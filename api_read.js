@@ -180,7 +180,6 @@ async function getAlertsList(stateList, countyList) {
   for (state of stateList) {
     addStateIdToCountyList(state);
     await getActiveAlerts(state);
-    console.log(countyList);
   }
   printAllAlerts();
   newOutputToCSV();
@@ -231,7 +230,7 @@ function outputToCSV() {
   document.querySelector("body").append(link);
 }
 
-getAlertsList(["GA"], ["Bibb"]);
+getAlertsList(["FL", "GA"], []);
 /*
 let stateList = [];
 while (true) {
