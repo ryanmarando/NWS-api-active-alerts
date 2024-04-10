@@ -66,6 +66,50 @@ var stateLibrary = new Set([
   "WY",
   "Q",
 ]);
+let countyList = new Set([
+  "Sumter",
+  "Baldwin",
+  "Bibb",
+  "Wilcox",
+  "Wheeler",
+  "Washington",
+  "Upson",
+  "Twiggs",
+  "Treutlen",
+  "Telfair",
+  "Taylor",
+  "Schley",
+  "Putnam",
+  "Pulaski",
+  "Peach",
+  "Montgomery",
+  "Monroe",
+  "Macon",
+  "Laurens",
+  "Lamar",
+  "Jones",
+  "Johnson",
+  "Jasper",
+  "Houston",
+  "Hancock",
+  "Dooly",
+  "Dodge",
+  "Crisp",
+  "Crawford",
+  "Butts",
+  "Bleckley",
+  "Wilkinson",
+  "Screven",
+]);
+const originalCountyListLength = countyList.size;
+const countySetToArray = [...countyList];
+
+function addStateIdToCountyList(stateId) {
+  //console.log(originalCountyListLength);
+  for (i = 0; i < countyList.size - 1; i++) {
+    countyList.add(countySetToArray[i] + " " + stateId);
+  }
+}
 
 function createAlert(areaDesc, event, effective, expires, headline, priority) {
   const Alert = {
@@ -119,6 +163,21 @@ function readInData(stateId) {
   return results;
 }
 
+function inCountyListCheck(singleAlert) {
+  const areaDescList = singleAlert.areaDesc.split("; ");
+  let filteredAreaDescList = [];
+  for (location of areaDescList) {
+    if (countyList.has(location)) {
+      filteredAreaDescList.push(location);
+    }
+  }
+  if (filteredAreaDescList.length == 0) {
+    return false;
+  }
+  singleAlert.areaDesc = filteredAreaDescList.join("; ");
+  return true;
+}
+
 async function getActiveAlerts(stateId) {
   results = await readInData(stateId);
   for (const [idx, alert] of results["features"].entries()) {
@@ -132,17 +191,21 @@ async function getActiveAlerts(stateId) {
       setWarningPriority(warningProperties["event"])
     );
     removeCommas(singleAlert);
-    alertList.push(singleAlert);
+    if (inCountyListCheck(singleAlert)) {
+      singleAlert = alertList.push(singleAlert);
+    }
   }
   sortAlertsByPriority(alertList);
 }
 
 async function getAlertsList(stateList) {
   for (state of stateList) {
+    addStateIdToCountyList(state);
     await getActiveAlerts(state);
+    console.log(countyList);
   }
   printAllAlerts();
-  newOutputToCSV();
+  //newOutputToCSV();
   //outputToCSV();
 }
 
@@ -190,8 +253,8 @@ function outputToCSV() {
   document.querySelector("body").append(link);
 }
 
-//getAlertsList(["GA", "FL"]);
-
+getAlertsList(["GA"]);
+/*
 let stateList = [];
 while (true) {
   let stateAbbr = prompt(
@@ -219,3 +282,4 @@ while (true) {
   getAlertsList(stateList);
   break;
 }
+*/
