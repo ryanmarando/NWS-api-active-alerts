@@ -69,48 +69,19 @@ var stateLibrary = new Set([
   "WY",
   "Q",
 ]);
-let countyList = new Set([
-  "Sumter",
-  "Baldwin",
-  "Bibb",
-  "Wilcox",
-  "Wheeler",
-  "Washington",
-  "Upson",
-  "Twiggs",
-  "Treutlen",
-  "Telfair",
-  "Taylor",
-  "Schley",
-  "Putnam",
-  "Pulaski",
-  "Peach",
-  "Montgomery",
-  "Monroe",
-  "Macon",
-  "Laurens",
-  "Lamar",
-  "Jones",
-  "Johnson",
-  "Jasper",
-  "Houston",
-  "Hancock",
-  "Dooly",
-  "Dodge",
-  "Crisp",
-  "Crawford",
-  "Butts",
-  "Bleckley",
-  "Wilkinson",
-  "Screven",
-]);
-const originalCountyListLength = countyList.size;
-const countySetToArray = [...countyList];
+let countyList = new Set([]);
 
 function addStateIdToCountyList(stateId) {
-  //console.log(originalCountyListLength);
+  const originalCountyListLength = countyList.size;
+  const countySetToArray = [...countyList];
   for (i = 0; i < countyList.size - 1; i++) {
     countyList.add(countySetToArray[i] + " " + stateId);
+  }
+}
+
+function addCounties(countyListArr) {
+  for (county of countyListArr) {
+    countyList.add(county);
   }
 }
 
@@ -183,6 +154,7 @@ function inCountyListCheck(singleAlert) {
 
 async function getActiveAlerts(stateId) {
   results = await readInData(stateId);
+  const countiesAdded = countyList.size > 0;
   for (const [idx, alert] of results["features"].entries()) {
     warningProperties = alert["properties"];
     singleAlert = createAlert(
@@ -194,14 +166,17 @@ async function getActiveAlerts(stateId) {
       setWarningPriority(warningProperties["event"])
     );
     removeCommas(singleAlert);
-    if (inCountyListCheck(singleAlert)) {
-      singleAlert = alertList.push(singleAlert);
+    if (countiesAdded && inCountyListCheck(singleAlert)) {
+      alertList.push(singleAlert);
+    } else if (!countiesAdded) {
+      alertList.push(singleAlert);
     }
   }
   sortAlertsByPriority(alertList);
 }
 
-async function getAlertsList(stateList) {
+async function getAlertsList(stateList, countyList) {
+  addCounties(countyList);
   for (state of stateList) {
     addStateIdToCountyList(state);
     await getActiveAlerts(state);
@@ -256,7 +231,7 @@ function outputToCSV() {
   document.querySelector("body").append(link);
 }
 
-getAlertsList(["GA"]);
+getAlertsList(["GA"], ["Bibb"]);
 /*
 let stateList = [];
 while (true) {

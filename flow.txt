@@ -15,3 +15,42 @@ HOW I WILL DO IT:
     IF WEBSITE: React website that reads in from the API
     IF CSV: Some go or either javascript that outputs it
     
+
+COUNTY LIST:
+/*
+let countyList = new Set([
+  "Sumter",
+  "Baldwin",
+  "Bibb",
+  "Wilcox",
+  "Wheeler",
+  "Washington",
+  "Upson",
+  "Twiggs",
+  "Treutlen",
+  "Telfair",
+  "Taylor",
+  "Schley",
+  "Putnam",
+  "Pulaski",
+  "Peach",
+  "Montgomery",
+  "Monroe",
+  "Macon",
+  "Laurens",
+  "Lamar",
+  "Jones",
+  "Johnson",
+  "Jasper",
+  "Houston",
+  "Hancock",
+  "Dooly",
+  "Dodge",
+  "Crisp",
+  "Crawford",
+  "Butts",
+  "Bleckley",
+  "Wilkinson",
+  "Screven",
+]);
+*/
