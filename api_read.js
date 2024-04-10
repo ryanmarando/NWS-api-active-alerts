@@ -105,7 +105,7 @@ function printAllAlerts() {
   console.log("-------------------------------------------------------");
 }
 
-function removeCommas(singleAlert, stateId) {
+function removeCommas(singleAlert) {
   const locations = singleAlert.areaDesc;
   let locationsNoCommaAddSemicolon = locations.replaceAll(",", "");
   singleAlert.areaDesc = locationsNoCommaAddSemicolon;
@@ -131,7 +131,7 @@ async function getActiveAlerts(stateId) {
       warningProperties["headline"],
       setWarningPriority(warningProperties["event"])
     );
-    removeCommas(singleAlert, stateId);
+    removeCommas(singleAlert);
     alertList.push(singleAlert);
   }
   sortAlertsByPriority(alertList);
@@ -142,7 +142,28 @@ async function getAlertsList(stateList) {
     await getActiveAlerts(state);
   }
   printAllAlerts();
-  outputToCSV();
+  newOutputToCSV();
+  //outputToCSV();
+}
+
+function newOutputToCSV() {
+  const { convertArrayToCSV } = require("convert-array-to-csv");
+  const fs = require("fs");
+  const headers = Object.keys(alertList[0]);
+  const csvFromArrayOfArrays = convertArrayToCSV(alertList, {
+    headers,
+    separator: ",",
+  });
+  fs.writeFile(
+    "C:/Users/maran/OneDrive/Documents/Weather/2023 REEL/outputTEST.csv",
+    csvFromArrayOfArrays,
+    (err) => {
+      if (err) {
+        console.log(18, err);
+      }
+      console.log("CSV file saved successfully");
+    }
+  );
 }
 
 function outputToCSV() {
@@ -168,6 +189,8 @@ function outputToCSV() {
 
   document.querySelector("body").append(link);
 }
+
+//getAlertsList(["GA", "FL"]);
 
 let stateList = [];
 while (true) {
