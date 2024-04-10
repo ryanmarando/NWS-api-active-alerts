@@ -1,0 +1,17 @@
+FINAL PROJECT: 
+    WEATHER ALERT SYSTEM
+
+WHAT IT WILL DO:
+    User will provide what state and counties they wish to receive active alerts from
+    Program will read from api.weather.gov to get the warnings for their state
+    Program will either:
+        show warnings outputted on their screen and update as they change on a website
+        or export warnings in a csv file to be read into Max
+    Warnings will change color and icon for type of warning and sort based on importance of warning type
+    Saved users will automatically have what areas they want on their list
+
+
+HOW I WILL DO IT:
+    IF WEBSITE: React website that reads in from the API
+    IF CSV: Some go or either javascript that outputs it
+    
