@@ -1,3 +1,6 @@
+const { convertArrayToCSV } = require("convert-array-to-csv");
+const fs = require("fs");
+
 const baseURL = "https://api.weather.gov";
 let alertList = new Array();
 const eventTypePriorityLibrary = new Map([
@@ -205,7 +208,7 @@ async function getAlertsList(stateList) {
     console.log(countyList);
   }
   printAllAlerts();
-  //newOutputToCSV();
+  newOutputToCSV();
   //outputToCSV();
 }
 
@@ -218,7 +221,7 @@ function newOutputToCSV() {
     separator: ",",
   });
   fs.writeFile(
-    "C:/Users/maran/OneDrive/Documents/Weather/2023 REEL/outputTEST.csv",
+    "C:/Users/Ryan Marando/program_files/course_careers/final-project/outputTEST.csv",
     csvFromArrayOfArrays,
     (err) => {
       if (err) {
