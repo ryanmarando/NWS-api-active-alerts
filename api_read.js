@@ -85,6 +85,24 @@ function addCounties(countyListArr) {
   }
 }
 
+function changeTimeOutput(singleAlertTime) {
+  const dateTime = new Date(singleAlertTime);
+  dayPart = "AM";
+  newDateHour = dateTime.getHours();
+  if (newDateHour > 12) {
+    newDateHour = newDateHour - 12;
+    dayPart = "PM";
+  }
+  newDateMinutes = dateTime.getMinutes();
+  if (newDateMinutes === 0) newDateMinutes = "00";
+  newDateTime = newDateHour + ":" + newDateMinutes + dayPart;
+  return newDateTime;
+}
+
+function changeHeadlineOutput(singleAlert) {
+  singleAlert.headline = singleAlert.event + " until " + singleAlert.expires;
+}
+
 function createAlert(areaDesc, event, effective, expires, headline, priority) {
   const Alert = {
     areaDesc,
@@ -165,6 +183,9 @@ async function getActiveAlerts(stateId) {
       warningProperties["headline"],
       setWarningPriority(warningProperties["event"])
     );
+    singleAlert.expires = changeTimeOutput(singleAlert.expires);
+    singleAlert.effective = changeTimeOutput(singleAlert.effective);
+    changeHeadlineOutput(singleAlert);
     removeCommas(singleAlert);
     if (countiesAdded && inCountyListCheck(singleAlert)) {
       alertList.push(singleAlert);
@@ -230,7 +251,7 @@ function outputToCSV() {
   document.querySelector("body").append(link);
 }
 
-getAlertsList(["FL", "GA"], []);
+getAlertsList(["GA", "FL"], []);
 /*
 let stateList = [];
 while (true) {
