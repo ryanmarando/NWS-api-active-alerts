@@ -93,8 +93,9 @@ function changeTimeOutput(singleAlertTime) {
     newDateHour = newDateHour - 12;
     dayPart = "PM";
   }
-  newDateMinutes = dateTime.getMinutes();
-  if (newDateMinutes === 0) newDateMinutes = "00";
+  newDateMinutes = dateTime.getMinutes().toString();
+  if (newDateMinutes === 0 || newDateMinutes.length === 1)
+    newDateMinutes = newDateMinutes + "0";
   newDateTime = newDateHour + ":" + newDateMinutes + dayPart;
   return newDateTime;
 }
@@ -251,7 +252,7 @@ function outputToCSV() {
   document.querySelector("body").append(link);
 }
 
-getAlertsList(["GA", "FL"], []);
+getAlertsList(["GA"], []);
 /*
 let stateList = [];
 while (true) {
