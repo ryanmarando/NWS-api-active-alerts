@@ -14,6 +14,13 @@ WHAT IT WILL DO:
 HOW I WILL DO IT:
     IF WEBSITE: React website that reads in from the API
     IF CSV: Some go or either javascript that outputs it
+
+
+ON WEBSITE:
+    User will enter the state they wish from a drop down then choose counties they want in a checklist
+    After entering the state and counties the user wishes to enter, the server will auto refresh every 
+    30 seconds to export into a csv and output that data into Max
+
     
 
 COUNTY LIST:
