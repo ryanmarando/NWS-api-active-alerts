@@ -2,6 +2,11 @@
 import { useState, useEffect } from "react";
 import React from "react";
 import Select from "react-select";
+import {
+  getAlertsList,
+  printAllAlerts,
+  getActiveAlerts,
+} from "@/components/api_read";
 
 export default function Home() {
   const options = [
@@ -70,11 +75,14 @@ export default function Home() {
       return;
     }
     setStateList([...stateList, state]);
-    removeStateFromList(state);
+    setSelectedOption(null);
   }
 
-  function removeStateFromList(state) {
-    setStateOptions((l) => l.filter((item) => item.name !== name));
+  async function getAlerts() {
+    //console.log(stateList);
+    let alertList = await getAlertsList(stateList, []);
+    console.log(alertList);
+    setStateList([]);
   }
 
   function alerting() {
@@ -97,6 +105,7 @@ export default function Home() {
       <div>
         <p>{stateList}</p>
       </div>
+      <button onClick={getAlerts}>Get Alerts!</button>
     </div>
   );
 }
