@@ -92,6 +92,10 @@ function changeTimeOutput(singleAlertTime) {
   if (newDateHour > 12) {
     newDateHour = newDateHour - 12;
     dayPart = "PM";
+  } else if (newDateHour == 0) {
+    newDateHour = 8;
+    dayPart = "PM";
+    //return "further notice";
   }
   newDateMinutes = dateTime.getMinutes().toString();
   if (newDateMinutes === 0 || newDateMinutes.length === 1)
@@ -252,7 +256,7 @@ function outputToCSV() {
   document.querySelector("body").append(link);
 }
 
-getAlertsList(["GA"], []);
+getAlertsList(["FL"], []);
 /*
 let stateList = [];
 while (true) {
