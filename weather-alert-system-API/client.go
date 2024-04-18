@@ -1,11 +1,14 @@
 package main
 
 import (
+	"encoding/csv"
 	"encoding/json"
 	"fmt"
 	"io"
 	"net/http"
+	"os"
 	"sort"
+	"strconv"
 	"strings"
 	"time"
 
@@ -132,6 +135,32 @@ func appendAndSortAlerts(alertListResponse Response, stateId string) {
 	sort.Slice(alertList, sortAlertsByPriority)
 }
 
+func exportToCSV() {
+	file, err := os.Create("C:/Users/Ryan Marando/program_files/course_careers/final-project/data.csv")
+	if err != nil {
+		return
+	}
+	defer file.Close()
+
+	writer := csv.NewWriter(file)
+	defer writer.Flush()
+
+	// Write the header row
+	header := []string{"AreaDesc", "Effective", "Event", "Expires", "Headline", "Priority"}
+	if err := writer.Write(header); err != nil {
+		return
+	}
+
+	// Write each record to the CSV file
+	for _, alert := range alertList {
+		record := []string{alert.AreaDesc, alert.Effective, alert.Event,  alert.Expires, alert.Headline, strconv.FormatInt(int64(alert.Priority), 10)}
+		if err := writer.Write(record); err != nil {
+			return
+		}
+	}
+
+}
+
 func getActiveAlertsFromNWS(stateId string) {
 	const BASE_URL = "https://api.weather.gov"
 	response, err := http.Get(BASE_URL + "/alerts/active?area=" + stateId)
@@ -162,6 +191,7 @@ func getState(c *gin.Context) {
 	for _, state := range states {
 		getActiveAlertsFromNWS(state)
 	}
+	exportToCSV()
 	c.IndentedJSON(http.StatusOK, alertList)
 }
 
@@ -178,6 +208,7 @@ func getStateWithCounties(c *gin.Context) {
 	for _, state := range states {
 		getActiveAlertsFromNWS(state)
 	}
+	exportToCSV()
 	c.IndentedJSON(http.StatusOK, alertList)
 }
 
