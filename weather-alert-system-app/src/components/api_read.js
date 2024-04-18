@@ -66,19 +66,21 @@ var stateLibrary = new Set([
   "WY",
   "Q",
 ]);
-let countyList = new Set([]);
+//let countyList = new Set([]);
+let countyList = [];
 
 function addStateIdToCountyList(stateId) {
   const originalCountyListLength = countyList.size;
   const countySetToArray = [...countyList];
-  for (i = 0; i < countyList.size - 1; i++) {
+  for (let i = 0; i < countyList.size - 1; i++) {
     countyList.add(countySetToArray[i] + " " + stateId);
   }
 }
 
 function addCounties(countyListArr) {
-  for (county of countyListArr) {
-    countyList.add(county);
+  for (const county of countyListArr) {
+    console.log(county);
+    countyList.push(county);
   }
 }
 
@@ -161,7 +163,7 @@ function inCountyListCheck(singleAlert) {
   const areaDescList = singleAlert.areaDesc.split("; ");
   let filteredAreaDescList = [];
   for (location of areaDescList) {
-    if (countyList.has(location)) {
+    if (countyList.includes(location)) {
       filteredAreaDescList.push(location);
     }
   }
@@ -199,9 +201,9 @@ export async function getActiveAlerts(stateId) {
 }
 
 export async function getAlertsList(stateList, countyList) {
-  //addCounties(countyList);
+  addCounties(countyList);
   for (const state of stateList) {
-    //addStateIdToCountyList(state);
+    addStateIdToCountyList(state);
     await getActiveAlerts(state);
   }
   //printAllAlerts();
@@ -251,6 +253,7 @@ function outputToCSV() {
   link.setAttribute("href", objUrl);
   link.setAttribute("download", "alert-list.csv");
   link.click();
+  //link.remove();
 
   document.querySelector("body").append(link);
 }

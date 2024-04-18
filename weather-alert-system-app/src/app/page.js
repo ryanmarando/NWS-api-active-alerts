@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import React from "react";
 import Select from "react-select";
+import { saveAs } from "file-saver";
 import {
   getAlertsList,
   printAllAlerts,
@@ -65,6 +66,7 @@ export default function Home() {
   const [stateOptions, setStateOptions] = useState(options);
   const [selectedOption, setSelectedOption] = useState(null);
   const [stateList, setStateList] = useState([]);
+  const [countyList, setCountyList] = useState([]);
 
   function addState() {
     const state = selectedOption.value;
@@ -75,12 +77,12 @@ export default function Home() {
       return;
     }
     setStateList([...stateList, state]);
+    setCountyList(["Brooks", "Brantley"]);
     setSelectedOption(null);
   }
 
   async function getAlerts() {
-    //console.log(stateList);
-    let alertList = await getAlertsList(stateList, []);
+    let alertList = await getAlertsList(stateList, countyList);
     console.log(alertList);
     setStateList([]);
   }
@@ -95,13 +97,16 @@ export default function Home() {
 
   return (
     <div>
-      <h1>Welcome</h1>
+      <h1>Welcome To The Weather Alert System</h1>
+      <h4>Please select state(s) to receive alerts:</h4>
       <Select
         defaultValue={selectedOption}
         onChange={setSelectedOption}
         options={stateOptions}
       />
-      <button onClick={addState}>Add State</button>
+      <button type="button" onClick={addState}>
+        Add State
+      </button>
       <div>
         <p>{stateList}</p>
       </div>
