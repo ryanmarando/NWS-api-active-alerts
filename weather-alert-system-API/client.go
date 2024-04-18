@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"sort"
 	"strings"
+	"time"
 
 	"github.com/gin-gonic/gin"
 )
@@ -42,6 +43,62 @@ type Alert struct {
 }
 
 var alertList []Alert
+var countyList = map[string]int{}
+
+func addStateIdToCountyList(stateId string) {
+	countyListLength := len(countyList)
+	count := 0
+	for county := range countyList {
+		countyState := county + " " + stateId
+		countyList[countyState] = 1
+		count++
+		if count == countyListLength {
+			return
+		}
+	}
+}
+
+func addCounties(countyListArr []string) {
+	for _,county := range countyListArr {
+		countyList[county] = 1
+	}
+}
+
+func inCountyListCheck(singleAlert *Alert) bool {
+	areaDescList := strings.Split(singleAlert.AreaDesc, "; ")
+	filteredAreaDescList := []string{}
+	if len(filteredAreaDescList) == 0 { return false }
+	for _,location := range areaDescList {
+		_,ok := countyList[location]
+		if ok {
+			filteredAreaDescList = append(filteredAreaDescList, location)
+		}
+	}
+	singleAlert.AreaDesc = strings.Join(filteredAreaDescList, "; ")
+	return true
+}
+
+func changeTimeOutputAndHeadline(singleAlert *Alert) {
+	timeStringEffective := singleAlert.Effective
+	timeStringExpires := singleAlert.Expires
+
+	timeEffective, _ := time.Parse(time.RFC3339, timeStringEffective)
+	timeExpires, _ := time.Parse(time.RFC3339, timeStringExpires)
+	localTimeEffective, localTimeExpires := timeEffective.Local(), timeExpires.Local()
+	timeEffectiveTimeOutput := localTimeEffective.Format("3:04PM")
+	timeExpiresTimeOutput := localTimeExpires.Format("3:04PM")
+	
+
+	singleAlert.Effective = timeEffectiveTimeOutput
+	singleAlert.Expires = timeExpiresTimeOutput
+	singleAlert.Headline = singleAlert.Event + " until " + singleAlert.Expires
+}
+
+func removeCommas(singleAlert *Alert) {
+	locations := singleAlert.AreaDesc
+	locations = strings.ReplaceAll(locations, ",", "")
+	singleAlert.AreaDesc = locations
+}
 
 func readInDataFromNWS(responseData []byte) Response {
 	var alertData Response
@@ -59,18 +116,26 @@ func getWarningPriority(warningEvent string) int {
 	return eventTypeLibrary[warningEvent]
 }
 
-func appendAndSortAlerts(alertListResponse Response) {
+func appendAndSortAlerts(alertListResponse Response, stateId string) {
+	addCounties([]string{})
+	addStateIdToCountyList(stateId)
 	for _, alertFeatures := range alertListResponse.Features {
 		singleAlert := alertFeatures.Properties
 		singleAlert.Priority = getWarningPriority(singleAlert.Event)
-		alertList = append(alertList, []Alert{singleAlert}...)
+		removeCommas(&singleAlert)
+		changeTimeOutputAndHeadline(&singleAlert)
+		if len(countyList) > 0 && inCountyListCheck(&singleAlert) {
+			alertList = append(alertList, []Alert{singleAlert}...)
+		} else if len(countyList) == 0 {
+			alertList = append(alertList, []Alert{singleAlert}...)
+		}
 	}
 	sort.Slice(alertList, sortAlertsByPriority)
 }
 
-func getActiveAlertsFromNWS(id string) {
+func getActiveAlertsFromNWS(stateId string) {
 	const BASE_URL = "https://api.weather.gov"
-	response, err := http.Get(BASE_URL + "/alerts/active?area=" + id)
+	response, err := http.Get(BASE_URL + "/alerts/active?area=" + stateId)
 	if err != nil {
 		fmt.Println(err.Error())
 		return
@@ -82,7 +147,7 @@ func getActiveAlertsFromNWS(id string) {
 	}
 
 	rawAlertData := readInDataFromNWS(responseData)
-	appendAndSortAlerts(rawAlertData)
+	appendAndSortAlerts(rawAlertData, stateId)
 }
 
 func getAlerts(c *gin.Context) {

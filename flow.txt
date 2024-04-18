@@ -61,3 +61,23 @@ let countyList = new Set([
   "Screven",
 ]);
 */
+
+
+WHAT TO DO:
+    Construct a website (outline the look of it)
+        map out functionality
+        how do people interact with it
+    Building layout with html and css
+    Start constructing the logic using javascript (file parsers and input fields of files)
+    React with components (navigation bar and left menu etc.)
+        what data will I pass in
+    Create an API to fetch and read in the data from the front end 
+    Route and connect to controller to send front end data to backend then manipulate
+    Button press make a fetch call that sends to the backend/server/api can grab that data
+
+    Either have everything combined together or create another app that is entirely server/api code
+    Create separate folder for backend
+
+    Once have route then try to fetch/post from frontend in javascript
+    post the states and counties from the user and read in that from the backend which exports to a csv
+
