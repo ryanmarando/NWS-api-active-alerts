@@ -67,13 +67,13 @@ func addCounties(countyListArr []string) {
 func inCountyListCheck(singleAlert *Alert) bool {
 	areaDescList := strings.Split(singleAlert.AreaDesc, "; ")
 	filteredAreaDescList := []string{}
-	if len(filteredAreaDescList) == 0 { return false }
 	for _,location := range areaDescList {
 		_,ok := countyList[location]
 		if ok {
 			filteredAreaDescList = append(filteredAreaDescList, location)
 		}
 	}
+	if len(filteredAreaDescList) == 0 { return false }
 	singleAlert.AreaDesc = strings.Join(filteredAreaDescList, "; ")
 	return true
 }
@@ -117,7 +117,6 @@ func getWarningPriority(warningEvent string) int {
 }
 
 func appendAndSortAlerts(alertListResponse Response, stateId string) {
-	addCounties([]string{})
 	addStateIdToCountyList(stateId)
 	for _, alertFeatures := range alertListResponse.Features {
 		singleAlert := alertFeatures.Properties
@@ -156,16 +155,29 @@ func getAlerts(c *gin.Context) {
 
 func getState(c *gin.Context) {
 	alertList = []Alert{}
+	countyList = map[string]int{}
 	arrayStates := c.Param("arrayStates")
 
 	states := strings.Split(arrayStates, ",")
 	for _, state := range states {
 		getActiveAlertsFromNWS(state)
 	}
-	//c.JSON(200, gin.H{"states": states})
-	//state := c.Param("state")
-	//fmt.Println(state)
-	//getActiveAlertsFromNWS(state)
+	c.IndentedJSON(http.StatusOK, alertList)
+}
+
+func getStateWithCounties(c *gin.Context) {
+	alertList = []Alert{}
+	countyList = map[string]int{}
+	arrayStates := c.Param("arrayStates")
+	arrayCounties := c.Param("arrayCounties")
+
+	counties := strings.Split(arrayCounties, ",")
+	addCounties(counties)
+
+	states := strings.Split(arrayStates, ",")
+	for _, state := range states {
+		getActiveAlertsFromNWS(state)
+	}
 	c.IndentedJSON(http.StatusOK, alertList)
 }
 
@@ -175,6 +187,7 @@ func main() {
 	router.GET("/alerts", getAlerts)
 	//router.GET("/alerts/:state", getState)
 	router.GET("/alerts/:arrayStates", getState)
+	router.GET("/alerts/:arrayStates/:arrayCounties", getStateWithCounties)
 	router.Run("localhost:8080")
 
 }
