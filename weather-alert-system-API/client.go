@@ -12,6 +12,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )
 
@@ -215,6 +216,12 @@ func getStateWithCounties(c *gin.Context) {
 func main() {
 	//getActiveAlertsFromNWS("GA")
 	router := gin.Default()
+	router.Use(cors.New(cors.Config{
+		AllowOrigins: []string{"http://localhost:3000"},
+		AllowMethods: []string{"PUT", "PATCH", "POST", "DELETE", "GET"},
+		AllowHeaders: []string{"Content-Type"},
+		AllowCredentials: true,
+	}))
 	router.GET("/alerts", getAlerts)
 	//router.GET("/alerts/:state", getState)
 	router.GET("/alerts/:arrayStates", getState)

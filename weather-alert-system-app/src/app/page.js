@@ -67,6 +67,7 @@ export default function Home() {
   const [selectedOption, setSelectedOption] = useState(null);
   const [stateList, setStateList] = useState([]);
   const [countyList, setCountyList] = useState([]);
+  const [alertList, setAlertList] = useState([]);
 
   function addState() {
     const state = selectedOption.value;
@@ -92,8 +93,24 @@ export default function Home() {
   }
 
   useEffect(() => {
-    //if (stateList.length > 2) alerting();
-  }, [stateList]);
+    fetch("http://localhost:8080/alerts/GA")
+      .then((data) => data.json())
+      .then((data) => {
+        setAlertList(data);
+      });
+  }, []);
+
+  async function getDataFromOwnAPI() {
+    const results = await fetch("http://localhost:8080/alerts/FL")
+      .then((data) => data.json())
+      .then((data) => {
+        setAlertList(data);
+      });
+
+    for (const result of alertList) {
+      console.log(result);
+    }
+  }
 
   return (
     <div>
@@ -110,7 +127,14 @@ export default function Home() {
       <div>
         <p>{stateList}</p>
       </div>
-      <button onClick={getAlerts}>Get Alerts!</button>
+      <button onClick={getDataFromOwnAPI}>Get Alerts!</button>
+      <div>
+        {alertList.map((alert) => (
+          <div>
+            <p>{alert.headline}</p>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
