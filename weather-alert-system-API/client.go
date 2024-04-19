@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"net/url"
 	"os"
 	"sort"
 	"strconv"
@@ -48,6 +49,7 @@ type Alert struct {
 
 var alertList []Alert
 var countyList = map[string]int{}
+var path string
 
 func addStateIdToCountyList(stateId string) {
 	countyListLength := len(countyList)
@@ -137,7 +139,8 @@ func appendAndSortAlerts(alertListResponse Response, stateId string) {
 }
 
 func exportToCSV() {
-	file, err := os.Create("C:/Users/Ryan Marando/program_files/course_careers/final-project/data.csv")
+	//"C:\Users\Ryan Marando\program_files\course_careers\final-project\data.csv"
+	file, err := os.Create(path)
 	if err != nil {
 		return
 	}
@@ -213,6 +216,20 @@ func getStateWithCounties(c *gin.Context) {
 	c.IndentedJSON(http.StatusOK, alertList)
 }
 
+
+func getExportPath(c *gin.Context) {
+	userPath := c.Query("path")
+	//userPath = strings.ReplaceAll(userPath, " ", "hello")
+	decodedPath, _ := url.QueryUnescape(userPath)
+	decodedPath = decodedPath + "\\data.csv"
+	fmt.Println("Decoded Path:", decodedPath)
+
+	c.JSON(200, gin.H{"decodedPath": decodedPath})
+	//path = userPath + path + "\\data.csv"
+	//fmt.Println(path)
+	//c.IndentedJSON(http.StatusOK, path)
+}
+
 func main() {
 	//getActiveAlertsFromNWS("GA")
 	router := gin.Default()
@@ -226,6 +243,7 @@ func main() {
 	//router.GET("/alerts/:state", getState)
 	router.GET("/alerts/:arrayStates", getState)
 	router.GET("/alerts/:arrayStates/:arrayCounties", getStateWithCounties)
+	router.GET("/path", getExportPath)
 	router.Run("localhost:8080")
 
 }
