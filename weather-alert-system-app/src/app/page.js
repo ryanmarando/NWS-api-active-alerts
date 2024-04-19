@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import React from "react";
 import Select from "react-select";
 import { saveAs } from "file-saver";
@@ -66,10 +66,12 @@ export default function Home() {
   const [stateOptions, setStateOptions] = useState(options);
   const [selectedOption, setSelectedOption] = useState(null);
   const [stateList, setStateList] = useState([]);
-  const [countyList, setCountyList] = useState([]);
+  const [countyList, setCountyList] = useState("");
   const [alertList, setAlertList] = useState([]);
+  const [isRunning, setIsRunning] = useState(false);
 
   function addState() {
+    if (!selectedOption) return alert("Please enter a state.");
     const state = selectedOption.value;
     if (stateList.includes(state)) {
       const alertString =
@@ -78,39 +80,85 @@ export default function Home() {
       return;
     }
     setStateList([...stateList, state]);
-    setCountyList(["Brooks", "Brantley"]);
-    setSelectedOption(null);
   }
 
-  async function getAlerts() {
-    let alertList = await getAlertsList(stateList, countyList);
-    console.log(alertList);
-    setStateList([]);
+  function removeState() {
+    if (stateList.length === 0)
+      return alert("You must add at least once state to remove.");
+    if (stateList.length <= 1) {
+      setStateList([]);
+      return;
+    }
+    stateList.pop();
+    setStateList([stateList]);
   }
-
-  function alerting() {
-    alert("getting long");
-  }
-
+  /*
   useEffect(() => {
     fetch("http://localhost:8080/alerts/GA")
       .then((data) => data.json())
       .then((data) => {
         setAlertList(data);
       });
-  }, []);
-
-  async function getDataFromOwnAPI() {
-    const results = await fetch("http://localhost:8080/alerts/FL")
+  }, [stateList]);
+*/
+  async function getDataFromOwnAPIWithCounties() {
+    //if (stateList.length === 0) return alert("Please choose a state.");
+    const stateListString = stateList.join(",");
+    const results = await fetch(
+      "http://localhost:8080/alerts/" + stateListString + "/" + countyList
+    )
       .then((data) => data.json())
       .then((data) => {
         setAlertList(data);
       });
-
-    for (const result of alertList) {
-      console.log(result);
-    }
+    console.log("successful county export");
   }
+
+  async function getDataFromOwnAPI() {
+    if (stateList.length === 0) return alert("Please choose a state.");
+    if (countyList.length > 0) return getDataFromOwnAPIWithCounties();
+    const stateListString = stateList.join(",");
+    const results = await fetch(
+      "http://localhost:8080/alerts/" + stateListString + countyList
+    )
+      .then((data) => data.json())
+      .then((data) => {
+        setAlertList(data);
+      });
+    console.log("successful state wide export");
+  }
+
+  const MyComponent = () => {
+    // Function to be called
+    const myFunction = () => {
+      console.log("Function called!");
+      getDataFromOwnAPI();
+    };
+
+    // Toggle function execution
+    const toggleFunction = () => {
+      setIsRunning((prev) => !prev);
+    };
+
+    // Run the function when isRunning is true
+    useEffect(() => {
+      let intervalId;
+      if (isRunning) {
+        intervalId = setInterval(myFunction, 30000); // Example: call every 30 seconds
+      } else {
+        clearInterval(intervalId);
+      }
+      return () => clearInterval(intervalId);
+    }, [isRunning]);
+
+    return (
+      <div>
+        <button onClick={toggleFunction}>
+          {isRunning ? "Stop Automatic Output" : "Start Automatic Output"}
+        </button>
+      </div>
+    );
+  };
 
   return (
     <div>
@@ -121,20 +169,31 @@ export default function Home() {
         onChange={setSelectedOption}
         options={stateOptions}
       />
-      <button type="button" onClick={addState}>
-        Add State
+      <span>
+        <button type="button" onClick={addState}>
+          Add State
+        </button>
+      </span>
+      <span>
+        <button type="button" onClick={removeState}>
+          /Remove Last State
+        </button>
+      </span>
+      <div>
+        <p>States Added: {stateList}</p>
+      </div>
+      <label>Want to enter counties?</label>
+      <input
+        type="text"
+        value={countyList}
+        placeholder="County,County,County"
+        onChange={(e) => setCountyList(e.target.value)}
+      />
+      <br></br>
+      <button type="alert-button" onClick={getDataFromOwnAPI}>
+        Get Alerts!
       </button>
-      <div>
-        <p>{stateList}</p>
-      </div>
-      <button onClick={getDataFromOwnAPI}>Get Alerts!</button>
-      <div>
-        {alertList.map((alert) => (
-          <div>
-            <p>{alert.headline}</p>
-          </div>
-        ))}
-      </div>
+      <MyComponent />
     </div>
   );
 }
