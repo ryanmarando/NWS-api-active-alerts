@@ -91,7 +91,7 @@ export default function Home() {
       return;
     }
     stateList.pop();
-    setStateList([stateList]);
+    setStateList([...stateList]);
   }
   /*
   useEffect(() => {
@@ -113,6 +113,7 @@ export default function Home() {
         setAlertList(data);
       });
     console.log("successful county export");
+    alert("Successful export!");
   }
 
   async function getDataFromOwnAPI() {
@@ -130,6 +131,7 @@ export default function Home() {
         setAlertList(data);
       });
     console.log("successful state wide export");
+    alert("Successful export!");
   }
 
   async function getPath(path) {
@@ -165,7 +167,7 @@ export default function Home() {
     useEffect(() => {
       let intervalId;
       if (isRunning) {
-        intervalId = setInterval(myFunction, 30000); // Example: call every 30 seconds
+        intervalId = setInterval(myFunction, 30000); // Call every 30 seconds
       } else {
         clearInterval(intervalId);
       }
@@ -174,55 +176,83 @@ export default function Home() {
 
     return (
       <div>
-        <button onClick={toggleFunction}>
+        <button className="button" onClick={toggleFunction}>
           {isRunning ? "Stop Automatic Output" : "Start Automatic Output"}
         </button>
       </div>
     );
   };
 
+  const StateListComponent = () => {
+    let frontendStateList = "";
+    if (stateList.length === 1) {
+      frontendStateList = stateList[0];
+      return (
+        <div>
+          <p>States Added: {frontendStateList}</p>
+        </div>
+      );
+    }
+    for (const state of stateList) {
+      frontendStateList += state + ", ";
+    }
+
+    return (
+      <div>
+        <p>States Added: {frontendStateList}</p>
+      </div>
+    );
+  };
+
   return (
     <div>
-      <h1>Welcome To The Weather Alert System</h1>
-      <label>Enter your path to imported folder here:</label>
-      <input
-        type="text"
-        value={path}
-        placeholder="C:\Users\maxuser\ImportedData"
-        onChange={(e) => setPath(e.target.value)}
-      />
-      <br></br>
-      <h4>Please select state(s) to receive alerts:</h4>
-      <Select
-        defaultValue={selectedOption}
-        onChange={setSelectedOption}
-        options={stateOptions}
-      />
-      <span>
-        <button type="button" onClick={addState}>
-          Add State
+      <div className="alert-system">
+        <h1>Welcome To The Weather Alert System</h1>
+        <label className="label">
+          Enter your path to ImportedData folder here:
+        </label>
+        <input
+          className="path-bar"
+          type="text"
+          value={path}
+          placeholder="C:\Users\maxuser\ImportedData"
+          onChange={(e) => setPath(e.target.value)}
+        />
+        <label className="label">
+          Please select state(s) to receive alerts:
+        </label>
+        <Select
+          defaultValue={selectedOption}
+          onChange={setSelectedOption}
+          options={stateOptions}
+        />
+        <div>
+          <button className="button" type="button" onClick={addState}>
+            Add State
+          </button>
+          <button className="button" type="button" onClick={removeState}>
+            Remove Last State
+          </button>
+        </div>
+        <StateListComponent />
+        <label className="label">Want to enter counties?</label>
+        <input
+          className="path-bar"
+          type="text"
+          value={countyList}
+          placeholder="County,County,County"
+          onChange={(e) => setCountyList(e.target.value)}
+        />
+        <br></br>
+        <button
+          className="button"
+          type="alert-button"
+          onClick={getDataFromOwnAPI}
+        >
+          Get Alerts!
         </button>
-      </span>
-      <span>
-        <button type="button" onClick={removeState}>
-          /Remove Last State
-        </button>
-      </span>
-      <div>
-        <p>States Added: {stateList}</p>
+        <MyComponent />
       </div>
-      <label>Want to enter counties?</label>
-      <input
-        type="text"
-        value={countyList}
-        placeholder="County,County,County"
-        onChange={(e) => setCountyList(e.target.value)}
-      />
-      <br></br>
-      <button type="alert-button" onClick={getDataFromOwnAPI}>
-        Get Alerts!
-      </button>
-      <MyComponent />
     </div>
   );
 }

@@ -82,6 +82,7 @@ WHAT TO DO:
     post the states and counties from the user and read in that from the backend which exports to a csv
 
 STILL NEED TO:
-    provide a path for users to put the csv in...
+    put working copy on a backend server that's always up
+    put website onto Vercel
     create a user prompt saying that it exported 
     just make it look pretty
