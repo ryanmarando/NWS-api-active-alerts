@@ -67,6 +67,7 @@ export default function Home() {
   const [selectedOption, setSelectedOption] = useState(null);
   const [stateList, setStateList] = useState([]);
   const [countyList, setCountyList] = useState("");
+  const [path, setPath] = useState("");
   const [alertList, setAlertList] = useState([]);
   const [isRunning, setIsRunning] = useState(false);
 
@@ -117,6 +118,9 @@ export default function Home() {
   async function getDataFromOwnAPI() {
     if (stateList.length === 0) return alert("Please choose a state.");
     if (countyList.length > 0) return getDataFromOwnAPIWithCounties();
+    if (path === "")
+      return alert("Please enter the path to your ImportedData folder.");
+    await getPath(path);
     const stateListString = stateList.join(",");
     const results = await fetch(
       "http://localhost:8080/alerts/" + stateListString + countyList
@@ -126,6 +130,23 @@ export default function Home() {
         setAlertList(data);
       });
     console.log("successful state wide export");
+  }
+
+  async function getPath(path) {
+    //if (path.length === 0) return alert("Please enter a path.");
+    //console.log("insidegetapath");
+    const pathData = { path };
+    //console.log(pathData);
+    const results = await fetch("http://localhost:8080/path", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(pathData),
+    })
+      .then((data) => data.json())
+      .then((data) => data);
+    console.log("path received");
   }
 
   const MyComponent = () => {
@@ -163,6 +184,14 @@ export default function Home() {
   return (
     <div>
       <h1>Welcome To The Weather Alert System</h1>
+      <label>Enter your path to imported folder here:</label>
+      <input
+        type="text"
+        value={path}
+        placeholder="C:\Users\maxuser\ImportedData"
+        onChange={(e) => setPath(e.target.value)}
+      />
+      <br></br>
       <h4>Please select state(s) to receive alerts:</h4>
       <Select
         defaultValue={selectedOption}

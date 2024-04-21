@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"io"
 	"net/http"
-	"net/url"
 	"os"
 	"sort"
 	"strconv"
@@ -47,9 +46,13 @@ type Alert struct {
 	Priority	int `json:"priority"`
 }
 
+type Path struct {
+	Path string `json:"path"`
+}
+
 var alertList []Alert
 var countyList = map[string]int{}
-var path string
+var userEnteredPath Path
 
 func addStateIdToCountyList(stateId string) {
 	countyListLength := len(countyList)
@@ -138,8 +141,8 @@ func appendAndSortAlerts(alertListResponse Response, stateId string) {
 	sort.Slice(alertList, sortAlertsByPriority)
 }
 
-func exportToCSV() {
-	//"C:\Users\Ryan Marando\program_files\course_careers\final-project\data.csv"
+func exportToCSV(path string) {
+	//path := "C:\Users\Ryan Marando\program_files\course_careers\final-project\data.csv"
 	file, err := os.Create(path)
 	if err != nil {
 		return
@@ -190,12 +193,13 @@ func getState(c *gin.Context) {
 	alertList = []Alert{}
 	countyList = map[string]int{}
 	arrayStates := c.Param("arrayStates")
+	fmt.Println("User's path:", userEnteredPath.Path)
 
 	states := strings.Split(arrayStates, ",")
 	for _, state := range states {
 		getActiveAlertsFromNWS(state)
 	}
-	exportToCSV()
+	exportToCSV(userEnteredPath.Path)
 	c.IndentedJSON(http.StatusOK, alertList)
 }
 
@@ -212,22 +216,18 @@ func getStateWithCounties(c *gin.Context) {
 	for _, state := range states {
 		getActiveAlertsFromNWS(state)
 	}
-	exportToCSV()
+	exportToCSV(userEnteredPath.Path)
 	c.IndentedJSON(http.StatusOK, alertList)
 }
 
 
-func getExportPath(c *gin.Context) {
-	userPath := c.Query("path")
-	//userPath = strings.ReplaceAll(userPath, " ", "hello")
-	decodedPath, _ := url.QueryUnescape(userPath)
-	decodedPath = decodedPath + "\\data.csv"
-	fmt.Println("Decoded Path:", decodedPath)
 
-	c.JSON(200, gin.H{"decodedPath": decodedPath})
-	//path = userPath + path + "\\data.csv"
-	//fmt.Println(path)
-	//c.IndentedJSON(http.StatusOK, path)
+func getExportPath(c *gin.Context) {
+	if err := c.BindJSON(&userEnteredPath); err != nil {
+		return 
+	}
+	userEnteredPath.Path = userEnteredPath.Path + "\\data.csv"
+	c.IndentedJSON(http.StatusCreated, userEnteredPath)
 }
 
 func main() {
@@ -243,7 +243,7 @@ func main() {
 	//router.GET("/alerts/:state", getState)
 	router.GET("/alerts/:arrayStates", getState)
 	router.GET("/alerts/:arrayStates/:arrayCounties", getStateWithCounties)
-	router.GET("/path", getExportPath)
+	router.POST("/path", getExportPath)
 	router.Run("localhost:8080")
 
 }
