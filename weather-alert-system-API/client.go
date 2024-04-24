@@ -226,7 +226,7 @@ func getExportPath(c *gin.Context) {
 	if err := c.BindJSON(&userEnteredPath); err != nil {
 		return 
 	}
-	userEnteredPath.Path = userEnteredPath.Path + "\\data.csv"
+	userEnteredPath.Path = userEnteredPath.Path + "\\currentwarnings.csv"
 	c.IndentedJSON(http.StatusCreated, userEnteredPath)
 }
 
