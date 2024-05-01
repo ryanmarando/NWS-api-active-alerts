@@ -106,7 +106,10 @@ export default function Home() {
     //if (stateList.length === 0) return alert("Please choose a state.");
     const stateListString = stateList.join(",");
     const results = await fetch(
-      "http://localhost:8080/alerts/" + stateListString + "/" + countyList
+      "https://nws-api-active-alerts.onrender.com/alerts/" +
+        stateListString +
+        "/" +
+        countyList
     )
       .then((data) => data.json())
       .then((data) => {
@@ -124,7 +127,9 @@ export default function Home() {
     await getPath(path);
     const stateListString = stateList.join(",");
     const results = await fetch(
-      "http://localhost:8080/alerts/" + stateListString + countyList
+      "https://nws-api-active-alerts.onrender.com/alerts/" +
+        stateListString +
+        countyList
     )
       .then((data) => data.json())
       .then((data) => {
@@ -139,13 +144,16 @@ export default function Home() {
     //console.log("insidegetapath");
     const pathData = { path };
     //console.log(pathData);
-    const results = await fetch("http://localhost:8080/path", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(pathData),
-    })
+    const results = await fetch(
+      "https://nws-api-active-alerts.onrender.com/path",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(pathData),
+      }
+    )
       .then((data) => data.json())
       .then((data) => data);
     console.log("path received");
