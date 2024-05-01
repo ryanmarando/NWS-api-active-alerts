@@ -104,6 +104,9 @@ export default function Home() {
 */
   async function getDataFromOwnAPIWithCounties() {
     //if (stateList.length === 0) return alert("Please choose a state.");
+    if (path === "")
+      return alert("Please enter the path to your ImportedData folder.");
+    await getPath(path);
     const stateListString = stateList.join(",");
     const results = await fetch(
       "https://nws-api-active-alerts.onrender.com/alerts/" +
