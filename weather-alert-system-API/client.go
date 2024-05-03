@@ -244,7 +244,7 @@ func main() {
 	router.GET("/alerts/:arrayStates", getState)
 	router.GET("/alerts/:arrayStates/:arrayCounties", getStateWithCounties)
 	router.POST("/path", getExportPath)
-	router.Run("localhost:8080") //localhost:8080
+	router.Run(":10000") //localhost:8080
 
 
 }
