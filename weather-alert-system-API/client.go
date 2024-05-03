@@ -226,7 +226,7 @@ func getExportPath(c *gin.Context) {
 	if err := c.BindJSON(&userEnteredPath); err != nil {
 		return 
 	}
-	userEnteredPath.Path = userEnteredPath.Path + "\\currentwarnings.csv"
+	userEnteredPath.Path = userEnteredPath.Path + "/currentwarnings.csv"
 	c.IndentedJSON(http.StatusCreated, userEnteredPath)
 }
 
@@ -244,7 +244,7 @@ func main() {
 	router.GET("/alerts/:arrayStates", getState)
 	router.GET("/alerts/:arrayStates/:arrayCounties", getStateWithCounties)
 	router.POST("/path", getExportPath)
-	router.Run(":10000") //localhost:8080
+	router.Run("localhost:8080") //localhost:8080
 
 
 }
