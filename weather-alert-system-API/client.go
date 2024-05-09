@@ -153,14 +153,14 @@ func exportToCSV(path string) {
 	defer writer.Flush()
 
 	// Write the header row
-	header := []string{"AreaDesc", "Effective", "Event", "Expires", "Headline", "Priority"}
+	header := []string{"AreaDesc", "Event", "Effective", "Expires", "Headline", "Priority"}
 	if err := writer.Write(header); err != nil {
 		return
 	}
 
 	// Write each record to the CSV file
 	for _, alert := range alertList {
-		record := []string{alert.AreaDesc, alert.Effective, alert.Event,  alert.Expires, alert.Headline, strconv.FormatInt(int64(alert.Priority), 10)}
+		record := []string{alert.AreaDesc, alert.Event, alert.Effective, alert.Expires, alert.Headline, strconv.FormatInt(int64(alert.Priority), 10)}
 		if err := writer.Write(record); err != nil {
 			return
 		}
@@ -226,7 +226,7 @@ func getExportPath(c *gin.Context) {
 	if err := c.BindJSON(&userEnteredPath); err != nil {
 		return 
 	}
-	userEnteredPath.Path = userEnteredPath.Path + "\\currentwarnings.csv"
+	userEnteredPath.Path = userEnteredPath.Path + "/currentwarnings.csv"
 	c.IndentedJSON(http.StatusCreated, userEnteredPath)
 }
 
@@ -234,7 +234,7 @@ func main() {
 	//getActiveAlertsFromNWS("GA")
 	router := gin.Default()
 	router.Use(cors.New(cors.Config{
-		AllowOrigins: []string{"http://localhost:3000"},
+		AllowOrigins: []string{"https://nws-api-active-alerts.vercel.app"},
 		AllowMethods: []string{"PUT", "PATCH", "POST", "DELETE", "GET"},
 		AllowHeaders: []string{"Content-Type"},
 		AllowCredentials: true,
@@ -244,6 +244,7 @@ func main() {
 	router.GET("/alerts/:arrayStates", getState)
 	router.GET("/alerts/:arrayStates/:arrayCounties", getStateWithCounties)
 	router.POST("/path", getExportPath)
-	router.Run("localhost:8080")
+	router.Run(":10000") //localhost:8080
+
 
 }
