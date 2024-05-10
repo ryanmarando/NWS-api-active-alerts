@@ -126,7 +126,7 @@ export default function Home() {
     //await getPath(path);
     const stateListString = stateList.join(",");
     const results = await fetch(
-      "https://nws-api-active-alerts.onrender.com/alerts/" + //http://localhost:8080
+      "https://nws-api-active-alerts.onrender.com/alerts/" + //http://localhost:8080 https://nws-api-active-alerts.onrender.com
         stateListString +
         countyList
     )
