@@ -3,11 +3,7 @@ import { useState, useEffect, useRef } from "react";
 import React from "react";
 import Select from "react-select";
 import { saveAs } from "file-saver";
-import {
-  getAlertsList,
-  printAllAlerts,
-  getActiveAlerts,
-} from "@/components/api_read";
+import Clock from "@/components/Clock";
 
 export default function Home() {
   const options = [
@@ -104,12 +100,12 @@ export default function Home() {
 */
   async function getDataFromOwnAPIWithCounties() {
     //if (stateList.length === 0) return alert("Please choose a state.");
-    if (path === "")
-      return alert("Please enter the path to your ImportedData folder.");
-    await getPath(path);
+    //if (path === "")
+    //  return alert("Please enter the path to your ImportedData folder.");
+    //await getPath(path);
     const stateListString = stateList.join(",");
     const results = await fetch(
-      "https://nws-api-active-alerts.onrender.com/alerts/" +
+      "https://nws-api-active-alerts.onrender.com/alerts/" + //https://nws-api-active-alerts.onrender.com
         stateListString +
         "/" +
         countyList
@@ -119,18 +115,18 @@ export default function Home() {
         setAlertList(data);
       });
     console.log("successful county export");
-    alert("Successful export!");
+    //alert("Successful export!");
   }
 
   async function getDataFromOwnAPI() {
     if (stateList.length === 0) return alert("Please choose a state.");
     if (countyList.length > 0) return getDataFromOwnAPIWithCounties();
-    if (path === "")
-      return alert("Please enter the path to your ImportedData folder.");
-    await getPath(path);
+    //if (path === "")
+    //  return alert("Please enter the path to your ImportedData folder.");
+    //await getPath(path);
     const stateListString = stateList.join(",");
     const results = await fetch(
-      "https://nws-api-active-alerts.onrender.com/alerts/" +
+      "https://nws-api-active-alerts.onrender.com/alerts/" + //http://localhost:8080
         stateListString +
         countyList
     )
@@ -139,28 +135,26 @@ export default function Home() {
         setAlertList(data);
       });
     console.log("successful state wide export");
-    alert("Successful export!");
+    //alert("Successful export!");
   }
-
+  /*
   async function getPath(path) {
     //if (path.length === 0) return alert("Please enter a path.");
     //console.log("insidegetapath");
     const pathData = { path };
     //console.log(pathData);
-    const results = await fetch(
-      "https://nws-api-active-alerts.onrender.com/path",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(pathData),
-      }
-    )
+    const results = await fetch("http://localhost:8080/path", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(pathData),
+    })
       .then((data) => data.json())
       .then((data) => data);
     console.log("path received");
   }
+  */
 
   const MyComponent = () => {
     // Function to be called
@@ -178,7 +172,7 @@ export default function Home() {
     useEffect(() => {
       let intervalId;
       if (isRunning) {
-        intervalId = setInterval(myFunction, 30000); // Call every 30 seconds
+        intervalId = setInterval(myFunction, 15000); // Call every 30 seconds
       } else {
         clearInterval(intervalId);
       }
@@ -214,12 +208,8 @@ export default function Home() {
       </div>
     );
   };
-
-  return (
-    <div>
-      <div className="alert-system">
-        <h1>Welcome To The Weather Alert System</h1>
-        <label className="label">
+  /*
+  <label className="label">
           Enter your path to ImportedData folder here:
         </label>
         <input
@@ -229,6 +219,12 @@ export default function Home() {
           placeholder="C:\Users\maxuser\ImportedData"
           onChange={(e) => setPath(e.target.value)}
         />
+  */
+  return (
+    <div>
+      <div className="alert-system">
+        <h1>Welcome To The Weather Alert System</h1>
+
         <label className="label">
           Please select state(s) to receive alerts:
         </label>
@@ -263,6 +259,27 @@ export default function Home() {
           Get Alerts!
         </button>
         <MyComponent />
+      </div>
+      <div className="clock">
+        <Clock />
+      </div>
+      <div className="alert-output">
+        <ul>
+          {/* Use map() to iterate over the array and render each object */}
+          {alertList.map((obj, idx) => (
+            <li
+              className="alert-list"
+              style={{ backgroundColor: obj.color }}
+              key={obj.id}
+            >
+              {/* Access object properties and render them */}
+              <span className="effective">{obj.effective}</span>{" "}
+              <span className="headline">{obj.headline}</span>
+              <br></br>
+              <div className="areaDesc">{obj.areaDesc}</div>
+            </li>
+          ))}
+        </ul>
       </div>
     </div>
   );

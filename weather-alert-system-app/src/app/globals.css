@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+body {
+  background-color: lightblue;
+}
+
 .alert-system {
   display: flex;
   flex-direction: column;
@@ -14,9 +18,42 @@
   border-style: solid black;
   border-width: 2px;
   border-color: black;
-  border-radius: 2px;
+  border-radius: 12px;
   width: 75%;
   transform: translate(15%, 0);
+}
+
+:root {
+  --component-background-color: white; /* Default background color */
+}
+
+.alert-output {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  justify-content: center;
+  margin: 10px;
+  margin-bottom: 600px;
+  padding: 5px;
+  padding-top: 1px;
+  background-color: rgb(221, 221, 221);
+  border-style: solid black;
+  border-width: 2px;
+  border-color: black;
+  border-radius: 12px;
+}
+
+.alert-list {
+  background-color: var(--component-background-color);
+  height: 15%;
+  padding-left: 5px;
+  padding-right: 5px;
+  padding-bottom: 5px;
+  margin-top: 5px;
+  border-style: solid black;
+  border-width: 2px;
+  border-color: black;
+  border-radius: 12px;
 }
 
 .label {
@@ -39,6 +76,34 @@
 .path-bar {
   width: 95%;
   margin-bottom: 5px;
+}
+
+.headline {
+  position: relative;
+  right: -1vw;
+  font-size: 38px;
+  font-weight: 500;
+}
+
+.areaDesc {
+  padding-left: 44px;
+  font-size: 20px;
+}
+
+.effective {
+  width: 150px;
+  max-width: 150px;
+  display: inline-block;
+  font-size: 25px;
+  padding-left: 5px;
+}
+
+.clock {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  font-size: 40px;
 }
 
 h1 {

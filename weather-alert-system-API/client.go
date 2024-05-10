@@ -29,6 +29,19 @@ var eventTypeLibrary = map[string]int{
 	"Frost Advisory":              10,
 }
 
+var eventTypeColorLibrary = map[string]string{
+	"Tornado Warning":             "red",
+	"Severe Thunderstorm Warning": "orange",
+	"Flash Flood Warning":         "green",
+	"Flood Warning":               "green",
+	"Tornado Watch":               "yellow",
+	"Severe Thunderstorm Watch":   "pink",
+	"Flood Watch":                 "green",
+	"Wind Advisory":               "tan",
+	"Coastal Flood Advisory":      "green",
+	"Frost Advisory":              "blue",
+}
+
 type Response struct {
 	// Response struct to access all the features
 	Features []Features `json:"features"` // features contain an array of properties in struct defined below
@@ -44,6 +57,7 @@ type Alert struct {
 	Expires		string `json:"expires"`
 	Headline	string `json:"headline"`
 	Priority	int `json:"priority"`
+	Color		string `json:"color"`
 }
 
 type Path struct {
@@ -125,11 +139,17 @@ func getWarningPriority(warningEvent string) int {
 	return eventTypeLibrary[warningEvent]
 }
 
+func getWarningColor(warningEvent string) string {
+	if eventTypeColorLibrary[warningEvent] == "" { return "white"}
+	return eventTypeColorLibrary[warningEvent]
+}
+
 func appendAndSortAlerts(alertListResponse Response, stateId string) {
 	addStateIdToCountyList(stateId)
 	for _, alertFeatures := range alertListResponse.Features {
 		singleAlert := alertFeatures.Properties
 		singleAlert.Priority = getWarningPriority(singleAlert.Event)
+		singleAlert.Color = getWarningColor(singleAlert.Event)
 		removeCommas(&singleAlert)
 		changeTimeOutputAndHeadline(&singleAlert)
 		if len(countyList) > 0 && inCountyListCheck(&singleAlert) {
@@ -234,7 +254,7 @@ func main() {
 	//getActiveAlertsFromNWS("GA")
 	router := gin.Default()
 	router.Use(cors.New(cors.Config{
-		AllowOrigins: []string{"https://nws-api-active-alerts.vercel.app"},
+		AllowOrigins: []string{"https://nws-api-active-alerts.vercel.app"}, //http://localhost:3000
 		AllowMethods: []string{"PUT", "PATCH", "POST", "DELETE", "GET"},
 		AllowHeaders: []string{"Content-Type"},
 		AllowCredentials: true,
