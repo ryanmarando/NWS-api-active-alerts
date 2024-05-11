@@ -1,14 +1,11 @@
 package main
 
 import (
-	"encoding/csv"
 	"encoding/json"
 	"fmt"
 	"io"
 	"net/http"
-	"os"
 	"sort"
-	"strconv"
 	"strings"
 	"time"
 
@@ -294,9 +291,14 @@ type Path struct {
 	Path string `json:"path"`
 }
 
+type NoAlert struct {
+	Output string `json:"output"`
+}
+
 var alertList []Alert
 var countyList = map[string]int{}
 var userEnteredPath Path
+var NoAlertStatement []NoAlert
 
 func addStateIdToCountyList(stateId string) {
 	countyListLength := len(countyList)
@@ -337,14 +339,10 @@ func changeTimeOutputAndHeadline(singleAlert *Alert) {
 
 	timeEffective, _ := time.Parse(time.RFC3339, timeStringEffective)
 	timeExpires, _ := time.Parse(time.RFC3339, timeStringExpires)
-	//fmt.Println("originial:",timeStringExpires)
-	//fmt.Println("first parsed:",timeExpires)
 	//localTimeEffective, localTimeExpires := timeEffective.Local(), timeExpires.Local()
-	//fmt.Println(localTimeExpires, localTimeEffective)
 	timeEffectiveTimeOutput := timeEffective.Format("3:04PM")
 	timeExpiresTimeOutput := timeExpires.Format("3:04PM")
 
-	//fmt.Println(timeExpiresTimeOutput)
 	
 
 	singleAlert.Effective = timeEffectiveTimeOutput
@@ -395,7 +393,7 @@ func appendAndSortAlerts(alertListResponse Response, stateId string) {
 	}
 	sort.Slice(alertList, sortAlertsByPriority)
 }
-
+/*
 func exportToCSV(path string) {
 	//path := "C:\Users\Ryan Marando\program_files\course_careers\final-project\data.csv"
 	file, err := os.Create(path)
@@ -422,6 +420,7 @@ func exportToCSV(path string) {
 	}
 
 }
+*/
 
 func getActiveAlertsFromNWS(stateId string) {
 	const BASE_URL = "https://api.weather.gov"
@@ -448,13 +447,16 @@ func getState(c *gin.Context) {
 	alertList = []Alert{}
 	countyList = map[string]int{}
 	arrayStates := c.Param("arrayStates")
-	fmt.Println("User's path:", userEnteredPath.Path)
 
 	states := strings.Split(arrayStates, ",")
 	for _, state := range states {
 		getActiveAlertsFromNWS(state)
 	}
-	exportToCSV(userEnteredPath.Path)
+	if (len(alertList) == 0) {
+		emptyHeadline := "All clear! Currently there are no active alerts for " + arrayStates
+		emptyAlerts := Alert{Headline: emptyHeadline}
+		alertList = append(alertList, emptyAlerts)
+	}
 	c.IndentedJSON(http.StatusOK, alertList)
 }
 
@@ -471,7 +473,11 @@ func getStateWithCounties(c *gin.Context) {
 	for _, state := range states {
 		getActiveAlertsFromNWS(state)
 	}
-	exportToCSV(userEnteredPath.Path)
+	if (len(alertList) == 0) {
+		emptyHeadline := "All clear! Currently there are no active alerts for " + arrayStates + " in " + arrayCounties
+		emptyAlerts := Alert{Headline: emptyHeadline}
+		alertList = append(alertList, emptyAlerts)
+	}
 	c.IndentedJSON(http.StatusOK, alertList)
 }
 
@@ -489,7 +495,7 @@ func main() {
 	//getActiveAlertsFromNWS("GA")
 	router := gin.Default()
 	router.Use(cors.New(cors.Config{
-		AllowOrigins: []string{"https://nws-api-active-alerts.vercel.app"}, //http://localhost:3000
+		AllowOrigins: []string{"https://nws-api-active-alerts.vercel.app"}, //https://nws-api-active-alerts.vercel.app http://localhost:3000
 		AllowMethods: []string{"PUT", "PATCH", "POST", "DELETE", "GET"},
 		AllowHeaders: []string{"Content-Type"},
 		AllowCredentials: true,
@@ -499,7 +505,7 @@ func main() {
 	router.GET("/alerts/:arrayStates", getState)
 	router.GET("/alerts/:arrayStates/:arrayCounties", getStateWithCounties)
 	router.POST("/path", getExportPath)
-	router.Run(":10000") //localhost:8080
+	router.Run(":10000") // :10000 localhost:8080
 
 
 }
