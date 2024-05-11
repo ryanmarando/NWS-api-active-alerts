@@ -4,6 +4,7 @@ import React from "react";
 import Select from "react-select";
 import Clock from "@/components/Clock";
 import LoadingAnimation from "@/components/LoadingAnimation";
+import CountdownTimer from "@/components/Counter";
 
 export default function Home() {
   const options = [
@@ -144,11 +145,14 @@ export default function Home() {
       }
       return () => clearInterval(intervalId);
     }, [isRunning]);
-
     return (
       <div>
         <button className="button" onClick={toggleFunction}>
-          {isRunning ? "Stop Automatic Output" : "Start Automatic Output"}
+          {isRunning ? (
+            <CountdownTimer initialTime={15} />
+          ) : (
+            "Start Automatic Output"
+          )}
         </button>
       </div>
     );
