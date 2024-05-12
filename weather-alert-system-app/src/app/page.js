@@ -2,9 +2,13 @@
 import { useState, useEffect } from "react";
 import React from "react";
 import Select from "react-select";
+import Image from "next/image";
 import Clock from "@/components/Clock";
 import LoadingAnimation from "@/components/LoadingAnimation";
 import CountdownTimer from "@/components/Counter";
+import { Navbar } from "@/components/Navbar";
+import BlueArrow from "../../public/assets/blue-button.svg";
+import { Footer } from "@/components/Footer";
 
 export default function Home() {
   const options = [
@@ -12,7 +16,6 @@ export default function Home() {
     { value: "AK", label: "AK" },
     { value: "AZ", label: "AZ" },
     { value: "AR", label: "AR" },
-    { value: "AS", label: "AS" },
     { value: "CA", label: "CA" },
     { value: "CO", label: "CO" },
     { value: "CT", label: "CT" },
@@ -67,6 +70,7 @@ export default function Home() {
   const [alertList, setAlertList] = useState([]);
   const [isRunning, setIsRunning] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [showSettings, setShowSettings] = useState(true);
 
   function addState() {
     if (!selectedOption) return alert("Please enter a state.");
@@ -94,7 +98,7 @@ export default function Home() {
   async function getDataFromOwnAPIWithCounties() {
     const stateListString = stateList.join(",");
     const results = await fetch(
-      "https://localhost:8080.com/alerts/" + // localhost:8080 nws-api-active-alerts.onrender.com
+      "https://nws-api-active-alerts.onrender.com/alerts/" + // http://localhost:8080 https://nws-api-active-alerts.onrender.com
         stateListString +
         "/" +
         countyList
@@ -114,7 +118,9 @@ export default function Home() {
     if (countyList.length > 0) return getDataFromOwnAPIWithCounties();
     const stateListString = stateList.join(",");
     const results = await fetch(
-      "https://localhost:8080.com/alerts/" + stateListString + countyList
+      "https://nws-api-active-alerts.onrender.com/alerts/" +
+        stateListString +
+        countyList
     )
       .then((data) => data.json())
       .then((data) => {
@@ -122,16 +128,15 @@ export default function Home() {
         setIsLoading(false);
       });
     console.log("successful state wide export");
-    alert("Successful export!");
   }
-
+  /*
   async function getPath(path) {
     //if (path.length === 0) return alert("Please enter a path.");
     //console.log("insidegetapath");
     const pathData = { path };
     //console.log(pathData);
     const results = await fetch(
-      "https://nws-api-active-alerts.onrender.com/path",
+      "https://localhost:8080.com/path", //nws-api-active-alerts.onrender.com
       {
         method: "POST",
         headers: {
@@ -144,8 +149,13 @@ export default function Home() {
       .then((data) => data);
     console.log("path received");
   }
+  */
 
-  const MyComponent = () => {
+  function ChangeSettings() {
+    return setShowSettings(!showSettings);
+  }
+
+  const AutomaticOutput = () => {
     const myFunction = () => {
       console.log("Function called!");
       getDataFromOwnAPI();
@@ -166,7 +176,10 @@ export default function Home() {
     }, [isRunning]);
     return (
       <div>
-        <button className="button" onClick={toggleFunction}>
+        <button
+          className="bg-[#4328EB] hover:text-gray-500 w-33 py-1 px-2 rounded-[8px] text-[white] my-[5px] mx-[25px]"
+          onClick={toggleFunction}
+        >
           {isRunning ? (
             <CountdownTimer initialTime={15} />
           ) : (
@@ -182,62 +195,84 @@ export default function Home() {
     if (stateList.length === 1) {
       frontendStateList = stateList[0];
       return (
-        <div>
-          <p>States Added: {frontendStateList}</p>
+        <div className="flex items-center justify-center gap-x-2">
+          <span>
+            <Image src={BlueArrow} alt="blue arrow" />
+          </span>
+          <p className="text-xl my-[10px]">States Added: {frontendStateList}</p>
         </div>
       );
     }
-    for (const state of stateList) {
-      frontendStateList += state + ", ";
+    for (let i = 0; i < stateList.length; i++) {
+      //const state of stateList
+      frontendStateList += ", " + stateList[i];
     }
-
+    frontendStateList = frontendStateList.slice(2);
     return (
-      <div>
-        <p>States Added: {frontendStateList}</p>
+      <div className="flex items-center justify-center gap-x-2">
+        <span>
+          <Image src={BlueArrow} alt="blue arrow" />
+        </span>
+        <p className="text-xl my-[10px]">States Added: {frontendStateList}</p>
       </div>
     );
   };
 
   return (
     <div>
-      <div className="alert-system">
-        <h1>Welcome To The Weather Alert System</h1>
-
-        <label className="label">
-          Please select state(s) to receive alerts:
-        </label>
-        <Select
-          defaultValue={selectedOption}
-          onChange={setSelectedOption}
-          options={stateOptions}
-        />
-        <div>
-          <button className="button" type="button" onClick={addState}>
-            Add State
-          </button>
-          <button className="button" type="button" onClick={removeState}>
-            Remove Last State
+      <Navbar />
+      {showSettings && (
+        <div className="alert-system">
+          <label className="label">
+            Please select state(s) to receive alerts:
+          </label>
+          <Select
+            defaultValue={selectedOption}
+            onChange={setSelectedOption}
+            options={stateOptions}
+          />
+          <div className="flex w-full items-center justify-center">
+            <button
+              onClick={addState}
+              className="bg-[#4328EB] hover:text-gray-500 w-33 py-1 px-2 rounded-[8px] text-white my-[5px] mx-[15px] mt-[14px]"
+            >
+              Add State
+            </button>
+            <button
+              onClick={removeState}
+              className="bg-[#4328EB] hover:text-gray-500 w-33 py-1 px-2 rounded-[8px] text-[white] my-[5px] mx-[15px] mt-[14px]"
+            >
+              Remove Last State
+            </button>
+          </div>
+          <StateListComponent />
+          <label className="label">Want to enter counties?</label>
+          <input
+            className="path-bar"
+            type="text"
+            value={countyList}
+            placeholder="County,County,County"
+            onChange={(e) => setCountyList(e.target.value)}
+          />
+          <br></br>
+          <button
+            className="bg-[#4328EB] hover:text-gray-500 w-33 py-1 px-2 rounded-[8px] text-[white] my-[5px] mx-[15px]"
+            type="alert-button"
+            onClick={getDataFromOwnAPI}
+            disabled={isLoading}
+          >
+            {isLoading ? <LoadingAnimation /> : "Get Alerts"}
           </button>
         </div>
-        <StateListComponent />
-        <label className="label">Want to enter counties?</label>
-        <input
-          className="path-bar"
-          type="text"
-          value={countyList}
-          placeholder="County,County,County"
-          onChange={(e) => setCountyList(e.target.value)}
-        />
-        <br></br>
+      )}
+      <div className="flex w-full items-center justify-between px-[20px] py-[8px]">
         <button
-          className="button"
-          type="alert-button"
-          onClick={getDataFromOwnAPI}
-          disabled={isLoading}
+          className="bg-[#4328EB] hover:text-gray-500 w-33 py-1 px-2 rounded-[8px] text-[white] my-[5px] mx-[25px]"
+          onClick={ChangeSettings}
         >
-          {isLoading ? <LoadingAnimation /> : "Get Alerts!"}
+          {showSettings ? "Hide Settings" : "Show Settings"}
         </button>
-        <MyComponent />
+        <AutomaticOutput />
       </div>
       <div className="clock">
         <Clock />
@@ -259,6 +294,7 @@ export default function Home() {
           ))}
         </ul>
       </div>
+      <Footer />
     </div>
   );
 }
