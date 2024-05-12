@@ -1,13 +1,10 @@
 "use client";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import React from "react";
 import Select from "react-select";
-import { saveAs } from "file-saver";
-import {
-  getAlertsList,
-  printAllAlerts,
-  getActiveAlerts,
-} from "@/components/api_read";
+import Clock from "@/components/Clock";
+import LoadingAnimation from "@/components/LoadingAnimation";
+import CountdownTimer from "@/components/Counter";
 
 export default function Home() {
   const options = [
@@ -67,9 +64,9 @@ export default function Home() {
   const [selectedOption, setSelectedOption] = useState(null);
   const [stateList, setStateList] = useState([]);
   const [countyList, setCountyList] = useState("");
-  const [path, setPath] = useState("");
   const [alertList, setAlertList] = useState([]);
   const [isRunning, setIsRunning] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   function addState() {
     if (!selectedOption) return alert("Please enter a state.");
@@ -93,45 +90,36 @@ export default function Home() {
     stateList.pop();
     setStateList([...stateList]);
   }
-  /*
-  useEffect(() => {
-    fetch("http://localhost:8080/alerts/GA")
-      .then((data) => data.json())
-      .then((data) => {
-        setAlertList(data);
-      });
-  }, [stateList]);
-*/
+
   async function getDataFromOwnAPIWithCounties() {
-    //if (stateList.length === 0) return alert("Please choose a state.");
-    if (path === "")
-      return alert("Please enter the path to your ImportedData folder.");
-    await getPath(path);
     const stateListString = stateList.join(",");
     const results = await fetch(
-      "http://localhost:8080/alerts/" + stateListString + "/" + countyList
+      "https://localhost:8080.com/alerts/" + // localhost:8080 nws-api-active-alerts.onrender.com
+        stateListString +
+        "/" +
+        countyList
     )
       .then((data) => data.json())
       .then((data) => {
         setAlertList(data);
+        setIsLoading(false);
       });
+
     console.log("successful county export");
-    alert("Successful export!");
   }
 
   async function getDataFromOwnAPI() {
     if (stateList.length === 0) return alert("Please choose a state.");
+    setIsLoading(true);
     if (countyList.length > 0) return getDataFromOwnAPIWithCounties();
-    if (path === "")
-      return alert("Please enter the path to your ImportedData folder.");
-    await getPath(path);
     const stateListString = stateList.join(",");
     const results = await fetch(
-      "http://localhost:8080/alerts/" + stateListString + countyList
+      "https://localhost:8080.com/alerts/" + stateListString + countyList
     )
       .then((data) => data.json())
       .then((data) => {
         setAlertList(data);
+        setIsLoading(false);
       });
     console.log("successful state wide export");
     alert("Successful export!");
@@ -142,45 +130,48 @@ export default function Home() {
     //console.log("insidegetapath");
     const pathData = { path };
     //console.log(pathData);
-    const results = await fetch("http://localhost:8080/path", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(pathData),
-    })
+    const results = await fetch(
+      "https://nws-api-active-alerts.onrender.com/path",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(pathData),
+      }
+    )
       .then((data) => data.json())
       .then((data) => data);
     console.log("path received");
   }
 
   const MyComponent = () => {
-    // Function to be called
     const myFunction = () => {
       console.log("Function called!");
       getDataFromOwnAPI();
     };
 
-    // Toggle function execution
     const toggleFunction = () => {
       setIsRunning((prev) => !prev);
     };
 
-    // Run the function when isRunning is true
     useEffect(() => {
       let intervalId;
       if (isRunning) {
-        intervalId = setInterval(myFunction, 30000); // Call every 30 seconds
+        intervalId = setInterval(myFunction, 15000); // Call every 30 seconds
       } else {
         clearInterval(intervalId);
       }
       return () => clearInterval(intervalId);
     }, [isRunning]);
-
     return (
       <div>
         <button className="button" onClick={toggleFunction}>
-          {isRunning ? "Stop Automatic Output" : "Start Automatic Output"}
+          {isRunning ? (
+            <CountdownTimer initialTime={15} />
+          ) : (
+            "Start Automatic Output"
+          )}
         </button>
       </div>
     );
@@ -211,16 +202,7 @@ export default function Home() {
     <div>
       <div className="alert-system">
         <h1>Welcome To The Weather Alert System</h1>
-        <label className="label">
-          Enter your path to ImportedData folder here:
-        </label>
-        <input
-          className="path-bar"
-          type="text"
-          value={path}
-          placeholder="C:\Users\maxuser\ImportedData"
-          onChange={(e) => setPath(e.target.value)}
-        />
+
         <label className="label">
           Please select state(s) to receive alerts:
         </label>
@@ -251,10 +233,31 @@ export default function Home() {
           className="button"
           type="alert-button"
           onClick={getDataFromOwnAPI}
+          disabled={isLoading}
         >
-          Get Alerts!
+          {isLoading ? <LoadingAnimation /> : "Get Alerts!"}
         </button>
         <MyComponent />
+      </div>
+      <div className="clock">
+        <Clock />
+      </div>
+      <div className="alert-output">
+        <ul>
+          {alertList.map((obj, idx) => (
+            <li
+              className="alert-list"
+              style={{ backgroundColor: obj.color }}
+              key={obj.id}
+            >
+              {/* Access object properties and render them */}
+              <span className="effective">{obj.effective}</span>{" "}
+              <span className="headline">{obj.headline}</span>
+              <br></br>
+              <div className="areaDesc">{obj.areaDesc}</div>
+            </li>
+          ))}
+        </ul>
       </div>
     </div>
   );
