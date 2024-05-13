@@ -1,15 +1,24 @@
 import Image from "next/image";
+import Link from "next/link";
 import Logo from "@/app/icon.ico";
 import Menu from "../../public/assets/Menu.svg";
 import Facebook from "../../public/assets/Facebook.svg";
 import Twitter from "../../public/assets/X.svg";
+import User from "../../public/assets/User.svg";
 
 export function Navbar() {
   return (
     <nav className="flex w-full items-center justify-between px-[20px] py-[16px] lg:container lg:mx-auto lg:px-22">
       <div className="flex gap-x-5">
-        <Image alt="Logo" src={Logo} />
-        <h1 className="py-[16px]">Weather Alert System</h1>
+        <Link href="/">
+          <Image alt="Logo" src={Logo} className="object-cover" />
+        </Link>
+        <Link className="py-[16px] text-center" href="/alert-system">
+          Weather Alert System
+        </Link>
+        <Link className="py-[16px]" href="/alert-system">
+          Contact
+        </Link>
       </div>
       <div className="flex items-center">
         <a
@@ -26,6 +35,19 @@ export function Navbar() {
         >
           <Image className="mr-[15px] w-8 h-8" alt="Twitter" src={Twitter} />
         </a>
+        <a href="/">
+          <div className="flex items-center">
+            <Image
+              className="mr-[15px] w-8 h-8"
+              src={User}
+              alt="User Profile"
+            />
+            <span className="hidden font-medium text-[#36485C] lg:block">
+              Sign in
+            </span>
+          </div>
+        </a>
+
         <Image alt="Menu" src={Menu} className="lg:hidden" />
       </div>
     </nav>
