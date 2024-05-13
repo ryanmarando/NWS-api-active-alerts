@@ -13,10 +13,13 @@ export function Navbar() {
         <Link href="/">
           <Image alt="Logo" src={Logo} className="object-cover" />
         </Link>
-        <Link className="py-[16px] text-center" href="/alert-system">
+        <Link
+          className="sm:hidden lg:block py-[16px] text-center"
+          href="/alert-system"
+        >
           Weather Alert System
         </Link>
-        <Link className="py-[16px]" href="/alert-system">
+        <Link className="sm:hidden lg:block py-[16px]" href="/alert-system">
           Contact
         </Link>
       </div>

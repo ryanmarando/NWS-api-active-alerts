@@ -31,14 +31,6 @@ export function Hero() {
           className="min-h-[500px] w-full object-cover"
         />
       </div>
-
-      <div className="absolute bottom-5 flex w-full flex-col items-center">
-        <Image
-          src={HeroAlertImage}
-          alt="Alert System"
-          className="mb-[220px] -ml-4 -mr-4 sm:-mb-12 sm:h-[50%] lg:-mb-12 lg:h-auto lg:w-[70%]"
-        />
-      </div>
     </div>
   );
 }
