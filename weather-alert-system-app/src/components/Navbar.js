@@ -48,7 +48,7 @@ export function Navbar() {
 
         <div className="flex items-center justify-center pr-4">
           <SignedOut>
-            <Link href="/sign-in">Signin</Link>
+            <Link href="/sign-in">Sign In</Link>
           </SignedOut>
           <SignedIn>
             <UserButton />
