@@ -37,7 +37,6 @@ export function Navbar() {
           rel="noopener noreferrer"
         >
           <Image className="mr-[15px] w-8 h-8" alt="Twitter" src={Twitter} />
-        </a>
         <a href="/">
           <div className="flex items-center">
             <Image
