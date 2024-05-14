@@ -51,7 +51,7 @@ export function Navbar() {
             <SignInButton className="font-medium text-[#36485C]" />
           </SignedOut>
           <SignedIn>
-            <UserButton />
+            <UserButton className="flex" />
           </SignedIn>
         </div>
 
