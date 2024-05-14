@@ -5,7 +5,10 @@ import Menu from "../../public/assets/Menu.svg";
 import Facebook from "../../public/assets/Facebook.svg";
 import Twitter from "../../public/assets/X.svg";
 import User from "../../public/assets/User.svg";
+import { SignInButton, SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
+import { MobileNav } from "@/components/MobileNav.js";
 
+<Image alt="Menu" src={Menu} className="lg:hidden" />;
 export function Navbar() {
   return (
     <nav className="flex w-full items-center justify-between px-[20px] py-[16px] lg:container lg:mx-auto lg:px-22">
@@ -24,33 +27,31 @@ export function Navbar() {
         </Link>
       </div>
       <div className="flex items-center">
-        <Link
+        <a
           href="https://www.facebook.com/ryanmarandowx"
           target="_blank"
           rel="noopener noreferrer"
         >
           <Image className="mr-[15px] w-8 h-8" alt="Facebook" src={Facebook} />
-        </Link>
-        <Link
+        </a>
+        <a
           href="https://twitter.com/ryanmarando"
           target="_blank"
           rel="noopener noreferrer"
         >
           <Image className="mr-[15px] w-8 h-8" alt="Twitter" src={Twitter} />
-        <a href="/">
-          <div className="flex items-center">
-            <Image
-              className="mr-[15px] w-8 h-8"
-              src={User}
-              alt="User Profile"
-            />
-            <span className="hidden font-medium text-[#36485C] lg:block">
-              Sign in
-            </span>
-          </div>
         </a>
-
-        <Image alt="Menu" src={Menu} className="lg:hidden" />
+        <div className="flex items-center mr-[15px]">
+          <SignedOut>
+            <SignInButton className="font-medium text-[#36485C]" />
+          </SignedOut>
+          <SignedIn>
+            <UserButton />
+          </SignedIn>
+        </div>
+        <div>
+          <MobileNav />
+        </div>
       </div>
     </nav>
   );

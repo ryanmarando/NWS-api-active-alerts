@@ -1,6 +1,5 @@
 import Image from "next/image";
 import Logo from "@/app/icon.ico";
-import Link from "next/link";
 import Facebook from "../../public/assets/Facebook.svg";
 import Twitter from "../../public/assets/X.svg";
 
@@ -15,20 +14,20 @@ export function Footer() {
         © Copyright 2024. All rights reserved.
       </p>
       <div className="flex items-center justify-center gap-y-[32px] pt-[20px]">
-        <Link
+        <a
           href="https://www.facebook.com/ryanmarandowx"
           target="_blank"
           rel="noopener noreferrer"
         >
           <Image className="mr-[15px] w-8 h-8" alt="Facebook" src={Facebook} />
-        </Link>
-        <Link
+        </a>
+        <a
           href="https://twitter.com/ryanmarando"
           target="_blank"
           rel="noopener noreferrer"
         >
           <Image className="mr-[15px] w-8 h-8" alt="Twitter" src={Twitter} />
-        </Link>
+        </a>
       </div>
     </footer>
   );

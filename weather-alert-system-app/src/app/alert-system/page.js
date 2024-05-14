@@ -9,7 +9,6 @@ import CountdownTimer from "@/components/Counter";
 import { Navbar } from "@/components/Navbar";
 import BlueArrow from "../../../public/assets/blue-button.svg";
 import { Footer } from "@/components/Footer";
-import Link from "next/link";
 
 export default function AlertSystem() {
   const options = [
