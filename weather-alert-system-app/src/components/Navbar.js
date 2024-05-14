@@ -46,14 +46,18 @@ export function Navbar() {
           <Image className="mr-[15px] w-8 h-8" alt="Twitter" src={Twitter} />
         </a>
 
-        <div className="flex items-center justify-center pr-4">
-          <SignedOut>
-            <Link href="/sign-in">Sign In</Link>
-          </SignedOut>
-          <SignedIn>
-            <UserButton />
-          </SignedIn>
-        </div>
+        <a href="/">
+          <div className="flex items-center">
+            <Image
+              className="mr-[15px] w-8 h-8"
+              src={User}
+              alt="User Profile"
+            />
+            <span className="hidden font-medium text-[#36485C] lg:block">
+              Sign in
+            </span>
+          </div>
+        </a>
 
         <Image alt="Menu" src={Menu} className="lg:hidden" />
       </div>
