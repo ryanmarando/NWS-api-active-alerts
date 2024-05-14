@@ -19,7 +19,7 @@
     "react-dom": "^18",
     "react-dropdown": "^1.11.0",
     "react-select": "^5.8.0",
-    "require": "^0.4.4",
+    "require": "^2.4.20",
     "tailwind": "^4.0.0"
   },
   "devDependencies": {
