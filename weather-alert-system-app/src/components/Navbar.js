@@ -5,6 +5,13 @@ import Menu from "../../public/assets/Menu.svg";
 import Facebook from "../../public/assets/Facebook.svg";
 import Twitter from "../../public/assets/X.svg";
 import User from "../../public/assets/User.svg";
+import {
+  ClerkProvider,
+  SignInButton,
+  SignedIn,
+  SignedOut,
+  UserButton,
+} from "@clerk/nextjs";
 
 export function Navbar() {
   return (
@@ -38,18 +45,15 @@ export function Navbar() {
         >
           <Image className="mr-[15px] w-8 h-8" alt="Twitter" src={Twitter} />
         </a>
-        <a href="/">
-          <div className="flex items-center">
-            <Image
-              className="mr-[15px] w-8 h-8"
-              src={User}
-              alt="User Profile"
-            />
-            <span className="hidden font-medium text-[#36485C] lg:block">
-              Sign in
-            </span>
-          </div>
-        </a>
+
+        <div className="flex items-center">
+          <SignedOut>
+            <SignInButton className="font-medium text-[#36485C]" />
+          </SignedOut>
+          <SignedIn>
+            <UserButton />
+          </SignedIn>
+        </div>
 
         <Image alt="Menu" src={Menu} className="lg:hidden" />
       </div>
