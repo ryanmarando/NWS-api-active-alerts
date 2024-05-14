@@ -46,9 +46,9 @@ export function Navbar() {
           <Image className="mr-[15px] w-8 h-8" alt="Twitter" src={Twitter} />
         </a>
 
-        <div className="flex items-center pr-4">
+        <div className="flex items-center justify-center pr-4">
           <SignedOut>
-            <SignInButton className="font-medium text-[#36485C]" />
+            <Link href="/sign-in">Signin</Link>
           </SignedOut>
           <SignedIn>
             <UserButton />
