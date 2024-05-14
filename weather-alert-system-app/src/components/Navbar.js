@@ -5,6 +5,7 @@ import Menu from "../../public/assets/Menu.svg";
 import Facebook from "../../public/assets/Facebook.svg";
 import Twitter from "../../public/assets/X.svg";
 import User from "../../public/assets/User.svg";
+import { UserInfo } from "@/components/UserInfo";
 
 export function Navbar() {
   return (
@@ -24,33 +25,21 @@ export function Navbar() {
         </Link>
       </div>
       <div className="flex items-center">
-        <a
+        <Link
           href="https://www.facebook.com/ryanmarandowx"
           target="_blank"
           rel="noopener noreferrer"
         >
           <Image className="mr-[15px] w-8 h-8" alt="Facebook" src={Facebook} />
-        </a>
-        <a
+        </Link>
+        <Link
           href="https://twitter.com/ryanmarando"
           target="_blank"
           rel="noopener noreferrer"
         >
           <Image className="mr-[15px] w-8 h-8" alt="Twitter" src={Twitter} />
-        </a>
-        <a href="/">
-          <div className="flex items-center">
-            <Image
-              className="mr-[15px] w-8 h-8"
-              src={User}
-              alt="User Profile"
-            />
-            <span className="hidden font-medium text-[#36485C] lg:block">
-              Sign in
-            </span>
-          </div>
-        </a>
-
+        </Link>
+        <UserInfo />
         <Image alt="Menu" src={Menu} className="lg:hidden" />
       </div>
     </nav>
