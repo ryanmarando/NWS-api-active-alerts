@@ -11,9 +11,7 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <ClerkProvider
-      publishableKey={process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY}
-    >
+    <ClerkProvider>
       <html lang="en">
         <head>
           <link
@@ -24,7 +22,7 @@ export default function RootLayout({ children }) {
           />
           <link
             rel="apple-touch-icon"
-            href="/apple-icon?<generated>"
+            href="/icon?<generated>"
             type="image/<generated>"
             sizes="<generated>"
           />

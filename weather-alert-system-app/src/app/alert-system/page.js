@@ -10,7 +10,7 @@ import { Navbar } from "@/components/Navbar";
 import BlueArrow from "../../../public/assets/blue-button.svg";
 import { Footer } from "@/components/Footer";
 import { useUser } from "@clerk/clerk-react";
-import { clerkClient } from "@clerk/nextjs/server";
+import { getAuth, clerkClient } from "@clerk/nextjs/server";
 
 export default function AlertSystem() {
   const options = [
@@ -75,7 +75,7 @@ export default function AlertSystem() {
   const [showSettings, setShowSettings] = useState(true);
   const [countyListSaved, setCountyListSaved] = useState("");
   const [inputValue, setInputValue] = useState("");
-  const { isLoaded, user } = useUser();
+  const { isLoaded, isSignedIn, user } = useUser();
 
   function addState() {
     if (!selectedOption) return alert("Please enter a state.");
@@ -206,7 +206,7 @@ export default function AlertSystem() {
     setCountyListSaved(countyList);
     alert("Saved counties to your profile!");
   };
-  */
+  
 
   const saveCountyListInput = async () => {
     console.log(user?.publicMetadata.countyList);
@@ -226,8 +226,10 @@ export default function AlertSystem() {
       alert("Failed to save input value. Please try again.");
     }
   };
+  */
 
   const populateCountyListInput = () => {
+    if (!isSignedIn) return alert("Please login to load your county list!");
     setCountyList(user?.publicMetadata.countyList);
   };
 
@@ -269,10 +271,7 @@ export default function AlertSystem() {
               onChange={(e) => setCountyList(e.target.value)}
             />
             <div className="flex items-center justify-center flex-col ml-6 mr-6">
-              <button
-                onClick={saveCountyListInput}
-                className="bg-[#4328EB] hover:text-gray-500 py-1 px-2 rounded-[8px] text-white mb-2"
-              >
+              <button className="bg-[#4328EB] hover:text-gray-500 py-1 px-2 rounded-[8px] text-white mb-2">
                 Save Counties
               </button>
               <button
