@@ -238,7 +238,7 @@ export default function AlertSystem() {
   };
 
   async function populateDataInput() {
-    if (!isSignedIn) return alert("Please login to load your saved data.");
+    if (!isSignedIn) return alert("Please login to save your location data.");
     const savedStateListArr = user?.publicMetadata.stateList.split(",");
     setStateList(savedStateListArr);
     setCountyList(user?.publicMetadata.countyList);
