@@ -241,10 +241,10 @@ export default function AlertSystem() {
       <Navbar />
       {showSettings && (
         <div className="alert-system">
-          <div className="relative w-full">
+          <div className="flex relative w-full items-center justify-center">
             <button
               onClick={populateCountyListInput}
-              className="bg-[#4328EB] absolute top-0 right-0 hover:text-gray-500 py-1 px-2 w-20 mt-16 mr-1 lg:mr-0 lg:mt-0 lg:w-40 rounded-[8px] text-white mb-2 "
+              className="bg-[#4328EB] lg:absolute lg:top-0 lg:right-0 hover:text-gray-500 py-1 px-2 w-50 mt-2 mr-1 lg:mr-0 lg:mt-0 lg:w-50 rounded-[8px] text-white "
             >
               Populate Saved Area
             </button>
