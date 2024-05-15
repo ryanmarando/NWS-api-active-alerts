@@ -74,6 +74,7 @@ export default function AlertSystem() {
   const [isLoading, setIsLoading] = useState(false);
   const [showSettings, setShowSettings] = useState(true);
   const [countyListSaved, setCountyListSaved] = useState("");
+  const [stateListSaved, setStateListSaved] = useState("");
   const [inputValue, setInputValue] = useState("");
   const { isLoaded, isSignedIn, user } = useUser();
 
@@ -228,16 +229,26 @@ export default function AlertSystem() {
   };
   */
 
-  const populateCountyListInput = () => {
-    if (!isSignedIn) return alert("Please login to load your county list!");
+  async function populateCountyListInput() {
+    if (!isSignedIn) return alert("Please login to load your saved data.");
+    const savedStateListArr = user?.publicMetadata.stateList.split(",");
+    setStateList(savedStateListArr);
     setCountyList(user?.publicMetadata.countyList);
-  };
+  }
 
   return (
     <div>
       <Navbar />
       {showSettings && (
         <div className="alert-system">
+          <div className="relative w-full">
+            <button
+              onClick={populateCountyListInput}
+              className="bg-[#4328EB] absolute top-0 right-0 hover:text-gray-500 py-1 px-2 w-20 mt-16 mr-1 lg:mr-0 lg:mt-0 lg:w-40 rounded-[8px] text-white mb-2 "
+            >
+              Populate Saved Area
+            </button>
+          </div>
           <label className="label">
             Please select state(s) to receive alerts:
           </label>
@@ -262,26 +273,13 @@ export default function AlertSystem() {
           </div>
           <StateListComponent />
           <label className="label">Want to enter counties?</label>
-          <div className="flex w-full items-center justify-center ml-6 ">
-            <input
-              className="path-bar"
-              type="text"
-              value={countyList}
-              placeholder="County,County,County"
-              onChange={(e) => setCountyList(e.target.value)}
-            />
-            <div className="flex items-center justify-center flex-col ml-6 mr-6">
-              <button className="bg-[#4328EB] hover:text-gray-500 py-1 px-2 rounded-[8px] text-white mb-2">
-                Save Counties
-              </button>
-              <button
-                onClick={populateCountyListInput}
-                className="bg-[#4328EB] hover:text-gray-500 py-1 px-2 rounded-[8px] text-white mb-2 "
-              >
-                Populate Counties
-              </button>
-            </div>
-          </div>
+          <input
+            className="path-bar"
+            type="text"
+            value={countyList}
+            placeholder="County,County,County"
+            onChange={(e) => setCountyList(e.target.value)}
+          />
           <br></br>
           <button
             className="bg-[#4328EB] hover:text-gray-500 w-33 py-1 px-2 rounded-[8px] text-[white] my-[5px] mx-[15px]"

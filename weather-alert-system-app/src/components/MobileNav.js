@@ -1,5 +1,7 @@
 import Link from "next/link";
 import { useState } from "react";
+import Logo from "@/app/icon.ico";
+import Image from "next/image";
 
 export function MobileNav() {
   const [isOpen, setIsOpen] = useState(false);
@@ -13,7 +15,7 @@ export function MobileNav() {
       <div className="flex justify-end">
         <button
           onClick={toggleNav}
-          className="block text-gray-500 hover:text-white focus:text-white focus:outline-none"
+          className="block text-gray-500 hover:text-white focus:text-white focus:outline-none z-20"
         >
           <svg
             className="h-6 w-6 fill-current"
@@ -40,9 +42,12 @@ export function MobileNav() {
       <div
         className={`${
           isOpen ? "block" : "hidden"
-        } lg:hidden bg-[#4328EB] rounded-md`}
+        } lg:hidden bg-[#4328EB] rounded-md absolute w-full left-0 top-0 mt-2 z-10 ml-2 mr-2`}
       >
         <div className="px-2 pt-2 pb-3">
+          <Link href="/">
+            <Image alt="Logo" src={Logo} className="object-cover" />
+          </Link>
           <Link
             className="block px-3 py-2 rounded-md text-base font-medium text-white hover:text-white hover:bg-gray-700"
             href="/"

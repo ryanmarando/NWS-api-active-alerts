@@ -26,12 +26,8 @@ body {
 }
 
 .alert-output {
-  display: flex;
-  flex-direction: column;
-  flex: 1;
   justify-content: center;
   margin: 10px;
-  margin-bottom: 600px;
   padding: 5px;
   padding-top: 1px;
 }
@@ -43,6 +39,8 @@ body {
   padding-right: 5px;
   padding-bottom: 5px;
   margin-top: 5px;
+  margin-left: 5px;
+  margin-right: 5px;
   border-style: solid black;
   border-width: 2px;
   border-color: black;
@@ -50,6 +48,7 @@ body {
 }
 
 .label {
+  display: flex;
   margin-top: 10px;
   font-size: 20px;
   font-family: "DM Sans", sans-serif;
@@ -71,7 +70,7 @@ body {
 }
 
 .path-bar {
-  width: 100%;
+  width: 98%;
   margin-bottom: 5px;
   height: 35px;
   font-size: 20px;
