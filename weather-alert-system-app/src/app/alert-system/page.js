@@ -9,6 +9,8 @@ import CountdownTimer from "@/components/Counter";
 import { Navbar } from "@/components/Navbar";
 import BlueArrow from "../../../public/assets/blue-button.svg";
 import { Footer } from "@/components/Footer";
+import { useUser } from "@clerk/clerk-react";
+import { clerkClient } from "@clerk/nextjs/server";
 
 export default function AlertSystem() {
   const options = [
@@ -71,6 +73,9 @@ export default function AlertSystem() {
   const [isRunning, setIsRunning] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [showSettings, setShowSettings] = useState(true);
+  const [countyListSaved, setCountyListSaved] = useState("");
+  const [inputValue, setInputValue] = useState("");
+  const { isLoaded, user } = useUser();
 
   function addState() {
     if (!selectedOption) return alert("Please enter a state.");
@@ -129,27 +134,6 @@ export default function AlertSystem() {
       });
     console.log("successful state wide export");
   }
-  /*
-  async function getPath(path) {
-    //if (path.length === 0) return alert("Please enter a path.");
-    //console.log("insidegetapath");
-    const pathData = { path };
-    //console.log(pathData);
-    const results = await fetch(
-      "https://localhost:8080.com/path", //nws-api-active-alerts.onrender.com
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(pathData),
-      }
-    )
-      .then((data) => data.json())
-      .then((data) => data);
-    console.log("path received");
-  }
-  */
 
   function ChangeSettings() {
     return setShowSettings(!showSettings);
@@ -217,6 +201,35 @@ export default function AlertSystem() {
       </div>
     );
   };
+  /*
+  const saveCountyListInput = () => {
+    setCountyListSaved(countyList);
+    alert("Saved counties to your profile!");
+  };
+  */
+
+  const saveCountyListInput = async () => {
+    console.log(user?.publicMetadata.countyList);
+    console.log(user?.id);
+
+    setCountyListSaved(countyList);
+    console.log(countyListSaved);
+    try {
+      await clerkClient.users.updateUserMetadata(user?.id, {
+        publicMetadata: {
+          countyList: countyListSaved,
+        },
+      });
+      alert("Input value saved successfully!");
+    } catch (error) {
+      console.error("Error saving input value:", error);
+      alert("Failed to save input value. Please try again.");
+    }
+  };
+
+  const populateCountyListInput = () => {
+    setCountyList(user?.publicMetadata.countyList);
+  };
 
   return (
     <div>
@@ -247,13 +260,29 @@ export default function AlertSystem() {
           </div>
           <StateListComponent />
           <label className="label">Want to enter counties?</label>
-          <input
-            className="path-bar"
-            type="text"
-            value={countyList}
-            placeholder="County,County,County"
-            onChange={(e) => setCountyList(e.target.value)}
-          />
+          <div className="flex w-full items-center justify-center ml-6 ">
+            <input
+              className="path-bar"
+              type="text"
+              value={countyList}
+              placeholder="County,County,County"
+              onChange={(e) => setCountyList(e.target.value)}
+            />
+            <div className="flex items-center justify-center flex-col ml-6 mr-6">
+              <button
+                onClick={saveCountyListInput}
+                className="bg-[#4328EB] hover:text-gray-500 py-1 px-2 rounded-[8px] text-white mb-2"
+              >
+                Save Counties
+              </button>
+              <button
+                onClick={populateCountyListInput}
+                className="bg-[#4328EB] hover:text-gray-500 py-1 px-2 rounded-[8px] text-white mb-2 "
+              >
+                Populate Counties
+              </button>
+            </div>
+          </div>
           <br></br>
           <button
             className="bg-[#4328EB] hover:text-gray-500 w-33 py-1 px-2 rounded-[8px] text-[white] my-[5px] mx-[15px]"

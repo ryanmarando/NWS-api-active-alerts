@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@clerk/clerk-sdk-node": "^5.0.6",
     "@clerk/nextjs": "^5.0.9",
     "convert-array-to-csv": "^2.0.0",
     "file-saver": "^2.0.5",
