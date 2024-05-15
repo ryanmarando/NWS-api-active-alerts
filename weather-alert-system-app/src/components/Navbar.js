@@ -22,7 +22,7 @@ export function Navbar() {
         >
           Weather Alert System
         </Link>
-        <Link className="hidden lg:block py-[16px]" href="/alert-system">
+        <Link className="hidden lg:block py-[16px]" href="/contact">
           Contact
         </Link>
       </div>

@@ -207,29 +207,37 @@ export default function AlertSystem() {
     setCountyListSaved(countyList);
     alert("Saved counties to your profile!");
   };
-  
-
-  const saveCountyListInput = async () => {
-    console.log(user?.publicMetadata.countyList);
-    console.log(user?.id);
-
-    setCountyListSaved(countyList);
-    console.log(countyListSaved);
-    try {
-      await clerkClient.users.updateUserMetadata(user?.id, {
-        publicMetadata: {
-          countyList: countyListSaved,
-        },
-      });
-      alert("Input value saved successfully!");
-    } catch (error) {
-      console.error("Error saving input value:", error);
-      alert("Failed to save input value. Please try again.");
-    }
-  };
   */
 
-  async function populateCountyListInput() {
+  const saveDataListInput = async () => {
+    if (!isSignedIn) return alert("Please login to load your saved data.");
+    if (stateList.length === 0)
+      return alert("You must add at least once state to save data.");
+    try {
+      const response = await fetch("/api/updateUserMetadata", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          userId: user?.id,
+          metadata: { countyList: countyList, stateList: stateList.join(",") },
+        }),
+      });
+
+      if (response.ok) {
+        alert("Location data updated successfully! Refresh to update");
+      } else {
+        const errorData = await response.json();
+        alert(`Failed to update metadata: ${errorData.error}`);
+      }
+    } catch (error) {
+      console.error("Error updating metadata:", error);
+      alert("Failed to update metadata. Please try again.");
+    }
+  };
+
+  async function populateDataInput() {
     if (!isSignedIn) return alert("Please login to load your saved data.");
     const savedStateListArr = user?.publicMetadata.stateList.split(",");
     setStateList(savedStateListArr);
@@ -243,7 +251,7 @@ export default function AlertSystem() {
         <div className="alert-system">
           <div className="flex relative w-full items-center justify-center">
             <button
-              onClick={populateCountyListInput}
+              onClick={populateDataInput}
               className="bg-[#4328EB] lg:absolute lg:top-0 lg:right-0 hover:text-gray-500 py-1 px-2 w-50 mt-2 mr-1 lg:mr-0 lg:mt-0 lg:w-50 rounded-[8px] text-white "
             >
               Populate Saved Area
@@ -281,14 +289,23 @@ export default function AlertSystem() {
             onChange={(e) => setCountyList(e.target.value)}
           />
           <br></br>
+
           <button
-            className="bg-[#4328EB] hover:text-gray-500 w-33 py-1 px-2 rounded-[8px] text-[white] my-[5px] mx-[15px]"
+            className="bg-[#4328EB] hover:text-gray-500 w-33 py-1 px-2 rounded-[8px] text-[white] my-[15px]  mx-[15px]"
             type="alert-button"
             onClick={getDataFromOwnAPI}
             disabled={isLoading}
           >
             {isLoading ? <LoadingAnimation /> : "Get Alerts"}
           </button>
+          <div className="flex relative w-full items-center justify-center">
+            <button
+              onClick={saveDataListInput}
+              className="bg-[#4328EB] lg:absolute lg:bottom-0 lg:right-0 hover:text-gray-500 py-1 px-2 w-50 mr-1 lg:mr-0 lg:mt-0 lg:w-50 rounded-[8px] text-white "
+            >
+              Save Area
+            </button>
+          </div>
         </div>
       )}
       <div className="flex w-full items-center justify-between px-[20px] py-[8px]">
