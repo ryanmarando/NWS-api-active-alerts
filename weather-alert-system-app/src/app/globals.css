@@ -90,6 +90,8 @@ body {
 .areaDesc {
   padding-left: 44px;
   font-size: 20px;
+  width: 100%;
+  word-wrap: break-word;
 }
 
 .effective {

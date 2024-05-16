@@ -202,15 +202,9 @@ export default function AlertSystem() {
       </div>
     );
   };
-  /*
-  const saveCountyListInput = () => {
-    setCountyListSaved(countyList);
-    alert("Saved counties to your profile!");
-  };
-  */
 
   const saveDataListInput = async () => {
-    if (!isSignedIn) return alert("Please login to load your saved data.");
+    if (!isSignedIn) return alert("Please login to save your location data.");
     if (stateList.length === 0)
       return alert("You must add at least once state to save data.");
     try {
@@ -238,7 +232,7 @@ export default function AlertSystem() {
   };
 
   async function populateDataInput() {
-    if (!isSignedIn) return alert("Please login to save your location data.");
+    if (!isSignedIn) return alert("Please login to load your saved data.");
     const savedStateListArr = user?.publicMetadata.stateList.split(",");
     setStateList(savedStateListArr);
     setCountyList(user?.publicMetadata.countyList);
@@ -291,7 +285,7 @@ export default function AlertSystem() {
           <br></br>
 
           <button
-            className="bg-[#4328EB] hover:text-gray-500 w-33 py-1 px-2 rounded-[8px] text-[white] my-[15px]  mx-[15px]"
+            className="bg-[#4328EB] hover:text-gray-500 w-33 py-1 px-2 rounded-[8px] text-[white] my-[15px]"
             type="alert-button"
             onClick={getDataFromOwnAPI}
             disabled={isLoading}
@@ -301,7 +295,7 @@ export default function AlertSystem() {
           <div className="flex relative w-full items-center justify-center">
             <button
               onClick={saveDataListInput}
-              className="bg-[#4328EB] lg:absolute lg:bottom-0 lg:right-0 hover:text-gray-500 py-1 px-2 w-50 mr-1 lg:mr-0 lg:mt-0 lg:w-50 rounded-[8px] text-white "
+              className="bg-[#4328EB] lg:absolute lg:bottom-0 lg:right-0 hover:text-gray-500 py-1 px-2 w-50 lg:mr-0 lg:mt-0 lg:w-50 rounded-[8px] text-white "
             >
               Save Area
             </button>

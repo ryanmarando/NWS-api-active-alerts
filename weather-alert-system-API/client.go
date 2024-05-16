@@ -474,8 +474,8 @@ func getStateWithCounties(c *gin.Context) {
 		getActiveAlertsFromNWS(state)
 	}
 	if (len(alertList) == 0) {
-		emptyHeadline := "All clear! Currently there are no active alerts for " + arrayStates + " in " + arrayCounties
-		emptyAlerts := Alert{Headline: emptyHeadline}
+		emptyHeadline := "All clear! Currently there are no active alerts for " + arrayStates
+		emptyAlerts := Alert{Headline: emptyHeadline, AreaDesc: arrayCounties}
 		alertList = append(alertList, emptyAlerts)
 	}
 	c.IndentedJSON(http.StatusOK, alertList)
@@ -495,7 +495,7 @@ func main() {
 	//getActiveAlertsFromNWS("GA")
 	router := gin.Default()
 	router.Use(cors.New(cors.Config{
-		AllowOrigins: []string{" https://nws-api-active-alerts.vercel.app"}, // localhost:3000 https://nws-api-active-alerts.vercel.app
+		AllowOrigins: []string{"https://nws-api-active-alerts.vercel.app"}, // http://localhost:3000 https://nws-api-active-alerts.vercel.app
 		AllowMethods: []string{"PUT", "PATCH", "POST", "DELETE", "GET"},
 		AllowHeaders: []string{"Content-Type"},
 		AllowCredentials: true,

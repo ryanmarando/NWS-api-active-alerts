@@ -8,7 +8,6 @@ export default async function handler(req, res) {
   const { userId, metadata } = req.body;
 
   try {
-    console.log(userId, metadata);
     await clerkClient.users.updateUserMetadata(userId, {
       publicMetadata: metadata,
     });
