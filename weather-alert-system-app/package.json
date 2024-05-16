@@ -21,6 +21,7 @@
     "react-dom": "^18",
     "react-dropdown": "^1.11.0",
     "react-hook-form": "^7.51.4",
+    "react-icons": "^5.2.1",
     "react-select": "^5.8.0",
     "require": "^2.4.20",
     "tailwind": "^4.0.0"

@@ -1,85 +1,110 @@
 "use client";
+import React from "react";
 import { useState } from "react";
+import { MdEmail } from "react-icons/md";
+import { FaPhoneAlt } from "react-icons/fa";
+import { FaMessage } from "react-icons/fa6";
+import { Navbar } from "../../components/Navbar";
 
-export default function Contact() {
-  const [fullname, setFullname] = useState("");
-  const [email, setEmail] = useState("");
-  const [subject, setSubject] = useState("");
-  const [message, setMessage] = useState("");
+export default function ContactPage() {
+  const [userEmail, setUserEmail] = useState("");
+  const [userName, setUserName] = useState("");
+  const [userCommentary, setUserCommentary] = useState("");
+
+  function print() {
+    console.log(userEmail);
+    console.log(userName);
+    console.log(userCommentary);
+  }
+  const ContactInfo = [
+    {
+      title: "Support",
+      email: "marandoryan@gmail.com",
+      phone: "(302) 250-8944",
+      message: "(302) 250-8944",
+    },
+  ];
   return (
-    <div>
-      <form class="rounded-lg shadow-xl flex flex-col px-8 py-8 bg-white dark:bg-blue-500">
-        <h1 class="text-2xl font-bold dark:text-gray-50">Send a message</h1>
-
-        <label
-          for="fullname"
-          class="text-gray-500 font-light mt-8 dark:text-gray-50"
-        >
-          Full name<span class="text-red-500 dark:text-gray-50">*</span>
-        </label>
-        <input
-          type="text"
-          name="fullname"
-          class="bg-transparent border-b py-2 pl-4 focus:outline-none focus:rounded-md focus:ring-1 ring-green-500 font-light text-gray-500"
-          required
-        />
-
-        <label
-          for="email"
-          class="text-gray-500 font-light mt-4 dark:text-gray-50"
-        >
-          E-mail<span class="text-red-500">*</span>
-        </label>
-        <input
-          type="email"
-          name="email"
-          class="bg-transparent border-b py-2 pl-4 focus:outline-none focus:rounded-md focus:ring-1 ring-green-500 font-light text-gray-500"
-          required
-        />
-
-        <label
-          for="subject"
-          class="text-gray-500 font-light mt-4 dark:text-gray-50"
-        >
-          Subject<span class="text-red-500">*</span>
-        </label>
-        <input
-          type="text"
-          name="subject"
-          class="bg-transparent border-b py-2 pl-4 focus:outline-none focus:rounded-md focus:ring-1 ring-green-500 font-light text-gray-500"
-          required
-        />
-
-        <label
-          for="message"
-          class="text-gray-500 font-light mt-4 dark:text-gray-50"
-        >
-          Message<span class="text-red-500">*</span>
-        </label>
-        <textarea
-          name="message"
-          class="bg-transparent border-b py-2 pl-4 focus:outline-none focus:rounded-md focus:ring-1 ring-green-500 font-light text-gray-500"
-          required
-        ></textarea>
-        <div class="flex flex-row items-center justify-start">
-          <button class="px-10 mt-8 py-2 bg-[#130F49] text-gray-50 font-light rounded-md text-lg flex flex-row items-center">
-            Send
-            <svg
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              class="text-cyan-500 ml-2"
-              fill="currentColor"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M9.00967 5.12761H11.0097C12.1142 5.12761 13.468 5.89682 14.0335 6.8457L16.5089 11H21.0097C21.562 11 22.0097 11.4477 22.0097 12C22.0097 12.5523 21.562 13 21.0097 13H16.4138L13.9383 17.1543C13.3729 18.1032 12.0191 18.8724 10.9145 18.8724H8.91454L12.4138 13H5.42485L3.99036 15.4529H1.99036L4.00967 12L4.00967 11.967L2.00967 8.54712H4.00967L5.44417 11H12.5089L9.00967 5.12761Z"
-                fill="currentColor"
+    <>
+      <Navbar />
+      <div className="relative mt-20">
+        <div className="absolute top-1/2 left-1/2 mx-auto flex w-11/12 max-w-[1200px] -translate-x-1/2 -translate-y-1/2 flex-col text-center text-white lg:ml-5">
+          <h1 className="text-4xl font-bold sm:text-5xl">Contact us</h1>
+          <p className="mx-auto pt-3 text-s mb-12 lg:w-3/5 lg:pt-5 lg:text-base text-black">
+            Have a question? Need assistance? Want something specifically done
+            for you?
+          </p>
+        </div>
+      </div>
+      <section className="w-full flex-grow">
+        <section className="mx-auto w-[95%] lg:w-[50%] items-center justify-center my-6  px-5  pt-16">
+          {ContactInfo.map((info, index) => (
+            <div key={index}>
+              <div className="border py-5 shadow-md bg-[#DDDDDD] rounded-[8px]">
+                <div className="flex justify-between px-4 pb-5">
+                  <p className="text-xl font-bold">{info.title}</p>
+                </div>
+                <div className="flex flex-col px-4">
+                  <a
+                    className="flex items-center"
+                    href={`mailto:${info.email}`}
+                  >
+                    <MdEmail className="mr-3 h-4 w-4 text-violet-900" />
+                    {info.email}
+                  </a>
+                  <a className="flex items-center" href={`tel:${info.phone}`}>
+                    <FaPhoneAlt className="mr-3 h-4 w-4 text-violet-900" />
+                    {info.phone}
+                  </a>
+                  <a className="flex items-center" href={`sms:${info.message}`}>
+                    <FaMessage className="mr-3 h-4 w-4 text-violet-900" />
+                    {info.message}
+                  </a>
+                </div>
+              </div>
+            </div>
+          ))}
+        </section>
+        <section className="mx-auto my-5 text-center">
+          <h2 className="text-3xl font-bold">Have another question?</h2>
+          <p>Complete the form below</p>
+        </section>
+        <form className="mx-auto my-5 max-w-[600px] px-5" action="">
+          <div className="mx-auto">
+            <div className="my-3 flex w-full gap-2">
+              <input
+                className="w-1/2 border px-4 py-2"
+                type="email"
+                placeholder="E-mail"
+                value={userEmail}
+                onChange={(e) => setUserEmail(e.target.value)}
               />
-            </svg>
+              <input
+                className="w-1/2 border px-4 py-2"
+                type="text"
+                placeholder="Full Name"
+                value={userName}
+                onChange={(e) => setUserName(e.target.value)}
+              />
+            </div>
+          </div>
+          <textarea
+            className="w-full border px-4 py-2"
+            placeholder="Write a commentary..."
+            name=""
+            id=""
+            defaultValue={""}
+            value={userCommentary}
+            onChange={(e) => setUserCommentary(e.target.value)}
+          />
+          <div className="lg:items:center container mt-4 flex flex-col justify-between lg:flex-row"></div>
+        </form>
+        <div className="flex items-center justify-center w-full">
+          <button onClick={print} className="-my-4 bg-amber-400 px-4 py-2">
+            Send Message
           </button>
         </div>
-      </form>
-    </div>
+      </section>
+    </>
   );
 }
