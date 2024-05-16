@@ -19,9 +19,12 @@ export function Hero() {
         >
           <button>Try the Weather Alert System</button>
         </Link>
-        <button className="text-[#4328EB] text-center font-semibold lg:w-1/4 sm:w-1/2  py-4 px-8 ml-3 mt-4">
-          Want something custom made?
-        </button>
+        <Link
+          className="text-[#4328EB] text-center font-semibold lg:w-1/4 sm:w-1/2  py-4 px-8 ml-3 mt-4"
+          href="/contact"
+        >
+          <button>Want something custom made?</button>
+        </Link>
       </div>
 
       <div className="relative flex h-full w-full justify-center">

@@ -35,13 +35,11 @@ body {
 .alert-list {
   background-color: var(--component-background-color);
   height: 15%;
-  padding-left: 5px;
-  padding-right: 5px;
-  padding-bottom: 5px;
-  margin-top: 5px;
-  margin-left: 5px;
-  margin-right: 5px;
-  border-style: solid black;
+  padding: 7px;
+  margin-top: 9px;
+  margin-left: 9px;
+  margin-right: 9px;
+  border: solid black;
   border-width: 2px;
   border-color: black;
   border-radius: 12px;

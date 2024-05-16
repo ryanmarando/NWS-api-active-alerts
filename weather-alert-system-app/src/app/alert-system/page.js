@@ -104,7 +104,7 @@ export default function AlertSystem() {
   async function getDataFromOwnAPIWithCounties() {
     const stateListString = stateList.join(",");
     const results = await fetch(
-      "https://nws-api-active-alerts.onrender.com/alerts/" + // http://localhost:8080 https://nws-api-active-alerts.onrender.com
+      "http://localhost:8080/alerts/" + // http://localhost:8080 https://nws-api-active-alerts.onrender.com
         stateListString +
         "/" +
         countyList
@@ -124,9 +124,7 @@ export default function AlertSystem() {
     if (countyList.length > 0) return getDataFromOwnAPIWithCounties();
     const stateListString = stateList.join(",");
     const results = await fetch(
-      "https://nws-api-active-alerts.onrender.com/alerts/" +
-        stateListString +
-        countyList
+      "http://localhost:8080/alerts/" + stateListString + countyList
     )
       .then((data) => data.json())
       .then((data) => {
@@ -315,10 +313,10 @@ export default function AlertSystem() {
         <Clock />
       </div>
       <div className="alert-output">
-        <ul>
+        <ul className="p-2">
           {alertList.map((obj, idx) => (
             <li
-              className="alert-list"
+              className="alert-list shadow-md border-spacing-1"
               style={{ backgroundColor: obj.color }}
               key={obj.id}
             >

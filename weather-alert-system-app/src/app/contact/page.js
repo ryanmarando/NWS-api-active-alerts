@@ -29,7 +29,7 @@ export default function ContactPage() {
       <Navbar />
       <div className="relative mt-20">
         <div className="absolute top-1/2 left-1/2 mx-auto flex w-11/12 max-w-[1200px] -translate-x-1/2 -translate-y-1/2 flex-col text-center text-white lg:ml-5">
-          <h1 className="text-4xl font-bold sm:text-5xl">Contact us</h1>
+          <h1 className="text-4xl font-bold sm:text-5xl">Contact me</h1>
           <p className="mx-auto pt-3 text-s mb-12 lg:w-3/5 lg:pt-5 lg:text-base text-black">
             Have a question? Need assistance? Want something specifically done
             for you?
