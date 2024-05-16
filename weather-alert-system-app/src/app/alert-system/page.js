@@ -10,7 +10,9 @@ import { Navbar } from "@/components/Navbar";
 import BlueArrow from "../../../public/assets/blue-button.svg";
 import { Footer } from "@/components/Footer";
 import { useUser } from "@clerk/clerk-react";
-import { getAuth, clerkClient } from "@clerk/nextjs/server";
+import { AlertForm } from "@/components/AlertForm";
+import { IoIosArrowBack } from "react-icons/io";
+import { IoIosArrowDown } from "react-icons/io";
 
 export default function AlertSystem() {
   const options = [
@@ -77,6 +79,7 @@ export default function AlertSystem() {
   const [stateListSaved, setStateListSaved] = useState("");
   const [inputValue, setInputValue] = useState("");
   const { isLoaded, isSignedIn, user } = useUser();
+  const [showWarningSettings, setShowWarningSettings] = useState(false);
 
   function addState() {
     if (!selectedOption) return alert("Please enter a state.");
@@ -282,8 +285,19 @@ export default function AlertSystem() {
             placeholder="County,County,County"
             onChange={(e) => setCountyList(e.target.value)}
           />
-          <br></br>
-
+          <div className="flex gap-1">
+            <label className="label">Choose your specific warnings:</label>
+            <button
+              onClick={() => setShowWarningSettings(!showWarningSettings)}
+            >
+              {showWarningSettings ? (
+                <IoIosArrowDown className="mt-[13px] w-8 hover:text-gray-500" />
+              ) : (
+                <IoIosArrowBack className="mt-[13px] w-8 hover:text-gray-500" />
+              )}
+            </button>
+          </div>
+          {showWarningSettings ? <AlertForm /> : ""}
           <button
             className="bg-[#4328EB] hover:text-gray-500 w-33 py-1 px-2 rounded-[8px] text-[white] my-[15px]"
             type="alert-button"
