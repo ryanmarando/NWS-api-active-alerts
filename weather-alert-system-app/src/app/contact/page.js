@@ -32,6 +32,9 @@ export default function ContactPage() {
       });
       if (response.ok) {
         alert("Message sent successfully!");
+        setUserEmail("");
+        setUserName("");
+        setUserCommentary("");
       } else {
         const errorData = await response.json();
         alert(`Failed to send message: ${errorData.error}`);
