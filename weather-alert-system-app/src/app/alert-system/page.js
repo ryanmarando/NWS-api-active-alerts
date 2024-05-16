@@ -104,7 +104,7 @@ export default function AlertSystem() {
   async function getDataFromOwnAPIWithCounties() {
     const stateListString = stateList.join(",");
     const results = await fetch(
-      "http://localhost:8080/alerts/" + // http://localhost:8080 https://nws-api-active-alerts.onrender.com
+      "https://nws-api-active-alerts.onrender.com/alerts/" + // http://localhost:8080 https://nws-api-active-alerts.onrender.com
         stateListString +
         "/" +
         countyList
@@ -124,7 +124,9 @@ export default function AlertSystem() {
     if (countyList.length > 0) return getDataFromOwnAPIWithCounties();
     const stateListString = stateList.join(",");
     const results = await fetch(
-      "http://localhost:8080/alerts/" + stateListString + countyList
+      "https://nws-api-active-alerts.onrender.com/alerts/" +
+        stateListString +
+        countyList
     )
       .then((data) => data.json())
       .then((data) => {
