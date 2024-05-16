@@ -5,17 +5,43 @@ import { MdEmail } from "react-icons/md";
 import { FaPhoneAlt } from "react-icons/fa";
 import { FaMessage } from "react-icons/fa6";
 import { Navbar } from "../../components/Navbar";
+import { Footer } from "../../components/Footer";
 
 export default function ContactPage() {
   const [userEmail, setUserEmail] = useState("");
   const [userName, setUserName] = useState("");
   const [userCommentary, setUserCommentary] = useState("");
 
-  function print() {
-    console.log(userEmail);
-    console.log(userName);
-    console.log(userCommentary);
-  }
+  const SubmitButton = async () => {
+    if (userEmail == "" || userName == "" || userCommentary == "")
+      return alert("Please enter all fields to send a message.");
+    const inputs = {
+      userEmail,
+      userName,
+      userCommentary,
+    };
+    try {
+      const response = await fetch("https://formspree.io/f/mkndeywo", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          data: inputs,
+        }),
+      });
+      if (response.ok) {
+        alert("Message sent successfully!");
+      } else {
+        const errorData = await response.json();
+        alert(`Failed to send message: ${errorData.error}`);
+      }
+    } catch {
+      const errorData = await response.json();
+      alert(`Failed to send message: ${errorData.error}`);
+    }
+  };
+
   const ContactInfo = [
     {
       title: "Support",
@@ -73,6 +99,7 @@ export default function ContactPage() {
           <div className="mx-auto">
             <div className="my-3 flex w-full gap-2">
               <input
+                required
                 className="w-1/2 border px-4 py-2"
                 type="email"
                 placeholder="E-mail"
@@ -80,6 +107,7 @@ export default function ContactPage() {
                 onChange={(e) => setUserEmail(e.target.value)}
               />
               <input
+                required
                 className="w-1/2 border px-4 py-2"
                 type="text"
                 placeholder="Full Name"
@@ -89,22 +117,23 @@ export default function ContactPage() {
             </div>
           </div>
           <textarea
+            required
             className="w-full border px-4 py-2"
-            placeholder="Write a commentary..."
+            placeholder="Tell me what's going on..."
             name=""
             id=""
             defaultValue={""}
             value={userCommentary}
             onChange={(e) => setUserCommentary(e.target.value)}
           />
-          <div className="lg:items:center container mt-4 flex flex-col justify-between lg:flex-row"></div>
         </form>
         <div className="flex items-center justify-center w-full">
-          <button onClick={print} className="-my-4 bg-amber-400 px-4 py-2">
+          <button onClick={SubmitButton} className=" bg-amber-400 px-4 py-2">
             Send Message
           </button>
         </div>
       </section>
+      <Footer />
     </>
   );
 }
