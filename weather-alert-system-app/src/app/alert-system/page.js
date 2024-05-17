@@ -10,7 +10,6 @@ import { Navbar } from "@/components/Navbar";
 import BlueArrow from "../../../public/assets/blue-button.svg";
 import { Footer } from "@/components/Footer";
 import { useUser } from "@clerk/clerk-react";
-import { AlertForm } from "@/components/AlertForm";
 import { IoIosArrowBack } from "react-icons/io";
 import { IoIosArrowDown } from "react-icons/io";
 
@@ -67,6 +66,132 @@ export default function AlertSystem() {
     { value: "WI", label: "WI" },
     { value: "WY", label: "WY" },
   ];
+  const items = [
+    "Tsunami Warning",
+    "Tornado Warning",
+    "Extreme Wind Warning",
+    "Severe Thunderstorm Warning",
+    "Flash Flood Warning",
+    "Flash Flood Statement",
+    "Severe Weather Statement",
+    "Shelter In Place Warning",
+    "Evacuation Immediate",
+    "Civil Danger Warning",
+    "Nuclear Power Plant Warning",
+    "Radiological Hazard Warning",
+    "Hazardous Materials Warning",
+    "Fire Warning",
+    "Civil Emergency Message",
+    "Law Enforcement Warning",
+    "Storm Surge Warning",
+    "Hurricane Force Wind Warning",
+    "Hurricane Warning",
+    "Typhoon Warning",
+    "Special Marine Warning",
+    "Blizzard Warning",
+    "Snow Squall Warning",
+    "Ice Storm Warning",
+    "Winter Storm Warning",
+    "High Wind Warning",
+    "Tropical Storm Warning",
+    "Storm Warning",
+    "Tsunami Advisory",
+    "Tsunami Watch",
+    "Avalanche Warning",
+    "Earthquake Warning",
+    "Volcano Warning",
+    "Ashfall Warning",
+    "Coastal Flood Warning",
+    "Lakeshore Flood Warning",
+    "Flood Warning",
+    "High Surf Warning",
+    "Dust Storm Warning",
+    "Blowing Dust Warning",
+    "Lake Effect Snow Warning",
+    "Excessive Heat Warning",
+    "Tornado Watch",
+    "Severe Thunderstorm Watch",
+    "Flash Flood Watch",
+    "Gale Warning",
+    "Flood Statement",
+    "Wind Chill Warning",
+    "Extreme Cold Warning",
+    "Hard Freeze Warning",
+    "Freeze Warning",
+    "Red Flag Warning",
+    "Storm Surge Watch",
+    "Hurricane Watch",
+    "Hurricane Force Wind Watch",
+    "Typhoon Watch",
+    "Tropical Storm Watch",
+    "Storm Watch",
+    "Hurricane Local Statement",
+    "Typhoon Local Statement",
+    "Tropical Storm Local Statement",
+    "Tropical Depression Local Statement",
+    "Avalanche Advisory",
+    "Winter Weather Advisory",
+    "Wind Chill Advisory",
+    "Heat Advisory",
+    "Urban and Small Stream Flood Advisory",
+    "Small Stream Flood Advisory",
+    "Arroyo and Small Stream Flood Advisory",
+    "Flood Advisory",
+    "Hydrologic Advisory",
+    "Lakeshore Flood Advisory",
+    "Coastal Flood Advisory",
+    "High Surf Advisory",
+    "Heavy Freezing Spray Warning",
+    "Dense Fog Advisory",
+    "Dense Smoke Advisory",
+    "Small Craft Advisory",
+    "Brisk Wind Advisory",
+    "Hazardous Seas Warning",
+    "Dust Advisory",
+    "Blowing Dust Advisory",
+    "Lake Wind Advisory",
+    "Wind Advisory",
+    "Frost Advisory",
+    "Ashfall Advisory",
+    "Freezing Fog Advisory",
+    "Freezing Spray Advisory",
+    "Low Water Advisory",
+    "Local Area Emergency",
+    "Avalanche Watch",
+    "Blizzard Watch",
+    "Rip Current Statement",
+    "Beach Hazards Statement",
+    "Gale Watch",
+    "Winter Storm Watch",
+    "Hazardous Seas Watch",
+    "Heavy Freezing Spray Watch",
+    "Coastal Flood Watch",
+    "Lakeshore Flood Watch",
+    "Flood Watch",
+    "High Wind Watch",
+    "Excessive Heat Watch",
+    "Extreme Cold Watch",
+    "Wind Chill Watch",
+    "Lake Effect Snow Watch",
+    "Hard Freeze Watch",
+    "Freeze Watch",
+    "Fire Weather Watch",
+    "Extreme Fire Danger",
+    " Telephone Outage",
+    "Coastal Flood Statement",
+    "Lakeshore Flood Statement",
+    "Special Weather Statement",
+    "Marine Weather Statement",
+    "Air Quality Alert",
+    "Air Stagnation Advisory",
+    "Hazardous Weather Outlook",
+    "Hydrologic Outlook",
+    "Short Term Forecast",
+    "Administrative Message",
+    "Test",
+    "Child Abduction Emergency",
+    "Blue Alert",
+  ];
   const [stateOptions, setStateOptions] = useState(options);
   const [selectedOption, setSelectedOption] = useState(null);
   const [stateList, setStateList] = useState([]);
@@ -80,6 +205,10 @@ export default function AlertSystem() {
   const [inputValue, setInputValue] = useState("");
   const { isLoaded, isSignedIn, user } = useUser();
   const [showWarningSettings, setShowWarningSettings] = useState(false);
+  const [checkedItems, setCheckedItems] = useState([]);
+  const [submittedItems, setSubmittedItems] = useState([]);
+  const [selectAll, setSelectAll] = useState(false);
+  const [buttonText, setButtonText] = useState("Submit Alert Types");
 
   function addState() {
     if (!selectedOption) return alert("Please enter a state.");
@@ -106,6 +235,17 @@ export default function AlertSystem() {
 
   async function getDataFromOwnAPIWithCounties() {
     const stateListString = stateList.join(",");
+    const data = { data: checkedItems };
+    const response = await fetch("http://localhost:8080/userAlertTypes", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
+    if (response.ok) {
+      console.log("Warnings submitted!");
+    }
     const results = await fetch(
       "http://localhost:8080/alerts/" + // http://localhost:8080 https://nws-api-active-alerts.onrender.com
         stateListString +
@@ -118,7 +258,7 @@ export default function AlertSystem() {
         setIsLoading(false);
       });
 
-    console.log("successful county export");
+    console.log("Successful county export");
   }
 
   async function getDataFromOwnAPI() {
@@ -126,6 +266,17 @@ export default function AlertSystem() {
     setIsLoading(true);
     if (countyList.length > 0) return getDataFromOwnAPIWithCounties();
     const stateListString = stateList.join(",");
+    const data = { data: checkedItems };
+    const response = await fetch("http://localhost:8080/userAlertTypes", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
+    if (response.ok) {
+      console.log("Warnings submitted!");
+    }
     const results = await fetch(
       "http://localhost:8080/alerts/" + stateListString + countyList
     )
@@ -134,7 +285,7 @@ export default function AlertSystem() {
         setAlertList(data);
         setIsLoading(false);
       });
-    console.log("successful state wide export");
+    console.log("Successful state wide export");
   }
 
   function ChangeSettings() {
@@ -204,8 +355,100 @@ export default function AlertSystem() {
     );
   };
 
+  const AlertForm = () => {
+    const [searchTerm, setSearchTerm] = useState("");
+    const handleCheckboxChange = (event) => {
+      const { value, checked } = event.target;
+      setCheckedItems((prevCheckedItems) =>
+        checked
+          ? [...prevCheckedItems, value]
+          : prevCheckedItems.filter((item) => item !== value)
+      );
+    };
+
+    const handleSelectAllChange = (event) => {
+      const { checked } = event.target;
+      setSelectAll(checked);
+      setCheckedItems(checked ? filteredItems : []);
+    };
+
+    const handleSubmit = async (event) => {
+      event.preventDefault();
+      setSubmittedItems(checkedItems);
+
+      const data = { data: checkedItems };
+      console.log(data);
+
+      const response = await fetch("http://localhost:8080/userAlertTypes", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+
+      if (response.ok) {
+        console.log("Warnings submitted!");
+      }
+      setButtonText("Submitted!");
+      setTimeout(() => {
+        setButtonText("Submit Alert Types");
+      }, 3000);
+    };
+
+    const handleSearchChange = (event) => {
+      setSearchTerm(event.target.value);
+    };
+
+    const filteredItems = items.filter((item) =>
+      item.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+
+    return (
+      <div className="p-4">
+        <p className="w-full flex items-center justify-center">
+          Optional: skip for all alerts
+        </p>
+        <input
+          type="text"
+          placeholder="Search..."
+          value={searchTerm}
+          onChange={handleSearchChange}
+          className="path-bar mb-6 p-1 w-full"
+        />
+        <form onSubmit={handleSubmit}>
+          <div className="w-full flex items-center justify-center mb-2 row-span-2">
+            <input
+              type="checkbox"
+              id="select-all"
+              checked={selectAll}
+              onChange={handleSelectAllChange}
+              className="mr-2"
+            />
+            <label htmlFor="select-all">Select All</label>
+          </div>
+          <div className=" grid grid-cols-3 gap-2 gap-x-6">
+            {filteredItems.map((item, index) => (
+              <div key={index} className="flex items-center">
+                <input
+                  type="checkbox"
+                  id={`checkbox-${index}`}
+                  value={item}
+                  checked={checkedItems.includes(item)}
+                  onChange={handleCheckboxChange}
+                  className="mr-2 text-center"
+                />
+                <label htmlFor={`checkbox-${index}`}>{item}</label>
+              </div>
+            ))}
+          </div>
+        </form>
+      </div>
+    );
+  };
+
   const saveDataListInput = async () => {
-    if (!isSignedIn) return alert("Please login to save your location data.");
+    if (!isSignedIn) return alert("Please login to save your settings.");
     if (stateList.length === 0)
       return alert("You must add at least once state to save data.");
     try {
@@ -216,12 +459,16 @@ export default function AlertSystem() {
         },
         body: JSON.stringify({
           userId: user?.id,
-          metadata: { countyList: countyList, stateList: stateList.join(",") },
+          metadata: {
+            countyList: countyList,
+            stateList: stateList.join(","),
+            warningTypes: checkedItems,
+          },
         }),
       });
 
       if (response.ok) {
-        alert("Location data updated successfully! Refresh to update");
+        alert("Settings updated successfully! Refresh to update");
       } else {
         const errorData = await response.json();
         alert(`Failed to update metadata: ${errorData.error}`);
@@ -237,6 +484,8 @@ export default function AlertSystem() {
     const savedStateListArr = user?.publicMetadata.stateList.split(",");
     setStateList(savedStateListArr);
     setCountyList(user?.publicMetadata.countyList);
+    const savedWarningTypeArr = user?.publicMetadata.warningTypes;
+    setCheckedItems(savedWarningTypeArr);
   }
 
   return (
@@ -249,7 +498,7 @@ export default function AlertSystem() {
               onClick={populateDataInput}
               className="bg-[#4328EB] lg:absolute lg:top-0 lg:right-0 hover:text-gray-500 py-1 px-2 w-50 mt-2 mr-1 lg:mr-0 lg:mt-0 lg:w-50 rounded-[8px] text-white "
             >
-              Populate Saved Area
+              Populate Saved Settings
             </button>
           </div>
           <label className="label">
@@ -309,7 +558,7 @@ export default function AlertSystem() {
               onClick={saveDataListInput}
               className="bg-[#4328EB] lg:absolute lg:bottom-0 lg:right-0 hover:text-gray-500 py-1 px-2 w-50 lg:mr-0 lg:mt-0 lg:w-50 rounded-[8px] text-white "
             >
-              Save Area
+              Save Settings
             </button>
           </div>
         </div>
