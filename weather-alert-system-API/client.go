@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"slices"
 	"sort"
 	"strings"
 	"time"
@@ -295,10 +296,15 @@ type NoAlert struct {
 	Output string `json:"output"`
 }
 
+type userAlertType struct {
+	Data []string `json:"data"`
+}
+
 var alertList []Alert
 var countyList = map[string]int{}
 var userEnteredPath Path
 var NoAlertStatement []NoAlert
+var userAlertTypes userAlertType
 
 func addStateIdToCountyList(stateId string) {
 	countyListLength := len(countyList)
@@ -339,7 +345,6 @@ func changeTimeOutputAndHeadline(singleAlert *Alert) {
 
 	timeEffective, _ := time.Parse(time.RFC3339, timeStringEffective)
 	timeExpires, _ := time.Parse(time.RFC3339, timeStringExpires)
-	//localTimeEffective, localTimeExpires := timeEffective.Local(), timeExpires.Local()
 	timeEffectiveTimeOutput := timeEffective.Format("3:04PM")
 	timeExpiresTimeOutput := timeExpires.Format("3:04PM")
 
@@ -385,6 +390,9 @@ func appendAndSortAlerts(alertListResponse Response, stateId string) {
 		singleAlert.Color = getWarningColor(singleAlert.Event)
 		removeCommas(&singleAlert)
 		changeTimeOutputAndHeadline(&singleAlert)
+		if len(userAlertTypes.Data) > 0 && len(userAlertTypes.Data) < 124 && !checkIfAlertInUserAlert(singleAlert.Event) {
+			continue
+		}
 		if len(countyList) > 0 && inCountyListCheck(&singleAlert) {
 			alertList = append(alertList, []Alert{singleAlert}...)
 		} else if len(countyList) == 0 {
@@ -393,34 +401,7 @@ func appendAndSortAlerts(alertListResponse Response, stateId string) {
 	}
 	sort.Slice(alertList, sortAlertsByPriority)
 }
-/*
-func exportToCSV(path string) {
-	//path := "C:\Users\Ryan Marando\program_files\course_careers\final-project\data.csv"
-	file, err := os.Create(path)
-	if err != nil {
-		return
-	}
-	defer file.Close()
 
-	writer := csv.NewWriter(file)
-	defer writer.Flush()
-
-	// Write the header row
-	header := []string{"AreaDesc", "Event", "Effective", "Expires", "Headline", "Priority"}
-	if err := writer.Write(header); err != nil {
-		return
-	}
-
-	// Write each record to the CSV file
-	for _, alert := range alertList {
-		record := []string{alert.AreaDesc, alert.Event, alert.Effective, alert.Expires, alert.Headline, strconv.FormatInt(int64(alert.Priority), 10)}
-		if err := writer.Write(record); err != nil {
-			return
-		}
-	}
-
-}
-*/
 
 func getActiveAlertsFromNWS(stateId string) {
 	const BASE_URL = "https://api.weather.gov"
@@ -482,20 +463,24 @@ func getStateWithCounties(c *gin.Context) {
 }
 
 
-
-func getExportPath(c *gin.Context) {
-	if err := c.BindJSON(&userEnteredPath); err != nil {
-		return 
+func getUserAlertTypes(c *gin.Context) {
+	if err := c.BindJSON(&userAlertTypes); err != nil {
+		return
 	}
-	userEnteredPath.Path = userEnteredPath.Path + "/currentwarnings.csv"
-	c.IndentedJSON(http.StatusCreated, userEnteredPath)
+	fmt.Println(userAlertTypes.Data, len(userAlertTypes.Data))
+	c.IndentedJSON(http.StatusCreated, userAlertTypes)
 }
+
+func checkIfAlertInUserAlert(event string) bool {
+	return (slices.Contains(userAlertTypes.Data, event))
+}
+
 
 func main() {
 	//getActiveAlertsFromNWS("GA")
 	router := gin.Default()
 	router.Use(cors.New(cors.Config{
-		AllowOrigins: []string{"https://nws-api-active-alerts.vercel.app"}, // http://localhost:3000 https://nws-api-active-alerts.vercel.app
+		AllowOrigins: []string{"http://localhost:3000"}, // http://localhost:3000 https://nws-api-active-alerts.vercel.app
 		AllowMethods: []string{"PUT", "PATCH", "POST", "DELETE", "GET"},
 		AllowHeaders: []string{"Content-Type"},
 		AllowCredentials: true,
@@ -504,7 +489,7 @@ func main() {
 	//router.GET("/alerts/:state", getState)
 	router.GET("/alerts/:arrayStates", getState)
 	router.GET("/alerts/:arrayStates/:arrayCounties", getStateWithCounties)
-	router.POST("/path", getExportPath)
-	router.Run(":10000") //localhost:8080 :10000
+	router.POST("/userAlertTypes", getUserAlertTypes)
+	router.Run("localhost:8080") //localhost:8080 :10000
 
 }
