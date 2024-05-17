@@ -466,7 +466,6 @@ func getUserAlertTypes(c *gin.Context) {
 	if err := c.BindJSON(&userAlertTypes); err != nil {
 		return
 	}
-	fmt.Println(userAlertTypes.Data, len(userAlertTypes.Data))
 	c.IndentedJSON(http.StatusCreated, userAlertTypes)
 }
 
