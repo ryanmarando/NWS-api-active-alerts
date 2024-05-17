@@ -426,7 +426,7 @@ export default function AlertSystem() {
             className="path-bar mb-6 p-1 w-full"
           />
         </div>
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} className="p-2">
           <div className="w-full flex items-center justify-center mb-2 row-span-2">
             <input
               type="checkbox"
@@ -437,16 +437,16 @@ export default function AlertSystem() {
             />
             <label htmlFor="select-all">Select All</label>
           </div>
-          <div className=" grid grid-cols-2 lg:grid-cols-3 gap-2 gap-x-6">
+          <div className=" grid grid-cols-2 lg:grid-cols-3 gap-2 gap-x-6 -ml-4 lg:ml-2">
             {filteredItems.map((item, index) => (
-              <div key={index} className="flex items-center">
+              <div key={index} className="flex items-center pl-4">
                 <input
                   type="checkbox"
                   id={`checkbox-${index}`}
                   value={item}
                   checked={checkedItems.includes(item)}
                   onChange={handleCheckboxChange}
-                  className="mr-2 text-center"
+                  className="p-2 mr-2 text-center"
                 />
                 <label htmlFor={`checkbox-${index}`}>{item}</label>
               </div>
