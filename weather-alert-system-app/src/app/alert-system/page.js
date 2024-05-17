@@ -12,6 +12,7 @@ import { Footer } from "@/components/Footer";
 import { useUser } from "@clerk/clerk-react";
 import { IoIosArrowBack } from "react-icons/io";
 import { IoIosArrowDown } from "react-icons/io";
+import { Popup } from "@/components/Popup";
 
 export default function AlertSystem() {
   const options = [
@@ -206,9 +207,8 @@ export default function AlertSystem() {
   const { isLoaded, isSignedIn, user } = useUser();
   const [showWarningSettings, setShowWarningSettings] = useState(false);
   const [checkedItems, setCheckedItems] = useState([]);
-  const [submittedItems, setSubmittedItems] = useState([]);
   const [selectAll, setSelectAll] = useState(false);
-  const [buttonText, setButtonText] = useState("Submit Alert Types");
+  const [showPopup, setShowPopup] = useState(true);
 
   function addState() {
     if (!selectedOption) return alert("Please enter a state.");
@@ -236,21 +236,18 @@ export default function AlertSystem() {
   async function getDataFromOwnAPIWithCounties() {
     const stateListString = stateList.join(",");
     const data = { data: checkedItems };
-    const response = await fetch(
-      "https://nws-api-active-alerts.onrender.com/userAlertTypes",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      }
-    );
+    const response = await fetch("http://localhost:8080/userAlertTypes", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
     if (response.ok) {
       console.log("Warnings submitted!");
     }
     const results = await fetch(
-      "https://nws-api-active-alerts.onrender.com/alerts/" + // http://localhost:8080 https://nws-api-active-alerts.onrender.com
+      "http://localhost:8080/alerts/" + // http://localhost:8080 https://nws-api-active-alerts.onrender.com
         stateListString +
         "/" +
         countyList
@@ -270,23 +267,18 @@ export default function AlertSystem() {
     if (countyList.length > 0) return getDataFromOwnAPIWithCounties();
     const stateListString = stateList.join(",");
     const data = { data: checkedItems };
-    const response = await fetch(
-      "https://nws-api-active-alerts.onrender.com/userAlertTypes",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      }
-    );
+    const response = await fetch("http://localhost:8080/userAlertTypes", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
     if (response.ok) {
       console.log("Warnings submitted!");
     }
     const results = await fetch(
-      "https://nws-api-active-alerts.onrender.com/alerts/" +
-        stateListString +
-        countyList
+      "http://localhost:8080/alerts/" + stateListString + countyList
     )
       .then((data) => data.json())
       .then((data) => {
@@ -380,30 +372,6 @@ export default function AlertSystem() {
       setCheckedItems(checked ? filteredItems : []);
     };
 
-    const handleSubmit = async (event) => {
-      event.preventDefault();
-      setSubmittedItems(checkedItems);
-
-      const data = { data: checkedItems };
-      console.log(data);
-
-      const response = await fetch("http://localhost:8080/userAlertTypes", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      });
-
-      if (response.ok) {
-        console.log("Warnings submitted!");
-      }
-      setButtonText("Submitted!");
-      setTimeout(() => {
-        setButtonText("Submit Alert Types");
-      }, 3000);
-    };
-
     const handleSearchChange = (event) => {
       setSearchTerm(event.target.value);
     };
@@ -426,7 +394,7 @@ export default function AlertSystem() {
             className="path-bar mb-6 p-1 w-full"
           />
         </div>
-        <form onSubmit={handleSubmit} className="p-2">
+        <form className="p-2">
           <div className="w-full flex items-center justify-center mb-2 row-span-2">
             <input
               type="checkbox"
