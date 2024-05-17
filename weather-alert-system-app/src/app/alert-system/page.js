@@ -413,17 +413,19 @@ export default function AlertSystem() {
     );
 
     return (
-      <div className="p-4">
+      <div className="p-4 w-full">
         <p className="w-full flex items-center justify-center">
           Optional: skip for all alerts
         </p>
-        <input
-          type="text"
-          placeholder="Search..."
-          value={searchTerm}
-          onChange={handleSearchChange}
-          className="path-bar mb-6 p-1 w-full"
-        />
+        <div className="w-full">
+          <input
+            type="text"
+            placeholder="Search..."
+            value={searchTerm}
+            onChange={handleSearchChange}
+            className="path-bar mb-6 p-1 w-full"
+          />
+        </div>
         <form onSubmit={handleSubmit}>
           <div className="w-full flex items-center justify-center mb-2 row-span-2">
             <input
@@ -435,7 +437,7 @@ export default function AlertSystem() {
             />
             <label htmlFor="select-all">Select All</label>
           </div>
-          <div className=" grid grid-cols-3 gap-2 gap-x-0 lg:gap-x-6">
+          <div className=" grid grid-cols-2 lg:grid-cols-3 gap-2 gap-x-6">
             {filteredItems.map((item, index) => (
               <div key={index} className="flex items-center">
                 <input
