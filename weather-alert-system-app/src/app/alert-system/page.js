@@ -299,7 +299,8 @@ export default function AlertSystem() {
     };
 
     const toggleFunction = () => {
-      if (!user) {
+      console.log(user?.publicMetadata.subscription);
+      if (!user?.publicMetadata.subscription) {
         return setShowPopup(true);
       }
       setIsRunning((prev) => !prev);
@@ -429,7 +430,7 @@ export default function AlertSystem() {
   };
 
   const saveDataListInput = async () => {
-    if (!isSignedIn) return alert("Please login to save your settings.");
+    if (!user?.publicMetadata.subscription) return setShowPopup(true);
     if (stateList.length === 0)
       return alert("You must add at least once state to save data.");
     try {
@@ -444,7 +445,7 @@ export default function AlertSystem() {
             countyList: countyList,
             stateList: stateList.join(","),
             warningTypes: checkedItems,
-            subscription: "false",
+            subscription: true,
           },
         }),
       });
@@ -462,7 +463,7 @@ export default function AlertSystem() {
   };
 
   async function populateDataInput() {
-    if (!isSignedIn) return alert("Please login to load your saved data.");
+    if (!user?.publicMetadata.subscription) return setShowPopup(true);
     const savedStateListArr = user?.publicMetadata.stateList.split(",");
     setStateList(savedStateListArr);
     setCountyList(user?.publicMetadata.countyList);
@@ -523,7 +524,8 @@ export default function AlertSystem() {
             <label className="label">Choose your specific warnings:</label>
             <button
               onClick={() => {
-                if (!user) return setShowPopup(true);
+                if (!user?.publicMetadata.subscription)
+                  return setShowPopup(true);
                 setShowWarningSettings(!showWarningSettings);
               }}
             >

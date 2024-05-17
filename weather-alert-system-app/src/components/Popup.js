@@ -34,7 +34,7 @@ export function Popup({ show, onClose, children }) {
           <h2 className="text-xl font-bold mb-4">Upgrade to Pro</h2>
           <p className="text-gray-700 mb-6">
             Get access to automatic 15 second updates, choosing your own
-            warnings, and saving data to easy access.
+            warnings, and saving data for easy access.
           </p>
           <button
             className="bg-[#4328EB] hover:text-gray-500 w-33 py-1 px-2 rounded-[8px] text-white my-[5px] mx-[15px] mt-[14px]"
