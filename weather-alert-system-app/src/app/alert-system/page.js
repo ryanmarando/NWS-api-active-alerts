@@ -435,7 +435,7 @@ export default function AlertSystem() {
             />
             <label htmlFor="select-all">Select All</label>
           </div>
-          <div className=" grid grid-cols-3 gap-2 gap-x-6">
+          <div className=" grid grid-cols-3 gap-2 gap-x-0 lg:gap-x-6">
             {filteredItems.map((item, index) => (
               <div key={index} className="flex items-center">
                 <input
