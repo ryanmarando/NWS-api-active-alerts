@@ -208,7 +208,7 @@ export default function AlertSystem() {
   const [showWarningSettings, setShowWarningSettings] = useState(false);
   const [checkedItems, setCheckedItems] = useState([]);
   const [selectAll, setSelectAll] = useState(false);
-  const [showPopup, setShowPopup] = useState(true);
+  const [showPopup, setShowPopup] = useState(false);
 
   function addState() {
     if (!selectedOption) return alert("Please enter a state.");
@@ -299,6 +299,9 @@ export default function AlertSystem() {
     };
 
     const toggleFunction = () => {
+      if (!user) {
+        return setShowPopup(true);
+      }
       setIsRunning((prev) => !prev);
     };
 
@@ -441,6 +444,7 @@ export default function AlertSystem() {
             countyList: countyList,
             stateList: stateList.join(","),
             warningTypes: checkedItems,
+            subscription: "false",
           },
         }),
       });
@@ -466,9 +470,14 @@ export default function AlertSystem() {
     setCheckedItems(savedWarningTypeArr);
   }
 
+  const closePopup = () => {
+    setShowPopup(false);
+  };
+
   return (
     <div>
       <Navbar />
+      <Popup show={showPopup} onClose={closePopup} />
       {showSettings && (
         <div className="alert-system">
           <div className="flex relative w-full items-center justify-center">
@@ -513,7 +522,10 @@ export default function AlertSystem() {
           <div className="flex gap-1">
             <label className="label">Choose your specific warnings:</label>
             <button
-              onClick={() => setShowWarningSettings(!showWarningSettings)}
+              onClick={() => {
+                if (!user) return setShowPopup(true);
+                setShowWarningSettings(!showWarningSettings);
+              }}
             >
               {showWarningSettings ? (
                 <IoIosArrowDown className="mt-[13px] w-8 hover:text-gray-500" />

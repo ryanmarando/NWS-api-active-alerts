@@ -15,9 +15,34 @@ export function Popup({ show, onClose, children }) {
     return null;
   }
   return (
-    <div className="absolute w-[50%] h-[50%] inset-0 m-auto items-center justify-center z-50">
-      <div className="flex w-full h-full items-center justify-center border-2 border-black rounded-md bg-[#DDDDDD]">
-        <p className="w-full text-center">Want the weather alert system?</p>
+    <div className="fixed inset-0 flex items-center justify-center z-50">
+      <div
+        className="absolute inset-0 bg-black bg-opacity-50"
+        onClick={onClose}
+      ></div>
+      <div className="bg-white p-8 rounded-lg shadow-lg relative z-10 max-w-md mx-auto">
+        <button
+          className="absolute top-2 right-2 mr-2 text-gray-500 hover:text-gray-700"
+          onClick={onClose}
+        >
+          &times;
+        </button>
+        <div className="text-center">
+          <h2 className="text-2xl font-bold mb-4">
+            Want to set it and forget it?
+          </h2>
+          <h2 className="text-xl font-bold mb-4">Upgrade to Pro</h2>
+          <p className="text-gray-700 mb-6">
+            Get access to automatic 15 second updates, choosing your own
+            warnings, and saving data to easy access.
+          </p>
+          <button
+            className="bg-[#4328EB] hover:text-gray-500 w-33 py-1 px-2 rounded-[8px] text-white my-[5px] mx-[15px] mt-[14px]"
+            onClick={() => alert("Upgrade to Pro")}
+          >
+            Upgrade Now
+          </button>
+        </div>
       </div>
     </div>
   );
