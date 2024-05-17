@@ -302,7 +302,6 @@ type userAlertType struct {
 
 var alertList []Alert
 var countyList = map[string]int{}
-var userEnteredPath Path
 var NoAlertStatement []NoAlert
 var userAlertTypes userAlertType
 
