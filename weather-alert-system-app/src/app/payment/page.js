@@ -1,9 +1,15 @@
 "use client";
 import { useEffect, useState } from "react";
 import { loadStripe } from "@stripe/stripe-js";
+import { useUser } from "@clerk/clerk-react";
 
-export default function Home() {
+export default function Payment() {
   const [loading, setLoading] = useState(true);
+  const { isLoaded, isSignedIn, user } = useUser();
+
+  if (!isSignedIn) {
+    window.location.href = "/sign-in";
+  }
 
   const testKEY =
     "pk_test_51PHaB5BhEzKZHebbhsYxL7UnvOXHH0IvdnshQweYT05jMRv4YcnyzF3M46qSO2QZUOtuzYols8dq5Y5GKyTkOuap00Ih42UG36";

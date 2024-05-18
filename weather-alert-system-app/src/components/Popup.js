@@ -1,4 +1,6 @@
 import { useEffect } from "react";
+import Link from "next/link";
+
 export function Popup({ show, onClose, children }) {
   useEffect(() => {
     if (show) {
@@ -14,6 +16,7 @@ export function Popup({ show, onClose, children }) {
   if (!show) {
     return null;
   }
+
   return (
     <div className="fixed inset-0 flex items-center justify-center z-50">
       <div
@@ -36,12 +39,11 @@ export function Popup({ show, onClose, children }) {
             Get access to automatic 15 second updates, choosing your own
             warnings, and saving data for easy access.
           </p>
-          <button
-            className="bg-[#4328EB] hover:text-gray-500 w-33 py-1 px-2 rounded-[8px] text-white my-[5px] mx-[15px] mt-[14px]"
-            onClick={() => alert("Upgrade to Pro")}
-          >
-            Upgrade Now
-          </button>
+          <Link href="/payment">
+            <button className="bg-[#4328EB] hover:text-gray-500 w-33 py-1 px-2 rounded-[8px] text-white my-[5px] mx-[15px] mt-[14px]">
+              Upgrade Now
+            </button>
+          </Link>
         </div>
       </div>
     </div>

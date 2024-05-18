@@ -299,7 +299,6 @@ export default function AlertSystem() {
     };
 
     const toggleFunction = () => {
-      console.log(user?.publicMetadata.subscription);
       if (!user?.publicMetadata.subscription) {
         return setShowPopup(true);
       }
@@ -445,7 +444,6 @@ export default function AlertSystem() {
             countyList: countyList,
             stateList: stateList.join(","),
             warningTypes: checkedItems,
-            subscription: true,
           },
         }),
       });
