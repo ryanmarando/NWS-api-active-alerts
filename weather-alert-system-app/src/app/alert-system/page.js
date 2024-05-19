@@ -209,8 +209,31 @@ export default function AlertSystem() {
   const [checkedItems, setCheckedItems] = useState([]);
   const [selectAll, setSelectAll] = useState(false);
   const [showPopup, setShowPopup] = useState(false);
+  const [hasSubscription, setHasSubscription] = useState();
+
+  useEffect(() => {
+    const fetchPrivateMetadata = async () => {
+      if (!user?.id) return;
+
+      try {
+        const response = await fetch(
+          `/api/updatePrivateMetadata?userId=${user?.id}`
+        );
+        if (!response.ok) {
+          throw new Error("Failed to fetch user data");
+        }
+        const data = await response.json();
+        setHasSubscription(data.privateMetadata.subscription);
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      }
+    };
+
+    fetchPrivateMetadata();
+  }, [user?.id]);
 
   function addState() {
+    console.log(hasSubscription);
     if (!selectedOption) return alert("Please enter a state.");
     const state = selectedOption.value;
     if (stateList.includes(state)) {
@@ -299,7 +322,7 @@ export default function AlertSystem() {
     };
 
     const toggleFunction = () => {
-      if (!user?.publicMetadata.subscription) {
+      if (!hasSubscription || !user) {
         return setShowPopup(true);
       }
       setIsRunning((prev) => !prev);
@@ -429,7 +452,7 @@ export default function AlertSystem() {
   };
 
   const saveDataListInput = async () => {
-    if (!user?.publicMetadata.subscription) return setShowPopup(true);
+    if (!hasSubscription || !user) return setShowPopup(true);
     if (stateList.length === 0)
       return alert("You must add at least once state to save data.");
     try {
@@ -461,7 +484,7 @@ export default function AlertSystem() {
   };
 
   async function populateDataInput() {
-    if (!user?.publicMetadata.subscription) return setShowPopup(true);
+    if (!hasSubscription || !user) return setShowPopup(true);
     const savedStateListArr = user?.publicMetadata.stateList.split(",");
     setStateList(savedStateListArr);
     setCountyList(user?.publicMetadata.countyList);
@@ -476,6 +499,10 @@ export default function AlertSystem() {
   return (
     <div>
       <Navbar />
+      <div>
+        <h1>User Private Metadata</h1>
+        <pre>{JSON.stringify(hasSubscription, null, 2)}</pre>
+      </div>
       <Popup show={showPopup} onClose={closePopup} />
       {showSettings && (
         <div className="alert-system">
@@ -522,8 +549,7 @@ export default function AlertSystem() {
             <label className="label">Choose your specific warnings:</label>
             <button
               onClick={() => {
-                if (!user?.publicMetadata.subscription)
-                  return setShowPopup(true);
+                if (!hasSubscription || !user) return setShowPopup(true);
                 setShowWarningSettings(!showWarningSettings);
               }}
             >

@@ -25,7 +25,7 @@ export function Navbar() {
         <Link className="hidden lg:block py-[16px]" href="/contact">
           Contact
         </Link>
-        <Link className="hidden lg:block py-[16px]" href="/payment">
+        <Link className="hidden lg:block py-[16px]" href="/pricing">
           Pricing
         </Link>
       </div>
@@ -46,7 +46,9 @@ export function Navbar() {
         </a>
         <div className="flex items-center mr-[15px]">
           <SignedOut>
-            <SignInButton className="font-medium text-[#36485C]" />
+            <Link href="/sign-in">
+              <p className="font-medium text-[#36485C]">Sign in</p>
+            </Link>
           </SignedOut>
           <SignedIn>
             <UserButton />
