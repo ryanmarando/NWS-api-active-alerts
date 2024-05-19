@@ -8,7 +8,7 @@ export default async function handler(req, res) {
 
   if (req.method === "GET") {
     // Extract userId from query parameters
-    const { userId } = req.query;
+    const { userId, metadata } = req.query;
 
     if (!userId) {
       return res.status(400).json({ error: "User ID is required" });
@@ -28,7 +28,7 @@ export default async function handler(req, res) {
   }
 
   if (req.method === "POST") {
-    const { userId } = req.body;
+    const { userId, metadata } = req.body;
 
     if (!userId) {
       return res.status(400).json({ error: "User ID is required" });
@@ -37,7 +37,7 @@ export default async function handler(req, res) {
     try {
       // Update the user's private metadata
       await clerkClient.users.updateUserMetadata(userId, {
-        privateMetadata: { subscription: true },
+        privateMetadata: metadata,
       });
       res
         .status(200)

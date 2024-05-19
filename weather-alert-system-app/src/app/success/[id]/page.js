@@ -33,7 +33,10 @@ export default function Success({ params }) {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ userId: user?.id }),
+        body: JSON.stringify({
+          userId: user?.id,
+          metadata: { subscription: true },
+        }),
       });
 
       if (response.ok) {
@@ -42,7 +45,7 @@ export default function Success({ params }) {
         const errorData = await response.json();
       }
     } catch (error) {
-      console.error("Error updating metadata:", error);
+      console.error("Error updating subscription:", error);
     }
   };
 
