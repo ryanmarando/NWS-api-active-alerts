@@ -11,6 +11,7 @@ const CancelSubscription = () => {
     console.log("Here");
     // Your cancellation logic goes here, such as sending a request to your backend
     // and updating the user's subscription status
+    /*
     try {
       const response = await fetch("/api/updatePrivateMetadata", {
         method: "POST",
@@ -30,6 +31,27 @@ const CancelSubscription = () => {
       }
     } catch (error) {
       console.error("Error updating subscription:", error);
+    } */
+    try {
+      const response = await fetch("/api/cancel-subscription", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          subscriptionId: "sub_1PIXLkBhEzKZHebbHK2eb8aJ",
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`Error: ${response.statusText}`);
+      }
+
+      const data = await response.json();
+      console.log("Subscription canceled:", data);
+      // Optionally, you can update the UI to reflect the cancellation
+    } catch (error) {
+      console.error("Failed to cancel subscription:", error);
     }
     setIsCanceled(true);
   };
