@@ -32,6 +32,7 @@ export default function AlertSystem() {
     { value: "IN", label: "IN" },
     { value: "IA", label: "IA" },
     { value: "KS", label: "KS" },
+    { value: "KY", label: "KY" },
     { value: "LA", label: "LA" },
     { value: "ME", label: "ME" },
     { value: "MD", label: "MD" },
