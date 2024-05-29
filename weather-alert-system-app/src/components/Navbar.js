@@ -50,12 +50,6 @@ export function Navbar() {
         <Link className="hidden lg:block py-[16px]" href="/contact">
           Contact
         </Link>
-        <Link className="hidden lg:block py-[16px]" href="/pricing">
-          Pricing
-        </Link>
-        <Link href="/cancel" className="hidden lg:block py-[16px] text-center">
-          {hasSubscription ? "Cancel Subscription" : ""}
-        </Link>
       </div>
       <div className="flex items-center">
         <a
