@@ -284,6 +284,7 @@ type Alert struct {
 	Effective	string `json:"effective"`
 	Expires		string `json:"expires"`
 	Headline	string `json:"headline"`
+	Description	string `json:"description"`
 	Priority	int `json:"priority"`
 	Color		string `json:"color"`
 }
