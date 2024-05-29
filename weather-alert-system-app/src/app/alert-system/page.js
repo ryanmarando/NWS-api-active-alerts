@@ -389,13 +389,16 @@ export default function AlertSystem() {
       const data = { data: checkedItems };
       console.log(data);
 
-      const response = await fetch("http://localhost:8080/userAlertTypes", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      });
+      const response = await fetch(
+        "https://nws-api-active-alerts.onrender.com/userAlertTypes",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(data),
+        }
+      );
 
       if (response.ok) {
         console.log("Warnings submitted!");
