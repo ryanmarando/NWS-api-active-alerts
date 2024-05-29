@@ -210,6 +210,7 @@ export default function AlertSystem() {
   const [submittedItems, setSubmittedItems] = useState([]);
   const [selectAll, setSelectAll] = useState(false);
   const [buttonText, setButtonText] = useState("Submit Alert Types");
+  const [expandedItemId, setExpandedItemId] = useState(null);
 
   function addState() {
     if (!selectedOption) return alert("Please enter a state.");
@@ -380,13 +381,16 @@ export default function AlertSystem() {
       const data = { data: checkedItems };
       console.log(data);
 
-      const response = await fetch("http://localhost:8080/userAlertTypes", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      });
+      const response = await fetch(
+        "https://nws-api-active-alerts.onrender.com/userAlertTypes",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(data),
+        }
+      );
 
       if (response.ok) {
         console.log("Warnings submitted!");
@@ -491,6 +495,52 @@ export default function AlertSystem() {
     setCheckedItems(savedWarningTypeArr);
   }
 
+  const AlertList = ({ alertList }) => {
+    const [expandedItemIndex, setExpandedItemIndex] = useState(null);
+
+    const toggleExpansion = (index) => {
+      setExpandedItemIndex((prevIndex) => (prevIndex === index ? null : index));
+    };
+
+    return (
+      <ul className="p-2">
+        {alertList.map((obj, idx) => (
+          <li
+            key={obj.id}
+            className="alert-list shadow-md border-spacing-1"
+            style={{ backgroundColor: obj.color }}
+          >
+            <button
+              className="w-full text-left"
+              onClick={() => toggleExpansion(idx)}
+            >
+              {/* Access object properties and render them */}
+              <span className="effective">{obj.effective}</span>
+              <span className="headline">{obj.headline}</span>
+              <br></br>
+              <div className="areaDesc">{obj.areaDesc}</div>
+            </button>
+            <div
+              className={`expanded-content ${
+                expandedItemIndex === idx
+                  ? "expanded"
+                  : expandedItemIndex !== null
+                  ? "collapsing"
+                  : ""
+              }`}
+            >
+              {expandedItemIndex === idx && (
+                <pre>
+                  <div className="p-4 text-wrap">{obj.description}</div>
+                </pre>
+              )}
+            </div>
+          </li>
+        ))}
+      </ul>
+    );
+  };
+
   return (
     <div>
       <Navbar />
@@ -579,24 +629,7 @@ export default function AlertSystem() {
         <Clock />
       </div>
       <div className="alert-output">
-        <ul className="p-2">
-          <button className="w-full">
-            {alertList.map((obj, idx) => (
-              <li
-                className="alert-list shadow-md border-spacing-1"
-                style={{ backgroundColor: obj.color }}
-                key={obj.id}
-              >
-                {/* Access object properties and render them */}
-                <div className="flex w-full items-start justify-start">
-                  <div className="effective">{obj.effective}</div>
-                  <div className="headline lg:ml-8">{obj.headline}</div>
-                </div>
-                <div className="areaDesc">{obj.areaDesc}</div>
-              </li>
-            ))}
-          </button>
-        </ul>
+        <AlertList alertList={alertList} />
       </div>
       <Footer />
     </div>
