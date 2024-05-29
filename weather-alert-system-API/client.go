@@ -478,7 +478,7 @@ func main() {
 	//getActiveAlertsFromNWS("GA")
 	router := gin.Default()
 	router.Use(cors.New(cors.Config{
-		AllowOrigins: []string{"https://nws-api-active-alerts.vercel.app"}, // http://localhost:3000 https://nws-api-active-alerts.vercel.app
+		AllowOrigins: []string{"http://localhost:3000"}, // http://localhost:3000 https://nws-api-active-alerts.vercel.app
 		AllowMethods: []string{"PUT", "PATCH", "POST", "DELETE", "GET"},
 		AllowHeaders: []string{"Content-Type"},
 		AllowCredentials: true,
@@ -488,6 +488,6 @@ func main() {
 	router.GET("/alerts/:arrayStates", getState)
 	router.GET("/alerts/:arrayStates/:arrayCounties", getStateWithCounties)
 	router.POST("/userAlertTypes", getUserAlertTypes)
-	router.Run(":10000") //localhost:8080 :10000
+	router.Run("localhost:8080") //localhost:8080 :10000
 
 }

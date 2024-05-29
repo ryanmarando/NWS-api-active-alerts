@@ -26,7 +26,6 @@ body {
 }
 
 .alert-output {
-  justify-content: center;
   margin: 10px;
   padding: 5px;
   padding-top: 1px;
@@ -76,13 +75,11 @@ body {
 }
 
 .headline {
-  position: relative;
-  display: inline-block;
-  right: -1vw;
   font-size: 38px;
   font-weight: 500;
-  text-indent: -5px;
-  text-align: center;
+  display: inline-block;
+  margin-left: 2px;
+  padding-right: 25px;
 }
 
 .areaDesc {
@@ -93,11 +90,11 @@ body {
 }
 
 .effective {
-  width: 150px;
+  width: 125px;
   max-width: 150px;
-  display: inline-block;
   font-size: 25px;
-  padding-left: 5px;
+  margin-top: 10px;
+  display: inline-block;
 }
 
 .clock {

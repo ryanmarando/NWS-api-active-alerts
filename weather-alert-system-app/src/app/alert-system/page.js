@@ -237,21 +237,18 @@ export default function AlertSystem() {
   async function getDataFromOwnAPIWithCounties() {
     const stateListString = stateList.join(",");
     const data = { data: checkedItems };
-    const response = await fetch(
-      "https://nws-api-active-alerts.onrender.com/userAlertTypes",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      }
-    );
+    const response = await fetch(" http://localhost:8080/userAlertTypes", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
     if (response.ok) {
       console.log("Warnings submitted!");
     }
     const results = await fetch(
-      "https://nws-api-active-alerts.onrender.com/alerts/" + // http://localhost:8080 https://nws-api-active-alerts.onrender.com
+      " http://localhost:8080/alerts/" + // http://localhost:8080 https://nws-api-active-alerts.onrender.com
         stateListString +
         "/" +
         countyList
@@ -271,23 +268,18 @@ export default function AlertSystem() {
     if (countyList.length > 0) return getDataFromOwnAPIWithCounties();
     const stateListString = stateList.join(",");
     const data = { data: checkedItems };
-    const response = await fetch(
-      "https://nws-api-active-alerts.onrender.com/userAlertTypes",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      }
-    );
+    const response = await fetch(" http://localhost:8080/userAlertTypes", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
     if (response.ok) {
       console.log("Warnings submitted!");
     }
     const results = await fetch(
-      "https://nws-api-active-alerts.onrender.com/alerts/" +
-        stateListString +
-        countyList
+      "http://localhost:8080/alerts/" + stateListString + countyList
     )
       .then((data) => data.json())
       .then((data) => {
@@ -588,19 +580,22 @@ export default function AlertSystem() {
       </div>
       <div className="alert-output">
         <ul className="p-2">
-          {alertList.map((obj, idx) => (
-            <li
-              className="alert-list shadow-md border-spacing-1"
-              style={{ backgroundColor: obj.color }}
-              key={obj.id}
-            >
-              {/* Access object properties and render them */}
-              <span className="effective">{obj.effective}</span>{" "}
-              <span className="headline">{obj.headline}</span>
-              <br></br>
-              <div className="areaDesc">{obj.areaDesc}</div>
-            </li>
-          ))}
+          <button className="w-full">
+            {alertList.map((obj, idx) => (
+              <li
+                className="alert-list shadow-md border-spacing-1"
+                style={{ backgroundColor: obj.color }}
+                key={obj.id}
+              >
+                {/* Access object properties and render them */}
+                <div className="flex w-full items-start justify-start">
+                  <div className="effective">{obj.effective}</div>
+                  <div className="headline lg:ml-8">{obj.headline}</div>
+                </div>
+                <div className="areaDesc">{obj.areaDesc}</div>
+              </li>
+            ))}
+          </button>
         </ul>
       </div>
       <Footer />
