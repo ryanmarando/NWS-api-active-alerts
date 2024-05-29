@@ -138,3 +138,20 @@ h1 {
     transform: rotate(360deg);
   }
 }
+
+.expanded-content {
+  max-height: 0;
+  opacity: 0;
+  overflow: hidden;
+  transition: max-height 0.6s ease;
+}
+
+.expanded-content.expanded {
+  max-height: 1000px; /* Adjust the value based on your content */
+  opacity: 1;
+}
+
+.expanded-content.collapsing {
+  max-height: 0;
+  opacity: 0;
+}
