@@ -284,6 +284,7 @@ type Alert struct {
 	Effective	string `json:"effective"`
 	Expires		string `json:"expires"`
 	Headline	string `json:"headline"`
+	Description	string `json:"description"`
 	Priority	int `json:"priority"`
 	Color		string `json:"color"`
 }
@@ -477,7 +478,7 @@ func checkIfAlertInUserAlert(event string) bool {
 func main() {
 	router := gin.Default()
 	router.Use(cors.New(cors.Config{
-		AllowOrigins: []string{"http://localhost:3000"}, // http://localhost:3000 https://nws-api-active-alerts.vercel.app
+		AllowOrigins: []string{"https://nws-api-active-alerts.vercel.app", "https://www.ryanmarando.com"}, // http://localhost:3000 https://nws-api-active-alerts.vercel.app
 		AllowMethods: []string{"PUT", "PATCH", "POST", "DELETE", "GET"},
 		AllowHeaders: []string{"Content-Type"},
 		AllowCredentials: true,

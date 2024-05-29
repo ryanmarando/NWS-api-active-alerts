@@ -33,6 +33,7 @@ export default function AlertSystem() {
     { value: "IN", label: "IN" },
     { value: "IA", label: "IA" },
     { value: "KS", label: "KS" },
+    { value: "KY", label: "KY" },
     { value: "LA", label: "LA" },
     { value: "ME", label: "ME" },
     { value: "MD", label: "MD" },
@@ -208,29 +209,8 @@ export default function AlertSystem() {
   const [showWarningSettings, setShowWarningSettings] = useState(false);
   const [checkedItems, setCheckedItems] = useState([]);
   const [selectAll, setSelectAll] = useState(false);
-  const [showPopup, setShowPopup] = useState(false);
-  const [hasSubscription, setHasSubscription] = useState();
-
-  useEffect(() => {
-    const fetchPrivateMetadata = async () => {
-      if (!user?.id) return;
-
-      try {
-        const response = await fetch(
-          `/api/updatePrivateMetadata?userId=${user?.id}`
-        );
-        if (!response.ok) {
-          throw new Error("Failed to fetch user data");
-        }
-        const data = await response.json();
-        setHasSubscription(data.privateMetadata.subscription);
-      } catch (error) {
-        console.error("Error fetching user data:", error);
-      }
-    };
-
-    fetchPrivateMetadata();
-  }, [user?.id]);
+  const [buttonText, setButtonText] = useState("Submit Alert Types");
+  const [expandedItemId, setExpandedItemId] = useState(null);
 
   function addState() {
     console.log(hasSubscription);
@@ -398,6 +378,33 @@ export default function AlertSystem() {
       setCheckedItems(checked ? filteredItems : []);
     };
 
+    const handleSubmit = async (event) => {
+      event.preventDefault();
+      setSubmittedItems(checkedItems);
+
+      const data = { data: checkedItems };
+      console.log(data);
+
+      const response = await fetch(
+        "https://nws-api-active-alerts.onrender.com/userAlertTypes",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(data),
+        }
+      );
+
+      if (response.ok) {
+        console.log("Warnings submitted!");
+      }
+      setButtonText("Submitted!");
+      setTimeout(() => {
+        setButtonText("Submit Alert Types");
+      }, 3000);
+    };
+
     const handleSearchChange = (event) => {
       setSearchTerm(event.target.value);
     };
@@ -492,8 +499,50 @@ export default function AlertSystem() {
     setCheckedItems(savedWarningTypeArr);
   }
 
-  const closePopup = () => {
-    setShowPopup(false);
+  const AlertList = ({ alertList }) => {
+    const [expandedItemIndex, setExpandedItemIndex] = useState(null);
+
+    const toggleExpansion = (index) => {
+      setExpandedItemIndex((prevIndex) => (prevIndex === index ? null : index));
+    };
+
+    return (
+      <ul className="p-2">
+        {alertList.map((obj, idx) => (
+          <li
+            key={obj.id}
+            className="alert-list shadow-md border-spacing-1"
+            style={{ backgroundColor: obj.color }}
+          >
+            <button
+              className="w-full text-left"
+              onClick={() => toggleExpansion(idx)}
+            >
+              {/* Access object properties and render them */}
+              <span className="effective">{obj.effective}</span>
+              <span className="headline">{obj.headline}</span>
+              <br></br>
+              <div className="areaDesc">{obj.areaDesc}</div>
+            </button>
+            <div
+              className={`expanded-content ${
+                expandedItemIndex === idx
+                  ? "expanded"
+                  : expandedItemIndex !== null
+                  ? "collapsing"
+                  : ""
+              }`}
+            >
+              {expandedItemIndex === idx && (
+                <pre>
+                  <div className="p-4 text-wrap">{obj.description}</div>
+                </pre>
+              )}
+            </div>
+          </li>
+        ))}
+      </ul>
+    );
   };
 
   return (
@@ -592,21 +641,7 @@ export default function AlertSystem() {
         <Clock />
       </div>
       <div className="alert-output">
-        <ul className="p-2">
-          {alertList.map((obj, idx) => (
-            <li
-              className="alert-list shadow-md border-spacing-1"
-              style={{ backgroundColor: obj.color }}
-              key={obj.id}
-            >
-              {/* Access object properties and render them */}
-              <span className="effective">{obj.effective}</span>{" "}
-              <span className="headline">{obj.headline}</span>
-              <br></br>
-              <div className="areaDesc">{obj.areaDesc}</div>
-            </li>
-          ))}
-        </ul>
+        <AlertList alertList={alertList} />
       </div>
       <Footer />
     </div>
