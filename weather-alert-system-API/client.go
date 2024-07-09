@@ -355,10 +355,9 @@ func changeTimeOutputAndHeadline(singleAlert *Alert) {
 	singleAlert.Headline = singleAlert.Event + " until " + singleAlert.Expires
 }
 
-func removeCommas(singleAlert *Alert) {
-	locations := singleAlert.AreaDesc
-	locations = strings.ReplaceAll(locations, ",", "")
-	singleAlert.AreaDesc = locations
+func removeCommas(AreaDesc string) string {
+	return strings.ReplaceAll(AreaDesc, ",", "")
+	
 }
 
 func readInDataFromNWS(responseData []byte) Response {
@@ -388,7 +387,7 @@ func appendAndSortAlerts(alertListResponse Response, stateId string) {
 		singleAlert := alertFeatures.Properties
 		singleAlert.Priority = getWarningPriority(singleAlert.Event)
 		singleAlert.Color = getWarningColor(singleAlert.Event)
-		removeCommas(&singleAlert)
+		singleAlert.AreaDesc = removeCommas(singleAlert.AreaDesc)
 		changeTimeOutputAndHeadline(&singleAlert)
 		if len(userAlertTypes.Data) > 0 && len(userAlertTypes.Data) < 124 && !checkIfAlertInUserAlert(singleAlert.Event) {
 			continue
@@ -456,6 +455,7 @@ func getStateWithCounties(c *gin.Context) {
 	}
 	if (len(alertList) == 0) {
 		emptyHeadline := "All clear! Currently there are no active alerts for " + arrayStates
+		arrayCounties = strings.ReplaceAll(arrayCounties, ",", "; ")
 		emptyAlerts := Alert{Headline: emptyHeadline, AreaDesc: arrayCounties}
 		alertList = append(alertList, emptyAlerts)
 	}
@@ -476,10 +476,9 @@ func checkIfAlertInUserAlert(event string) bool {
 
 
 func main() {
-	//getActiveAlertsFromNWS("GA")
 	router := gin.Default()
 	router.Use(cors.New(cors.Config{
-		AllowOrigins: []string{"https://nws-api-active-alerts.vercel.app", "https://www.ryanmarando.com"}, // http://localhost:3000 https://nws-api-active-alerts.vercel.app
+		AllowOrigins: []string{"http://localhost:3000"}, // http://localhost:3000 https://nws-api-active-alerts.vercel.app", "https://www.ryanmarando.com
 		AllowMethods: []string{"PUT", "PATCH", "POST", "DELETE", "GET"},
 		AllowHeaders: []string{"Content-Type"},
 		AllowCredentials: true,
@@ -489,6 +488,6 @@ func main() {
 	router.GET("/alerts/:arrayStates", getState)
 	router.GET("/alerts/:arrayStates/:arrayCounties", getStateWithCounties)
 	router.POST("/userAlertTypes", getUserAlertTypes)
-	router.Run(":10000") //localhost:8080 :10000
+	router.Run("localhost:8080") //localhost:8080 :10000
 
 }

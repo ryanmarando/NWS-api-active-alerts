@@ -207,7 +207,6 @@ export default function AlertSystem() {
   const { isLoaded, isSignedIn, user } = useUser();
   const [showWarningSettings, setShowWarningSettings] = useState(false);
   const [checkedItems, setCheckedItems] = useState([]);
-  const [submittedItems, setSubmittedItems] = useState([]);
   const [selectAll, setSelectAll] = useState(false);
   const [buttonText, setButtonText] = useState("Submit Alert Types");
   const [expandedItemId, setExpandedItemId] = useState(null);
@@ -238,21 +237,18 @@ export default function AlertSystem() {
   async function getDataFromOwnAPIWithCounties() {
     const stateListString = stateList.join(",");
     const data = { data: checkedItems };
-    const response = await fetch(
-      "https://nws-api-active-alerts.onrender.com/userAlertTypes",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      }
-    );
+    const response = await fetch("http://localhost:8080/userAlertTypes", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
     if (response.ok) {
       console.log("Warnings submitted!");
     }
     const results = await fetch(
-      "https://nws-api-active-alerts.onrender.com/alerts/" + // http://localhost:8080 https://nws-api-active-alerts.onrender.com
+      "http://localhost:8080/alerts/" + // http://localhost:8080 https://nws-api-active-alerts.onrender.com
         stateListString +
         "/" +
         countyList
@@ -272,23 +268,18 @@ export default function AlertSystem() {
     if (countyList.length > 0) return getDataFromOwnAPIWithCounties();
     const stateListString = stateList.join(",");
     const data = { data: checkedItems };
-    const response = await fetch(
-      "https://nws-api-active-alerts.onrender.com/userAlertTypes",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      }
-    );
+    const response = await fetch("http://localhost:8080/userAlertTypes", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
     if (response.ok) {
       console.log("Warnings submitted!");
     }
     const results = await fetch(
-      "https://nws-api-active-alerts.onrender.com/alerts/" +
-        stateListString +
-        countyList
+      "http://localhost:8080/alerts/" + stateListString + countyList
     )
       .then((data) => data.json())
       .then((data) => {
@@ -431,7 +422,7 @@ export default function AlertSystem() {
             className="path-bar mb-6 p-1 w-full"
           />
         </div>
-        <form onSubmit={handleSubmit} className="p-2">
+        <form className="p-2">
           <div className="w-full flex items-center justify-center mb-2 row-span-2">
             <input
               type="checkbox"
@@ -463,7 +454,6 @@ export default function AlertSystem() {
   };
 
   const saveDataListInput = async () => {
-    if (!isSignedIn) return alert("Please login to save your settings.");
     if (stateList.length === 0)
       return alert("You must add at least once state to save data.");
     try {
@@ -495,7 +485,6 @@ export default function AlertSystem() {
   };
 
   async function populateDataInput() {
-    if (!isSignedIn) return alert("Please login to load your saved data.");
     const savedStateListArr = user?.publicMetadata.stateList.split(",");
     setStateList(savedStateListArr);
     setCountyList(user?.publicMetadata.countyList);
@@ -596,7 +585,9 @@ export default function AlertSystem() {
           <div className="flex gap-1">
             <label className="label">Choose your specific warnings:</label>
             <button
-              onClick={() => setShowWarningSettings(!showWarningSettings)}
+              onClick={() => {
+                setShowWarningSettings(!showWarningSettings);
+              }}
             >
               {showWarningSettings ? (
                 <IoIosArrowDown className="mt-[13px] w-8 hover:text-gray-500" />

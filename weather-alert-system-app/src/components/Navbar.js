@@ -1,3 +1,6 @@
+"use client";
+import { useState, useEffect } from "react";
+import { useUser } from "@clerk/clerk-react";
 import Image from "next/image";
 import Link from "next/link";
 import Logo from "@/app/icon.ico";
@@ -10,6 +13,28 @@ import { MobileNav } from "@/components/MobileNav.js";
 
 <Image alt="Menu" src={Menu} className="lg:hidden" />;
 export function Navbar() {
+  const { user } = useUser();
+  const [hasSubscription, setHasSubscription] = useState();
+  useEffect(() => {
+    const fetchPrivateMetadata = async () => {
+      if (!user?.id) return;
+
+      try {
+        const response = await fetch(
+          `/api/updatePrivateMetadata?userId=${user?.id}`
+        );
+        if (!response.ok) {
+          throw new Error("Failed to fetch user data");
+        }
+        const data = await response.json();
+        setHasSubscription(data.privateMetadata.subscription);
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      }
+    };
+
+    fetchPrivateMetadata();
+  }, [user?.id]);
   return (
     <nav className="flex w-full items-center justify-between px-[20px] py-[16px] lg:container lg:mx-auto lg:px-22">
       <div className="flex gap-x-5">
@@ -43,7 +68,9 @@ export function Navbar() {
         </a>
         <div className="flex items-center mr-[15px]">
           <SignedOut>
-            <SignInButton className="font-medium text-[#36485C]" />
+            <Link href="/sign-in">
+              <p className="font-medium text-[#36485C]">Sign in</p>
+            </Link>
           </SignedOut>
           <SignedIn>
             <UserButton />

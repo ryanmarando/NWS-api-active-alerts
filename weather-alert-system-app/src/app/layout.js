@@ -27,7 +27,6 @@ export default function RootLayout({ children }) {
             sizes="<generated>"
           />
         </head>
-
         <body className={inter.className}>{children}</body>
       </html>
     </ClerkProvider>

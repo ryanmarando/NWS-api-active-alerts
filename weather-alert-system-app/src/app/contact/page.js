@@ -67,7 +67,7 @@ export default function ContactPage() {
         <section className="mx-auto w-[95%] lg:w-[50%] items-center justify-center my-6  px-5  pt-16">
           {ContactInfo.map((info, index) => (
             <div key={index}>
-              <div className="border py-5 shadow-md bg-[#DDDDDD] rounded-[8px]">
+              <div className="border py-5 shadow-md bg-white rounded-[8px]">
                 <div className="flex justify-between px-4 pb-5">
                   <p className="text-xl font-bold">{info.title}</p>
                 </div>
