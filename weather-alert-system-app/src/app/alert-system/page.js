@@ -237,18 +237,21 @@ export default function AlertSystem() {
   async function getDataFromOwnAPIWithCounties() {
     const stateListString = stateList.join(",");
     const data = { data: checkedItems };
-    const response = await fetch("http://localhost:8080/userAlertTypes", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    });
+    const response = await fetch(
+      "https://nws-api-active-alerts.onrender.com/userAlertTypes",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      }
+    );
     if (response.ok) {
       console.log("Warnings submitted!");
     }
     const results = await fetch(
-      "http://localhost:8080/alerts/" + // http://localhost:8080 https://nws-api-active-alerts.onrender.com
+      "https://nws-api-active-alerts.onrender.com/alerts/" + // http://localhost:8080 https://nws-api-active-alerts.onrender.com
         stateListString +
         "/" +
         countyList
@@ -268,18 +271,23 @@ export default function AlertSystem() {
     if (countyList.length > 0) return getDataFromOwnAPIWithCounties();
     const stateListString = stateList.join(",");
     const data = { data: checkedItems };
-    const response = await fetch("http://localhost:8080/userAlertTypes", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    });
+    const response = await fetch(
+      "https://nws-api-active-alerts.onrender.com/userAlertTypes",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      }
+    );
     if (response.ok) {
       console.log("Warnings submitted!");
     }
     const results = await fetch(
-      "http://localhost:8080/alerts/" + stateListString + countyList
+      "https://nws-api-active-alerts.onrender.com/alerts/" +
+        stateListString +
+        countyList
     )
       .then((data) => data.json())
       .then((data) => {
