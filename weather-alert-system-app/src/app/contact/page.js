@@ -49,8 +49,6 @@ export default function ContactPage() {
     {
       title: "Support",
       email: "marandoryan@gmail.com",
-      phone: "(302) 250-8944",
-      message: "(302) 250-8944",
     },
   ];
   return (
@@ -80,14 +78,6 @@ export default function ContactPage() {
                   >
                     <MdEmail className="mr-3 h-4 w-4 text-violet-900" />
                     {info.email}
-                  </a>
-                  <a className="flex items-center" href={`tel:${info.phone}`}>
-                    <FaPhoneAlt className="mr-3 h-4 w-4 text-violet-900" />
-                    {info.phone}
-                  </a>
-                  <a className="flex items-center" href={`sms:${info.message}`}>
-                    <FaMessage className="mr-3 h-4 w-4 text-violet-900" />
-                    {info.message}
                   </a>
                 </div>
               </div>
