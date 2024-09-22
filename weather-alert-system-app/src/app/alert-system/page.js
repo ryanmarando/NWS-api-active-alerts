@@ -747,7 +747,7 @@ export default function AlertSystem() {
           <li
             className="alert-list shadow-md border-spacing-1"
             style={{ backgroundColor: "white" }}>
-                <span className="headline">All clear!</span>
+                <span className="headline items-center">All clear!</span>
             </li>
         </ul>
       )
