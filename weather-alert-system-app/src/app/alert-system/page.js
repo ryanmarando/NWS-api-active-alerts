@@ -194,15 +194,36 @@ export default function AlertSystem() {
     "Blue Alert",
   ];
   const NWSofficeFullList = [
+    "NWS Birmingham AL",
+    "NWS Mobile AL",
+    "NWS Huntsville AL",
+    "NWS Anchorange AK",
     "NWS Fairbanks AK",
     "NWS Juneau AK",
-    "NWS Anchorage AK",
+    "NWS Flagstaff AZ",
+    "NWS Phoenix AZ",
+    "NWS Tucson AZ",
+    "NWS Little Rock AR",
+    "NWS Key West FL",
+    "NWS Jacksonville FL",
+    "NWS Melbourne FL",
+    "NWS Miami FL",
+    "NWS Talahassee FL",
+    "NWS Tampa Bay Ruskin FL",
+    "NWS Peachtree City GA",
+    "NWS Chicago IL",
+    "NWS Northern Indiana",
+    "NWS Indianapolis IN",
     "NWS Caribou ME",
     "NWS Burlington VT",
+    "NWS Wilmington NC",
     "NWS Mount Holly NJ",
+    "NWS Albany NY",
     "NWS Upton NY",
+    "NWS Duluth MN",
     "NWS Wilmington OH",
-    "NWS Indianapolis IN",
+    "NWS Medford OR",
+    "NWS Charleston SC",
   ]
   const [stateOptions, setStateOptions] = useState(options);
   const [selectedOption, setSelectedOption] = useState(null);
@@ -222,6 +243,10 @@ export default function AlertSystem() {
   const [NWSselectedOfficeList, setNWSselectedOfficeList] = useState([])
   const [showNWSOfficeFullList, setShowNWSOfficeFullList] = useState(false);
   const [checkedNWSOffices, setCheckedNWSOffices] = useState([]);
+  const [countiesByState, setCountiesByState] = useState({});
+  const [selectedCounties, setSelectedCounties] = useState({});
+  const [showCountiesForSelectedStates, setShowCountiesForSelectedStates] = useState(false);
+  const [hasSearchedForAlerts, setHasSearchedForAlerts] = useState(false);
   const URL = "http://localhost:8080" //https://nws-api-active-alerts.onrender.com
 
   function addState() {
@@ -236,6 +261,92 @@ export default function AlertSystem() {
     setStateList([...stateList, state]);
   }
 
+  const CountyListLibrary = () => {
+
+  // Fetch counties for a state when it's added
+  const getCountiesFromState = async (state) => {
+    const results = await fetch(URL + `/countiesByState/` + state)
+      .then((data) => data.json())
+      .then((data) => {
+        setCountiesByState((prevState) => ({
+          ...prevState,
+          [state]: data, // Store counties for the selected state
+        }));
+      });
+  };
+
+ // Handle county checkbox change
+ const handleCheckboxChange = (event, state, county) => {
+  const isChecked = event.target.checked;
+
+  setSelectedCounties((prevState) => {
+    const updatedCounties = isChecked
+      ? [...(prevState[state] || []), county]
+      : prevState[state].filter((item) => item !== county);
+
+    return {
+      ...prevState,
+      [state]: updatedCounties,
+    };
+  });
+};
+
+  // Fetch counties when a new state is added to the list
+  useEffect(() => {
+    stateList.forEach((state) => {
+      if (!countiesByState[state]) {
+        getCountiesFromState(state); // Fetch counties only if not already fetched
+      }
+    });
+  }, [stateList]);
+
+  return (
+    <div className="p-4">
+      <p className="w-full flex items-center justify-center">
+          Optional: skip for all statewide alerts
+        </p>
+      {/* Display selected states and allow selecting counties for each */}
+      {/* Conditional rendering based on stateList */}
+      {stateList.length === 0 ? (
+        <p>Please enter a state.</p>
+      ) : (
+        stateList.map((state, index) => (
+          <div key={index} className="mb-4">
+            <label>Select Counties for {state}:</label>
+            <div className="grid grid-cols-6 md:grid-cols-6 lg:grid-cols-6 gap-1">
+              {countiesByState[state] ? (
+                countiesByState[state].map((county, countyIndex) => (
+                  <div key={countyIndex} className="flex items-center">
+                    <input
+                      type="checkbox"
+                      id={`checkbox-${state}-${countyIndex}`}
+                      value={county}
+                      checked={
+                        selectedCounties[state]?.includes(county) || false
+                      }
+                      onChange={(event) =>
+                        handleCheckboxChange(event, state, county)
+                      }
+                    />
+                    <label
+                      htmlFor={`checkbox-${state}-${countyIndex}`}
+                      className="ml-2"
+                    >
+                      {county}
+                    </label>
+                  </div>
+                ))
+              ) : (
+                <p>Loading counties...</p>
+              )}
+            </div>
+          </div>
+        ))
+      )}
+    </div>
+  );
+  };
+
   function removeState() {
     if (stateList.length === 0)
       return alert("You must add at least once state to remove.");
@@ -248,7 +359,7 @@ export default function AlertSystem() {
   }
 
   async function getDataFromOwnAPIWithCounties() {
-    const stateListString = stateList.join(",");
+    const tempAlertList = [];
     const data = { data: checkedItems };
     const response = await fetch(
       URL + "/userAlertTypes",
@@ -261,27 +372,56 @@ export default function AlertSystem() {
       }
     );
     if (response.ok) {
-      console.log("Warnings submitted!");
+      console.log("Warnings submitted county!");
     }
-    const results = await fetch(
-      URL + "/alerts/" + // http://localhost:8080 https://nws-api-active-alerts.onrender.com
-        stateListString +
-        "/" +
-        countyList
-    )
-      .then((data) => data.json())
-      .then((data) => {
-        setAlertList(data);
-        setIsLoading(false);
-      });
-
+    const NWSOfficeList = { officeList: checkedNWSOffices}
+    const NWSOfficeResponse = await fetch(
+      URL + "/getNWSOffices",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(NWSOfficeList),
+      }
+    );
+    if (NWSOfficeResponse.ok) {
+      console.log("Offices submitted county!");
+    }
+    for (let i = 0; i < Object.entries(selectedCounties).length; i++) {
+      if (Object.values(selectedCounties)[i].length > 0) {
+      const results = await fetch(
+        URL + "/alerts/" +
+         Object.keys(selectedCounties)[i] +
+          "/" +
+          Object.values(selectedCounties)[i]
+      )
+        .then((data) => data.json())
+        .then((data) => {
+          tempAlertList.push(...data)
+        });
+    } else {
+      const results = await fetch(
+        URL + "/alerts/" +
+         Object.keys(selectedCounties)[i]
+      )
+        .then((data) => data.json())
+        .then((data) => {
+          tempAlertList.push(...data)
+        });
+  }
+  }
+    setAlertList(tempAlertList);
+    setIsLoading(false);
+    setHasSearchedForAlerts(true)
     console.log("Successful county export");
   }
 
   async function getDataFromOwnAPI() {
     if (stateList.length === 0) return alert("Please choose a state.");
     setIsLoading(true);
-    if (countyList.length > 0) return getDataFromOwnAPIWithCounties();
+    if (Object.entries(selectedCounties).length > 0) {
+      if (Object.values(selectedCounties)[0].length > 0) return getDataFromOwnAPIWithCounties();}
     const stateListString = stateList.join(",");
     const data = { data: checkedItems };
     const response = await fetch(
@@ -313,14 +453,14 @@ export default function AlertSystem() {
     }
     const results = await fetch(
       URL + "/alerts/" +
-        stateListString +
-        countyList
+        stateListString
     )
       .then((data) => data.json())
       .then((data) => {
         setAlertList(data);
         setIsLoading(false);
       });
+    setHasSearchedForAlerts(true)
     console.log("Successful state wide export");
   }
 
@@ -559,9 +699,10 @@ export default function AlertSystem() {
         body: JSON.stringify({
           userId: user?.id,
           metadata: {
-            countyList: countyList,
+            selectedCounties: selectedCounties,
             stateList: stateList.join(","),
             warningTypes: checkedItems,
+            checkedNWSOffices: checkedNWSOffices
           },
         }),
       });
@@ -581,9 +722,10 @@ export default function AlertSystem() {
   async function populateDataInput() {
     const savedStateListArr = user?.publicMetadata.stateList.split(",");
     setStateList(savedStateListArr);
-    setCountyList(user?.publicMetadata.countyList);
+    setSelectedCounties(user?.publicMetadata.selectedCounties);
     const savedWarningTypeArr = user?.publicMetadata.warningTypes;
     setCheckedItems(savedWarningTypeArr);
+    setCheckedNWSOffices(user?.publicMetadata.checkedNWSOffices)
   }
 
   const handleSelectOfficeChange = (e) => {
@@ -598,6 +740,18 @@ export default function AlertSystem() {
     const toggleExpansion = (index) => {
       setExpandedItemIndex((prevIndex) => (prevIndex === index ? null : index));
     };
+
+    if (alertList.length === 0 && hasSearchedForAlerts) {
+      return (
+        <ul className="p-2">
+          <li
+            className="alert-list shadow-md border-spacing-1"
+            style={{ backgroundColor: "white" }}>
+                <span className="headline">All clear!</span>
+            </li>
+        </ul>
+      )
+    }
 
     return (
       <ul className="p-2">
@@ -674,14 +828,21 @@ export default function AlertSystem() {
             </button>
           </div>
           <StateListComponent />
-          <label className="label">Want to enter counties?</label>
-          <input
-            className="path-bar"
-            type="text"
-            value={countyList}
-            placeholder="County,County,County"
-            onChange={(e) => setCountyList(e.target.value)}
-          />
+          <div className="flex gap-1">
+            <label className="label">Choose your specific counties:</label>
+            <button
+              onClick={() => {
+                setShowCountiesForSelectedStates(!showCountiesForSelectedStates);
+              }}
+            >
+              {showCountiesForSelectedStates ? (
+                <IoIosArrowDown className="mt-[13px] w-8 hover:text-gray-500" />
+              ) : (
+                <IoIosArrowBack className="mt-[13px] w-8 hover:text-gray-500" />
+              )}
+            </button>
+          </div>
+          {showCountiesForSelectedStates ? <CountyListLibrary statesList={stateList}/> : ""}
           <div className="flex gap-1">
             <label className="label">Choose your specific warnings:</label>
             <button

@@ -268,8 +268,32 @@ var eventTypeColorLibrary = map[string]string{
 	"Blue Alert":                             "#FFFFFF",
 }
 
-var NWSOffices = map[string][]string{
-	"OH": {"NWS Wilmington OH", "NWS Cleveland OH", "NWS Pittsburgh PA"},
+var countiesInStateLibrary = map[string][]string{
+	"OH": {"Adams", "Allen", "Ashland", "Ashtabula", "Athens", "Auglaize", "Belmont", "Brown",
+		"Butler", "Carroll", "Champaign", "Clark", "Clermont", "Clinton", "Columbiana",
+		"Coshocton", "Crawford", "Cuyahoga", "Darke", "Defiance", "Delaware", "Erie",
+		"Fairfield", "Fayette", "Franklin", "Fulton", "Gallia", "Geagua", "Greene",
+		"Guernsey", "Hamilton", "Hancock", "Hardin", "Harrison", "Henry", "Highland",
+		"Hocking", "Holmes", "Huron", "Jackson", "Jefferson", "Knox", "Lake", "Lawrence",
+		"Licking", "Logan", "Lorain", "Lucas", "Madison", "Mahoning", "Marion", "Medina",
+		"Meigs", "Mercer", "Miami", "Monroe", "Montgomery", "Morgan", "Morrow", "Muskingum",
+		"Noble", "Ottawa", "Paulding", "Perry", "Pickaway", "Pike", "Porage", "Preble",
+		"Putnam", "Richland", "Ross", "Sandusky", "Scioto", "Seneca", "Shelby", "Stark",
+		"Summit", "Trumbull", "Tuscarawas", "Union", "Van Wert", "Vinton", "Warren",
+		"Washington", "Wayne", "Williams", "Wood", "Wyandot",
+	},
+	"IN": {"Adams", "Allen", "Bartholomew", "Benton", "Blackford", "Boone", "Brown", "Carroll", "Cass",
+		"Clark", "Clay", "Clinton", "Crawford", "Daviess", "Dearborn", "Decatur", "DeKalb", "Delaware",
+		"Elkhart", "Fayette", "Floyd", "Fountain", "Franklin", "Fulton", "Gibson", "Grant", "Greene",
+		"Hamilton", "Hancock", "Harrison", "Hendricks", "Henry", "Howard", "Huntington", "Jackson",
+		"Jasper", "Jay", "Jefferson", "Jennings", "Johnson", "Knox", "Kosciusko", "LeGrange", "Lake",
+		"LaPorte", "Lawrence", "Madison", "Marion", "Marshall", "Martin", "Miami", "Monroe", "Montgomery",
+		"Morgan", "Newton", "Noble", "Ohio", "Orange", "Owen", "Parke", "Perry", "Pike", "Porter", "Posey",
+		"Pulaski", "Putnam", "Randolph", "Ripley", "Rush", "St. Jospeph", "Scott", "Shelby", "Spencer",
+		"Starke", "Steuben", "Sullivan", "Switzerland", "Tippecanoe", "Tipton", "Union", "Vanderburgh",
+		"Vermillion", "Vigo", "Wabash", "Warren", "Warrick", "Washington", "Wayne", "Wells", "White", "Whitley",
+	},
+	"DE": {"New Castle", "Kent", "Sussex", "Inland Sussex", "Delaware Beaches"},
 }
 
 type Response struct {
@@ -467,12 +491,12 @@ func getStateWithCounties(c *gin.Context) {
 	for _, state := range states {
 		getActiveAlertsFromNWS(state)
 	}
-	if len(alertList) == 0 {
-		emptyHeadline := "All clear! Currently there are no active alerts for " + arrayStates
-		arrayCounties = strings.ReplaceAll(arrayCounties, ",", "; ")
-		emptyAlerts := Alert{Headline: emptyHeadline, AreaDesc: arrayCounties}
-		alertList = append(alertList, emptyAlerts)
-	}
+	//if len(alertList) == 0 {
+	//	emptyHeadline := "All clear! Currently there are no active alerts for " + arrayStates
+	//	arrayCounties = strings.ReplaceAll(arrayCounties, ",", "; ")
+	//	emptyAlerts := Alert{Headline: emptyHeadline, AreaDesc: arrayCounties}
+	//	alertList = append(alertList, emptyAlerts)
+	//}
 	c.IndentedJSON(http.StatusOK, alertList)
 }
 
@@ -498,13 +522,11 @@ func checkIfAlertIssedByOffice(eventSenderName string) bool {
 	return (slices.Contains(userNWSOffices.OfficeList, eventSenderName))
 }
 
-//
-//func getNWSOffices(c *gin.Context) {
-//	state := c.Param("state")
-//	officeList := NWSOffices[state]
-//	fmt.Println("Office List:", officeList)
-//	c.IndentedJSON(http.StatusCreated, officeList)
-//}
+func getCountiesByState(c *gin.Context) {
+	state := c.Param("state")
+	countyListLibrary := countiesInStateLibrary[state]
+	c.IndentedJSON(http.StatusCreated, countyListLibrary)
+}
 
 func main() {
 	router := gin.Default()
@@ -520,6 +542,7 @@ func main() {
 	router.GET("/alerts/:arrayStates/:arrayCounties", getStateWithCounties)
 	router.POST("/userAlertTypes", getUserAlertTypes)
 	router.POST("/getNWSOffices", getNWSOffices)
+	router.GET("/countiesByState/:state", getCountiesByState)
 	router.Run("localhost:8080") //localhost:8080 :10000
 
 }
