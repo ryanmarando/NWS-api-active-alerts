@@ -193,6 +193,17 @@ export default function AlertSystem() {
     "Child Abduction Emergency",
     "Blue Alert",
   ];
+  const NWSofficeFullList = [
+    "NWS Fairbanks AK",
+    "NWS Juneau AK",
+    "NWS Anchorage AK",
+    "NWS Caribou ME",
+    "NWS Burlington VT",
+    "NWS Mount Holly NJ",
+    "NWS Upton NY",
+    "NWS Wilmington OH",
+    "NWS Indianapolis IN",
+  ]
   const [stateOptions, setStateOptions] = useState(options);
   const [selectedOption, setSelectedOption] = useState(null);
   const [stateList, setStateList] = useState([]);
@@ -208,8 +219,10 @@ export default function AlertSystem() {
   const [showWarningSettings, setShowWarningSettings] = useState(false);
   const [checkedItems, setCheckedItems] = useState([]);
   const [selectAll, setSelectAll] = useState(false);
-  const [buttonText, setButtonText] = useState("Submit Alert Types");
-  const [expandedItemId, setExpandedItemId] = useState(null);
+  const [NWSselectedOfficeList, setNWSselectedOfficeList] = useState([])
+  const [showNWSOfficeFullList, setShowNWSOfficeFullList] = useState(false);
+  const [checkedNWSOffices, setCheckedNWSOffices] = useState([]);
+  const URL = "http://localhost:8080" //https://nws-api-active-alerts.onrender.com
 
   function addState() {
     if (!selectedOption) return alert("Please enter a state.");
@@ -238,7 +251,7 @@ export default function AlertSystem() {
     const stateListString = stateList.join(",");
     const data = { data: checkedItems };
     const response = await fetch(
-      "https://nws-api-active-alerts.onrender.com/userAlertTypes",
+      URL + "/userAlertTypes",
       {
         method: "POST",
         headers: {
@@ -251,7 +264,7 @@ export default function AlertSystem() {
       console.log("Warnings submitted!");
     }
     const results = await fetch(
-      "https://nws-api-active-alerts.onrender.com/alerts/" + // http://localhost:8080 https://nws-api-active-alerts.onrender.com
+      URL + "/alerts/" + // http://localhost:8080 https://nws-api-active-alerts.onrender.com
         stateListString +
         "/" +
         countyList
@@ -272,7 +285,7 @@ export default function AlertSystem() {
     const stateListString = stateList.join(",");
     const data = { data: checkedItems };
     const response = await fetch(
-      "https://nws-api-active-alerts.onrender.com/userAlertTypes",
+      URL + "/userAlertTypes",
       {
         method: "POST",
         headers: {
@@ -284,8 +297,22 @@ export default function AlertSystem() {
     if (response.ok) {
       console.log("Warnings submitted!");
     }
+    const NWSOfficeList = { officeList: checkedNWSOffices}
+    const NWSOfficeResponse = await fetch(
+      URL + "/getNWSOffices",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(NWSOfficeList),
+      }
+    );
+    if (NWSOfficeResponse.ok) {
+      console.log("Offices submitted!");
+    }
     const results = await fetch(
-      "https://nws-api-active-alerts.onrender.com/alerts/" +
+      URL + "/alerts/" +
         stateListString +
         countyList
     )
@@ -389,7 +416,7 @@ export default function AlertSystem() {
       console.log(data);
 
       const response = await fetch(
-        "https://nws-api-active-alerts.onrender.com/userAlertTypes",
+        URL + "/userAlertTypes",
         {
           method: "POST",
           headers: {
@@ -461,6 +488,65 @@ export default function AlertSystem() {
     );
   };
 
+  const NWSOfficeListForm = () => {
+    const [searchOfficeTerm, setSearchOfficeTerm] = useState("");
+
+  // Handle checkbox change
+  const handleCheckboxChange = (event) => {
+    const { value, checked } = event.target;
+
+    setCheckedNWSOffices((prevCheckedItems) =>
+      checked
+        ? [...prevCheckedItems, value] // Add to checked list
+        : prevCheckedItems.filter((item) => item !== value) // Remove from checked list
+    );
+  };
+
+  // Handle search term change
+  const handleSearchChange = (event) => {
+    setSearchOfficeTerm(event.target.value);
+  };
+
+  // Filter the office list based on search term
+  const filteredOfficeItems = NWSofficeFullList.filter((item) =>
+    item.toLowerCase().includes(searchOfficeTerm.toLowerCase())
+  );
+
+  return (
+    <div className="p-4 w-full">
+      <p className="w-full flex items-center justify-center">
+        Optional: skip for any office that applies
+      </p>
+      <div className="w-full">
+        <input
+          type="text"
+          placeholder="Search..."
+          value={searchOfficeTerm}
+          onChange={handleSearchChange}
+          className="path-bar mb-6 p-1 w-full"
+        />
+      </div>
+      <form className="p-2">
+        <div className="grid grid-cols-2 lg:grid-cols-3 gap-2 gap-x-6 -ml-4 lg:ml-2">
+          {filteredOfficeItems.map((item, index) => (
+            <div key={item} className="flex items-center pl-4">
+              <input
+                type="checkbox"
+                id={`checkbox-${index}`}
+                value={item}
+                checked={checkedNWSOffices.includes(item)} // Check if it's selected
+                onChange={handleCheckboxChange}
+                className="p-2 mr-2 text-center"
+              />
+              <label htmlFor={`checkbox-${index}`}>{item}</label>
+            </div>
+          ))}
+        </div>
+      </form>
+    </div>
+  );
+  };
+
   const saveDataListInput = async () => {
     if (stateList.length === 0)
       return alert("You must add at least once state to save data.");
@@ -499,6 +585,12 @@ export default function AlertSystem() {
     const savedWarningTypeArr = user?.publicMetadata.warningTypes;
     setCheckedItems(savedWarningTypeArr);
   }
+
+  const handleSelectOfficeChange = (e) => {
+    setNWSselectedOfficeList(e.target.value);
+  };
+
+
 
   const AlertList = ({ alertList }) => {
     const [expandedItemIndex, setExpandedItemIndex] = useState(null);
@@ -605,6 +697,21 @@ export default function AlertSystem() {
             </button>
           </div>
           {showWarningSettings ? <AlertForm /> : ""}
+          <div className="flex gap-1">
+            <label className="label">Choose your issuing office:</label>
+            <button
+              onClick={() => {
+                setShowNWSOfficeFullList(!showNWSOfficeFullList);
+              }}
+            >
+              {showNWSOfficeFullList ? (
+                <IoIosArrowDown className="mt-[13px] w-8 hover:text-gray-500" />
+              ) : (
+                <IoIosArrowBack className="mt-[13px] w-8 hover:text-gray-500" />
+              )}
+            </button>
+          </div>
+          {showNWSOfficeFullList ? <NWSOfficeListForm /> : ""}
           <button
             className="bg-[#4328EB] hover:text-gray-500 w-33 py-1 px-2 rounded-[8px] text-[white] my-[15px]"
             type="alert-button"

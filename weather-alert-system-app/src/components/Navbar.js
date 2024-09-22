@@ -50,6 +50,9 @@ export function Navbar() {
         <Link className="hidden lg:block py-[16px]" href="/contact">
           Contact
         </Link>
+        <Link className="hidden lg:block py-[16px]" href="/wbgt">
+          Wet Bulb Globe Temperatures
+        </Link>
       </div>
       <div className="flex items-center">
         <a
