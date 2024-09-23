@@ -747,7 +747,15 @@ export default function AlertSystem() {
           <li
             className="alert-list shadow-md border-spacing-1"
             style={{ backgroundColor: "white" }}>
-                <span className="headline items-center">All clear!</span>
+                <p className="w-full items-center justify-center">
+                  All clear for {Object.keys(selectedCounties).flat().join(', ')}
+                </p>
+                <p className="w-full items-center justify-center">
+                  {Object.values(selectedCounties).flat().join(', ')}
+                </p>
+                <p className="w-full items-center justify-center">
+                  Under {checkedNWSOffices.join(', ')}
+                </p>
             </li>
         </ul>
       )
