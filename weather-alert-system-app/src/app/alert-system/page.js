@@ -217,8 +217,10 @@ export default function AlertSystem() {
     "NWS Indianapolis IN",
     "NWS Louisville KY",
     "NWS Lake Charles LA",
+    "NWS Boston/Norton MA",
     "NWS Baltimore MD/Washington DC",
     "NWS Caribou ME",
+    "NWS Gray ME",
     "NWS Duluth MN",
     "NWS Great Falls MT",
     "NWS Newport/Morehead City NC",
@@ -765,6 +767,13 @@ export default function AlertSystem() {
                 <p className="w-full items-center justify-center">
                   Under {checkedNWSOffices.join(', ')}
                 </p>
+                {
+                checkedItems.length === 0 ? (
+                  <p className="w-full items-center justify-center">For All Warnings</p>
+                 ) : (
+                   <p className="w-full items-center justify-center">For {checkedItems.join(', ')}</p>
+                 )
+              }
             </li>
         </ul>
       )

@@ -9,6 +9,7 @@ import (
 	"sort"
 	"strings"
 	"time"
+	"unicode"
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
@@ -571,39 +572,73 @@ var NoAlertStatement []NoAlert
 var userAlertTypes userAlertType
 var userNWSOffices userNWSOffice
 
-func addStateIdToCountyList(stateId string) {
-	countyListLength := len(countyList)
-	count := 0
-	for county := range countyList {
-		countyState := county + " " + stateId
-		countyList[countyState] = 1
-		count++
-		if count == countyListLength {
-			return
-		}
-	}
-}
-
 func addCounties(countyListArr []string) {
 	for _, county := range countyListArr {
 		countyList[county] = 1
 	}
 }
 
+var transformedCountyList = map[string]int{}
+
+// Step 1: Refactor addStateIdToCountyList to avoid modifying the original countyList
+func addStateIdToCountyList(stateId string) {
+	transformedCountyList = make(map[string]int)
+	for county := range countyList {
+		countyState := county + " " + stateId
+		transformedCountyList[countyState] = 1
+	}
+}
+
+// Step 2: Use transformedCountyList in inCountyListCheck
 func inCountyListCheck(singleAlert *Alert) bool {
-	areaDescList := strings.Split(singleAlert.AreaDesc, "; ")
+	areaDescList := strings.Split(strings.TrimSpace(singleAlert.AreaDesc), "; ")
+
+	// Sort areaDescList to ensure consistent order
+	sort.Strings(areaDescList)
+
+	// Create filtered list
 	filteredAreaDescList := []string{}
+
+	// Normalize and sanitize both locations and countyList entries
 	for _, location := range areaDescList {
-		_, ok := countyList[location]
-		if ok {
-			filteredAreaDescList = append(filteredAreaDescList, location)
+		location = strings.TrimSpace(location)
+		normalizedLocation := strings.ToLower(removeNonASCII(location))
+
+		// Normalize the county names and compare
+		for county := range transformedCountyList {
+			normalizedCounty := strings.ToLower(removeNonASCII(county))
+
+			// If they match, append the location
+			if normalizedLocation == normalizedCounty {
+				filteredAreaDescList = append(filteredAreaDescList, location)
+				break
+			}
 		}
 	}
+
+	// Sort filteredAreaDescList to ensure consistent order of results
+	sort.Strings(filteredAreaDescList)
+
+	// If no matching locations found, return false
 	if len(filteredAreaDescList) == 0 {
 		return false
 	}
+
+	// Join filtered list and update AreaDesc
 	singleAlert.AreaDesc = strings.Join(filteredAreaDescList, "; ")
+
 	return true
+}
+
+// Utility function to remove non-ASCII characters for simpler comparison
+func removeNonASCII(str string) string {
+	var result []rune
+	for _, r := range str {
+		if r <= unicode.MaxASCII {
+			result = append(result, r)
+		}
+	}
+	return string(result)
 }
 
 func changeTimeOutputAndHeadline(singleAlert *Alert) {
