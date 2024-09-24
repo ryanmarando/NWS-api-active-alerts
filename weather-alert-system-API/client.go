@@ -480,7 +480,29 @@ var countiesInStateLibrary = map[string][]string{
 		"Upson", "Walker", "Walton", "Ware", "Warren", "Washington", "Wayne", "Webster", "Western Charlton", "Wheeler", "White", "Whitfield", "Wilcox",
 		"Wilkes", "Wilkinson", "Worth",
 	},
-	"HI": {},
+	"HI": {"Big Island East", "Big Island Interior", "Big Island North", "Big Island South", "Big Island Southeast", "Big Island Summit",
+		"Central Oahu", "East Honolulu", "Ewq Plain", "Haleakala Summit", "Honolulu Metro", "Kahoolawe", "Kauai East", "Kauai Mountains",
+		"Kauai North", "Kauai South", "Kauai Southwest", "Kipahulu", "Kohala", "Kona", "Koolau Leeward", "Koolau Windward",
+		"Lanai Leeward", "Lanai Mauka", "Lanai South", "Lanai Windward", "Maui Central Valley North", "Maui Central Valley South",
+		"Maui Leeward West", "Maui Windward West", "Molokai Leeward South", "Molokai North", "Molokai Southeast", "Molokai West",
+		"Molokai Westward", "Niihau", "Oahu North Shore", "Olomana", "South Haleakala", "South Maui/Upcountry", "Waianaie",
+		"Waianae Mountains", "Windward Haleakala"},
+	"ID": {"Ada", "Adams", "Arco/Mud Lake Desert", "Bannock", "Bear Lake", "Bear Lake Valley", "Bear River Range",
+		"Beaverhead/Lemhi Highlands", "Benewah", "Big Hole Mountains", "Big Lost Highlands/Copper Basin", "Bingham",
+		"Blackfoot Mountains", "Blaine", "Boise", "Boise Mountains", "Bonner", "Bonneville", "Boundary", "Butte",
+		"Camas", "Camas Prairie", "Canyon", "Caribou", "Caribou Range", "Cassia", "Centennial Mountains/Island Park",
+		"Central Panhandle Mountains", "Challis/Pahsimeroi Valleys", "Clark", "Clearwater", "Coeur d'Alene Area", "Custer",
+		"Eastern Lemhi County", "Eastern Magic Valley", "Elmore", "Frank Church Wilderness", "Franklin", "Franklin/Eastern Oneida Region", "Fremont", "Gem", "Gooding",
+		"Idaho", "Idaho Palouse", "Jefferson", "Jerome", "Kootenai", "Latah", "Lemhi", "Lewis",
+		"Lewis and Southern Nez Perce Counties", "Lewiston Area", "Lincoln", "Lost River Range", "Lost River Valleys",
+		"Lower Hells Canyon/Salmon River Region", "Lower Snake River Plain", "Lower Treasure Valley", "Madison",
+		"Marsh and Arbon Highlands", "Minidoka", "Nez Perce", "Northern Clearwater Mountains", "Northern Panhandle", "Oneida",
+		"Orofino/Grangeville Region", "Owyhee", "Owyhee Mountains", "Payette", "Power", "Raft River Region",
+		"Sawtooth/Stanley Basin", "Shoshone", "Shoshone/Lava Beds", "Southern Clearwater Mountains", "Southern Hills/Albion Mountains",
+		"Southern Twin Falls County", "Southwest Highlands", "Sun Valley Region", "Teton", "Teton Valley", "Twin Falls",
+		"Upper Snake River Plain", "Upper Treasure Valley", "Upper Weiser River", "Valley", "Washington",
+		"West Central Mountains", "Western Lemhi County", "Western Magic Valley", "Wood River Foothills",
+	},
 	"IN": {"Adams", "Allen", "Bartholomew", "Benton", "Blackford", "Boone", "Brown", "Carroll", "Cass",
 		"Clark", "Clay", "Clinton", "Crawford", "Daviess", "Dearborn", "Decatur", "DeKalb", "Delaware",
 		"Dubois", "Eastern St. Joseph", "Elkhart", "Fayette", "Floyd", "Fountain", "Franklin", "Fulton", "Gibson", "Grant", "Greene",
@@ -591,7 +613,7 @@ func changeTimeOutputAndHeadline(singleAlert *Alert) {
 	timeEffective, _ := time.Parse(time.RFC3339, timeStringEffective)
 	timeExpires, _ := time.Parse(time.RFC3339, timeStringExpires)
 	timeEffectiveTimeOutput := timeEffective.Format("3:04PM")
-	timeExpiresTimeOutput := timeExpires.Format("3:04PM")
+	timeExpiresTimeOutput := timeExpires.Format("3:04PM Jan 2, 2006")
 
 	singleAlert.Effective = timeEffectiveTimeOutput
 	singleAlert.Expires = timeExpiresTimeOutput
