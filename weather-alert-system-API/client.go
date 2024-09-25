@@ -542,6 +542,59 @@ var countiesInStateLibrary = map[string][]string{
 		"Rush", "Russell", "Saline", "Scott", "Sedgwick", "Seward", "Shawnee", "Sheridan", "Sherman", "Smith", "Stafford", "Stanton", "Stevens", "Sumner",
 		"Thomas", "Trego", "Wabaunsee", "Wallace", "Washington", "Wichita", "Wilson", "Woodson", "Wyandotte",
 	},
+	"KY": {"Adair", "Allen", "Anderson", "Ballard", "Barren", "Bath", "Bell", "Boone", "Bourbon", "Boyd", "Boyle", "Bracken", "Breathitt", "Breckinridge",
+		"Bullitt", "Butler", "Caldwell", "Calloway", "Campbell", "Carlisle", "Carroll", "Carter", "Casey", "Christian", "Clark", "Clay", "Clinton",
+		"Crittenden", "Cumberland", "Daviess", "Edmonson", "Elliott", "Estill", "Fayette", "Fleming", "Floyd", "Franklin", "Fulton", "Gallatin", "Garrard",
+		"Grant", "Graves", "Grayson", "Green", "Greenup", "Hancock", "Hardin", "Harlan", "Harrison", "Hart", "Henderson", "Henry", "Hickman", "Hopkins", "Jackson",
+		"Jefferson", "Jessamine", "Johnson", "Kenton", "Knott", "Knox", "Larue", "Laurel", "Lawrence", "Lee", "Leslie", "Letcher", "Lewis", "Lincoln", "Livingston",
+		"Logan", "Lyon", "Madison", "Magoffin", "Marion", "Marshall", "Martin", "Mason", "McCracken", "McCreary", "McLean", "Meade", "Menifee", "Mercer", "Metcalfe",
+		"Monroe", "Montgomery", "Morgan", "Muhlenberg", "Nelson", "Nicholas", "Ohio", "Oldham", "Owen", "Owsley", "Pendleton", "Perry", "Pike", "Powell", "Pulaski",
+		"Robertson", "Rockcastle", "Rowan", "Russell", "Scott", "Shelby", "Simpson", "Spencer", "Taylor", "Todd", "Trigg", "Trimble", "Union", "Warren",
+		"Washington", "Wayne", "Webster", "Whitley", "Wolfe", "Woodford",
+	},
+	"LA": {"Acadia Parish", "Allen", "Allen Parish", "Ascension Parish", "Assumption", "Assumption Parish", "Avoyelles",
+		"Avoyelles Parish", "Beauregard", "Beauregard Parish", "Bienville", "Bienville Parish", "Bossier",
+		"Bossier Parish", "Caddo", "Caddo Parish", "Calcasieu Parish", "Caldwell", "Caldwell Parish", "Cameron Parish",
+		"Catahoula", "Catahoula Parish", "Central Plaquemines", "Central Tangipahoa", "Claiborne", "Claiborne Parish",
+		"Coastal Jefferson", "Concordia", "Concordia Parish", "De Soto", "De Soto Parish,", "East Baton Rouge", "East Baton Rouge Parish",
+		"East Cameron", "East Caroll", "East Carroll Parish", "East Feliciana", "East Feliciana Parish", "Eastern Ascension", "Eastern Orleans",
+		"Evangeline", "Evangeline Parish", "Franklin", "Franklin Parish", "Grant", "Grant Parish", "Iberia", "Iberia Parish",
+		"Iberville", "Iberville Parish", "Jackson", "Jackson Parish", "Jefferson Davis Parish", "Jefferson Parish", "La Salle", "La Salle Parish",
+		"Lafayette", "Lafayette Parish", "Lafourche Parish", "Lincoln", "Lincoln Parish", "Livingston Parish",
+		"Lower Iberia", "Lower Jefferson", "Lower Lafourche", "Lower Plaquemines", "Lower St. Bernard", "Lower St. Martin", "Lower St. Mary",
+		"Lower Tangipahoa", "Lower Terrebonne", "Lower Vermilion", "Madison", "Madison Parish", "Morehouse", "Morehouse Parish", "Natchitoches", "Natchitoches Parish",
+		"Northern Acadia", "Northern Calcasieu", "Northern Jefferson Davis", "Northern Livingston", "Northern St. Tammany", "Northern Tangipahoa",
+		"Orleans Parish", "Ouachita", "Ouachita Parish", "Plaquemines Parish", "Pointe Coupee", "Pointe Coupee Parish", "Rapides", "Rapides Parish",
+		"Red River", "Red River Parish", "Richland", "Richland Parish", "Sabine", "Sabine Parish", "Southeast St. Tammany",
+		"Southern Acadia", "Southern Calcasieu", "Southern Jefferson Davis", "Southern Livingston", "Southwestern St. Tammany",
+		"St. Bernard Parish", "St. Charles", "St. Charles Parish", "St. Helena", "St. Helena Parish",
+		"St. James", "St. James Parish", "St. John The Baptist", "St. John The Baptist Parish", "St. Landry",
+		"St. Landry Parish", "St. Martin Parish", "St. Mary Parish", "St. Tammany Parish", "Tangiphahoa Parish", "Tensas", "Tensas Parish", "Terrebonne Parish",
+		"Union Parish", "Upper Iberia", "Upper Jefferson", "Upper Lafourche", "Upper Plaquemines", "Upper St.Bernard", "Upper St. Martin",
+		"Upper St. Mary", "Upper Terrebonne", "Upper Vermilion", "Vermilion Parish", "Vernon", "Vernon Parish", "Washington", "Washington Parish",
+		"Webster", "Webster Parish", "West Baton Rouge", "West Baton Rouge Parish", "West Cameron", "West Carroll", "West Carroll Parish",
+		"West Feliciana", "West Feliciana Parish", "Western Ascension", "Western Orleans", "Winn", "Winn Parish",
+	},
+	"ME": {"Androscoggin", "Aroostook", "Central Interior Cumberland", "Central Penobscot", "Central Piscataquis", "Central Somerset", "Central Washington",
+		"Coastal Cumberland", "Coastal Hancock", "Coastal Waldo", "Coastal Washington", "Coastal York", "Cumberland", "Franklin", "Hancock",
+		"Interior Cumberland Highlands", "Interior Hancock", "Interior Waldo", "Interior York", "Kennebec", "Knox", "Lincoln",
+		"Northeast Aroostook", "Northern Franklin", "Northern Oxford", "Northern Penobscot", "Northern Piscataquis", "Northern Somerset",
+		"Northern Washington", "Northwest Aroostook", "Oxford", "Penobscot", "Piscataquis",
+		"Sagadahoc", "Somerset", "Southeast Aroostook", "Southern Franklin", "Southern Oxford", "Southern Penobscot",
+		"Southern Piscataquis", "Southern Somerset", "Waldo", "Washington", "York",
+	},
+	"MD": {"Allegany", "Anne Arundel", "Baltimore City", "Baltimore", "Calvert", "Caroline", "Carroll", "Cecil",
+		"Central and Eastern Allegany", "Central and Southeast Howard", "Central and Southeast Montgomery", "Charles", "Dorchester", "Extreme Western Allegany", "Frederick",
+		"Garrett", "Harford", "Howard", "Inland Worcester", "Kent", "Maryland Beaches", "Montgomery", "Northern Baltimore", "Northwest Harford",
+		"Northwest  Howard", "Northwest Montgomery", "Prince Georges", "Queen Anne's", "Somerset", "Southeast Harford",
+		"Southern Baltimore", "St. Marys", "Talbot", "Washington", "Wicomico", "Worcester",
+	},
+	"MA": {"Barnstable", "Berkshire", "Bristol", "Central Middlesex County", "Dukes", "Essex", "Eastern Essex", "Eastern Franklin", "Eastern Hampden",
+		"Eastern Hampshire", "Eastern Norfolk", "Eastern Plymouth", "Franklin", "Hampden", "Hampshire", "Middlesex", "Nantucket", "Norfolk",
+		"Northern Berkshire", "Northern Bristol", "Northern Worcester", "Northwest Middlesex", "Plymouth", "Southern Berkshire", "Southern Bristol",
+		"Southern Plymouth", "Southern Worcester", "Suffolk", "Western Essex", "Western Franklin", "Western Hampden", "Western Hampshire", "Western Norfolk",
+		"Worcester"},
+	"MI": {},
 	"OH": {"Adams", "Allen", "Ashland", "Ashtabula", "Ashtabula Lakeshore", "Athens", "Auglaize", "Belmont", "Brown",
 		"Butler", "Carroll", "Champaign", "Clark", "Clermont", "Clinton", "Columbiana",
 		"Coshocton", "Crawford", "Cuyahoga", "Darke", "Defiance", "Delaware", "Erie",
@@ -593,11 +646,53 @@ type userNWSOffice struct {
 	OfficeList []string `json:"officeList"`
 }
 
+type Coordinates struct {
+	Lat float64 `json:"lat"`
+	Lng float64 `json:"lng"`
+}
+
+type wbgtURL struct {
+	Properties struct {
+		Url string `json:"forecastGridData"`
+	} `json:"properties"`
+}
+
+type TemperatureValue struct {
+	ValidTime string  `json:"validTime"`
+	Value     float64 `json:"value"`
+}
+
+type WetBulbGlobeTemperature struct {
+	UOM    string             `json:"uom"`
+	Values []TemperatureValue `json:"values"`
+}
+
+type WBGTForecast struct {
+	Properties struct {
+		WetBulbGlobeTemperature WetBulbGlobeTemperature `json:"wetBulbGlobeTemperature"`
+	} `json:"properties"`
+}
+
+type WBGTForecastLocation struct {
+	Properties struct {
+		RelativeLocation struct {
+			Properties struct {
+				City  string `json:"city"`
+				State string `json:"state"`
+			} `json:"properties"`
+		} `json:"relativeLocation"`
+	} `json:"properties"`
+}
+
 var alertList []Alert
 var countyList = map[string]int{}
 var NoAlertStatement []NoAlert
 var userAlertTypes userAlertType
 var userNWSOffices userNWSOffice
+var wbgtDataLocation WBGTForecastLocation
+
+// var userWBGTLocationQuery Coordinates
+var wbgtRawData WBGTForecast
 
 func addCounties(countyListArr []string) {
 	for _, county := range countyListArr {
@@ -786,12 +881,6 @@ func getStateWithCounties(c *gin.Context) {
 	for _, state := range states {
 		getActiveAlertsFromNWS(state)
 	}
-	//if len(alertList) == 0 {
-	//	emptyHeadline := "All clear! Currently there are no active alerts for " + arrayStates
-	//	arrayCounties = strings.ReplaceAll(arrayCounties, ",", "; ")
-	//	emptyAlerts := Alert{Headline: emptyHeadline, AreaDesc: arrayCounties}
-	//	alertList = append(alertList, emptyAlerts)
-	//}
 	c.IndentedJSON(http.StatusOK, alertList)
 }
 
@@ -823,6 +912,68 @@ func getCountiesByState(c *gin.Context) {
 	c.IndentedJSON(http.StatusCreated, countyListLibrary)
 }
 
+func getWBGTForecastLocation(lat, long string) {
+	const BASE_URL = "https://api.weather.gov"
+	response, err := http.Get(BASE_URL + "/points/" + lat + "," + long)
+	if err != nil {
+		fmt.Println(err.Error())
+		return
+	}
+	responseData, err := io.ReadAll(response.Body)
+	if err != nil {
+		fmt.Println(err.Error())
+		return
+	}
+	var responseURL wbgtURL
+	json.Unmarshal(responseData, &responseURL)
+	// Save Location
+	json.Unmarshal(responseData, &wbgtDataLocation)
+	// Go in to get the WBGT
+	response, err = http.Get(responseURL.Properties.Url)
+	if err != nil {
+		fmt.Println(err.Error())
+		return
+	}
+	responseData, err = io.ReadAll(response.Body)
+	if err != nil {
+		fmt.Println(err.Error())
+		return
+	}
+	json.Unmarshal(responseData, &wbgtRawData)
+	wbgtRawData.Properties.WetBulbGlobeTemperature.Values = convertTemperatures(wbgtRawData.Properties.WetBulbGlobeTemperature.Values)
+}
+
+func celsiusToFahrenheit(celsius float64) float64 {
+	return (celsius * 9 / 5) + 32
+}
+
+func convertTemperatures(temperatures []TemperatureValue) []TemperatureValue {
+	var converted []TemperatureValue
+
+	for _, temp := range temperatures {
+		// Convert the temperature value to Fahrenheit
+		fahrenheit := celsiusToFahrenheit(temp.Value)
+		converted = append(converted, TemperatureValue{
+			ValidTime: temp.ValidTime,
+			Value:     fahrenheit,
+		})
+	}
+
+	return converted
+}
+
+func getWBGTForecastData(c *gin.Context) {
+	loc := strings.Split(c.Param("loc"), ",")
+	lat := loc[0]
+	long := loc[1]
+	getWBGTForecastLocation(lat, long)
+	c.IndentedJSON(http.StatusCreated, wbgtRawData.Properties.WetBulbGlobeTemperature.Values)
+}
+
+func getWBGTForecastCityState(c *gin.Context) {
+	c.IndentedJSON(http.StatusCreated, wbgtDataLocation)
+}
+
 func main() {
 	router := gin.Default()
 	router.Use(cors.New(cors.Config{
@@ -838,6 +989,8 @@ func main() {
 	router.POST("/userAlertTypes", getUserAlertTypes)
 	router.POST("/getNWSOffices", getNWSOffices)
 	router.GET("/countiesByState/:state", getCountiesByState)
+	router.GET("/getWBGTForecastCityState", getWBGTForecastCityState)
+	router.GET("/getWBGTForecastData/:loc", getWBGTForecastData)
 	router.Run("localhost:8080") //localhost:8080 :10000
 
 }
