@@ -224,6 +224,7 @@ export default function AlertSystem() {
     "NWS Gray ME",
     "NWS Duluth MN",
     "NWS Billings MT",
+    "NWS Glasgow MT",
     "NWS Great Falls MT",
     "NWS Missoula MT",
     "NWS Newport/Morehead City NC",
@@ -778,9 +779,13 @@ export default function AlertSystem() {
                 <p className="w-full items-center justify-center">
                   {Object.values(selectedCounties).flat().join(', ')}
                 </p>
-                <p className="w-full items-center justify-center">
-                  Under {checkedNWSOffices.join(', ')}
-                </p>
+                {
+                checkedNWSOffices.length === 0 ? (
+                  <p className="w-full items-center justify-center">For All Offices</p>
+                 ) : (
+                   <p className="w-full items-center justify-center">For {checkedNWSOffices.join(', ')}</p>
+                 )
+              }
                 {
                 checkedItems.length === 0 ? (
                   <p className="w-full items-center justify-center">For All Warnings</p>

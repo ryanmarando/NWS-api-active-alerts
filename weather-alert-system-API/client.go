@@ -690,8 +690,6 @@ var NoAlertStatement []NoAlert
 var userAlertTypes userAlertType
 var userNWSOffices userNWSOffice
 var wbgtDataLocation WBGTForecastLocation
-
-// var userWBGTLocationQuery Coordinates
 var wbgtRawData WBGTForecast
 
 func addCounties(countyListArr []string) {
@@ -708,6 +706,7 @@ func addStateIdToCountyList(stateId string) {
 	for county := range countyList {
 		countyState := county + " " + stateId
 		transformedCountyList[countyState] = 1
+		transformedCountyList[county] = 1
 	}
 }
 

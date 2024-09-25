@@ -6,6 +6,8 @@ import 'leaflet/dist/leaflet.css';
 import { useState } from 'react';
 import { Line } from 'react-chartjs-2';
 import { Chart as ChartJS, Title, Tooltip, Legend, LineElement, PointElement, CategoryScale, LinearScale } from 'chart.js';
+import WBGTLevels from "@/components/WBGTLevels";
+import LoadingAnimation from "@/components/LoadingAnimation";
 
 
 ChartJS.register(Title, Tooltip, Legend, LineElement, PointElement, CategoryScale, LinearScale);
@@ -17,6 +19,39 @@ export default function WbgtPage() {
     const [wbgtForecast, setWbgtForecast] = useState([])
     const [wbgtLocation, setWbgtLocation] = useState("")
     const [loading, setLoading] = useState(false)
+
+    const convertToCSV = (data) => {
+        const csvRows = [];
+        const headers = Object.keys(data[0]); // Get headers from the first data object
+        csvRows.push(headers.join(',')); // Add headers to the first row
+      
+        // Loop through the data and create a row for each entry
+        data.forEach((row) => {
+          const values = headers.map((header) => row[header]);
+          csvRows.push(values.join(','));
+        });
+      
+        return csvRows.join('\n'); // Join all rows with a newline character
+      };
+      
+      const downloadCSV = (data, filename = 'map-data.csv') => {
+        const csv = convertToCSV(data);
+        const blob = new Blob([csv], { type: 'text/csv' });
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.setAttribute('hidden', '');
+        a.setAttribute('href', url);
+        a.setAttribute('download', filename);
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+      };
+
+      const handleDownloadCSV = () => {
+        // You can pass the actual map data here instead of dummyData
+        downloadCSV(wbgtForecast);
+      };
+      
 
     function extractDateTime(timestamp) {
         const match = timestamp.match(/^([^/]+)\s*/);
@@ -53,8 +88,6 @@ const ClickableMap = () => {
         });
     }
 
-
-
   // This component listens to click events on the map
   const LocationMarker = () => {
     useMapEvents({
@@ -86,9 +119,15 @@ const ClickableMap = () => {
       {/* Display the clicked position */}
       {position &&  (
         <div>
+             <div className="flex items-center justify-center mt-4 -mb-4">
+        <button
+          className="bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-700"
+          onClick={handleDownloadCSV}
+        >
+          Download Data as CSV
+        </button>
+      </div>
           <WBGTChart />
-          <p>Clicked Position:</p>
-          <p>Latitude: {position.lat}, Longitude: {position.lng}</p>
         </div>
       )}
     </div>
@@ -128,11 +167,13 @@ const WBGTChart = () => {
     };
   
     return (
-      <div>
+      <div className="m-8">
+        <div className="alert-system">
         {loading ? <h1 className="w-full items-center justify-center flex">Loading...</h1>:
         <h1 className="w-full items-center justify-center flex">WBGT Forecast Chart for {wbgtLocation.properties.relativeLocation.properties.city}, {wbgtLocation.properties.relativeLocation.properties.state}</h1>
         }
         <Line data={chartData} options={options} />
+        </div>
       </div>
     );
   }
@@ -144,7 +185,15 @@ const WBGTChart = () => {
         <div>
             <h1 className="font-bold flex items-center justify-center">Wet Bulb Globe Temperature Forecast</h1>
             <h3 className="flex items-center justify-center">Click a location to get the forecast:</h3>
-            <ClickableMap />
+            <div className="relative">
+                <ClickableMap />
+                {loading && (
+                <div className="absolute inset-0 bg-white bg-opacity-75 flex items-center justify-center z-10">
+                    <LoadingAnimation />
+                </div>
+            )}
+            </div>
+            <WBGTLevels />
         </div>
         <Footer/>
         </>
