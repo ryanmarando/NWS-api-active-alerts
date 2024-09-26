@@ -216,6 +216,7 @@ export default function AlertSystem() {
     "NWS Chicago IL",
     "NWS Northern Indiana",
     "NWS Indianapolis IN",
+    "NWS Jackson KY",
     "NWS Louisville KY",
     "NWS Paducah KY",
     "NWS Lake Charles LA",
@@ -244,7 +245,9 @@ export default function AlertSystem() {
     "NWS Columbia SC",
     "NWS Greenville-Spartanburg SC",
     "NWS Rapid City SD",
+    "NWS Memphis TN",
     "NWS Morristown TN",
+    "NWS Nashville TN",
     "NWS Blacksburg VA",
     "NWS Wakefield VA",
     "NWS Burlington VT",
@@ -379,10 +382,15 @@ export default function AlertSystem() {
       return alert("You must add at least once state to remove.");
     if (stateList.length <= 1) {
       setStateList([]);
+      setSelectedCounties({})
       return;
     }
-    stateList.pop();
+    const stateToRemove = stateList.pop();
+    const updatedCounties = {...selectedCounties}
     setStateList([...stateList]);
+    delete updatedCounties[stateToRemove];
+    setSelectedCounties(updatedCounties)
+
   }
 
   async function getDataFromOwnAPIWithCounties() {
