@@ -6,8 +6,8 @@ import { Analytics } from "@vercel/analytics/react"
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
-  title: "Weather Alert System",
-  description: "Get the warnings for the location you desire",
+  title: "Ryan Marando",
+  description: "Get the weather from the future",
 };
 
 export default function RootLayout({ children }) {
