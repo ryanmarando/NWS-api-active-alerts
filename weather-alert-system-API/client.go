@@ -692,6 +692,7 @@ type Features struct {
 	Properties Alert `json:"properties"` // properties contain alert strings defined in the alert struct
 }
 type Alert struct {
+	ID          string `json:"id"`
 	AreaDesc    string `json:"areaDesc"`
 	Event       string `json:"event"`
 	Effective   string `json:"effective"`

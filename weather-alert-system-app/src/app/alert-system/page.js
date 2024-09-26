@@ -210,7 +210,7 @@ export default function AlertSystem() {
     "NWS Jacksonville FL",
     "NWS Melbourne FL",
     "NWS Miami FL",
-    "NWS Talahassee FL",
+    "NWS Tallahassee FL",
     "NWS Tampa Bay Ruskin FL",
     "NWS Peachtree City GA",
     "NWS Chicago IL",
@@ -277,6 +277,7 @@ export default function AlertSystem() {
   const [selectedCounties, setSelectedCounties] = useState({});
   const [showCountiesForSelectedStates, setShowCountiesForSelectedStates] = useState(false);
   const [hasSearchedForAlerts, setHasSearchedForAlerts] = useState(false);
+  const [siftedAlertList, setSiftedAlertList] = useState([]);
   const URL = "http://localhost:8080" //https://nws-api-active-alerts.onrender.com
 
   function addState() {
@@ -393,6 +394,41 @@ export default function AlertSystem() {
 
   }
 
+  function updateAlertAreaDesc(alertList) {
+    const mergedAlerts = [];
+  
+    alertList.forEach((alert, index) => {
+      // Check if this alert has already been processed
+      const existingAlertIndex = mergedAlerts.findIndex(a => a.id === alert.id);
+  
+      if (existingAlertIndex !== -1) {
+        // Merge the AreaDesc of the matching alert with the existing one
+        const existingAlert = mergedAlerts[existingAlertIndex];
+        
+        const combinedAreaDesc = [
+          existingAlert.areaDesc ? existingAlert.areaDesc.trim() : '',
+          alert.areaDesc ? alert.areaDesc.trim() : ''
+        ].filter(desc => desc !== '').join("; ").trim();
+  
+        // Update the existing alert with the combined AreaDesc
+        mergedAlerts[existingAlertIndex].areaDesc = combinedAreaDesc;
+  
+      } else {
+        // Add this alert to the merged list if it's not already processed
+        mergedAlerts.push({ ...alert });
+      }
+    });
+  
+    return mergedAlerts;
+  }
+  
+  function sortAlertListByPriority(alertList) {
+    return alertList.sort((a, b) => {
+      // Assuming priority is a numerical value and lower values have higher priority
+      return a.priority - b.priority;
+    });
+  }
+
   async function getDataFromOwnAPIWithCounties() {
     const tempAlertList = [];
     const data = { data: checkedItems };
@@ -446,7 +482,9 @@ export default function AlertSystem() {
         });
   }
   }
-    setAlertList(tempAlertList);
+    let updatedList = updateAlertAreaDesc(tempAlertList);
+    sortAlertListByPriority(updatedList)
+    setAlertList(updatedList);
     setIsLoading(false);
     setHasSearchedForAlerts(true)
     console.log("Successful county export");
@@ -492,9 +530,10 @@ export default function AlertSystem() {
     )
       .then((data) => data.json())
       .then((data) => {
-        setAlertList(data);
+        setAlertList(updateAlertAreaDesc(data));
         setIsLoading(false);
       });
+ 
     setHasSearchedForAlerts(true)
     console.log("Successful state wide export");
   }
