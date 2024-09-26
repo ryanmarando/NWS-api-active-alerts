@@ -217,6 +217,7 @@ export default function AlertSystem() {
     "NWS Northern Indiana",
     "NWS Indianapolis IN",
     "NWS Louisville KY",
+    "NWS Paducah KY",
     "NWS Lake Charles LA",
     "NWS Boston/Norton MA",
     "NWS Baltimore MD/Washington DC",
@@ -774,7 +775,7 @@ export default function AlertSystem() {
             className="alert-list shadow-md border-spacing-1"
             style={{ backgroundColor: "white" }}>
                 <p className="w-full items-center justify-center">
-                  All clear for {Object.keys(selectedCounties).flat().join(', ')}
+                  All clear for {stateList.join(', ')} 
                 </p>
                 <p className="w-full items-center justify-center">
                   {Object.values(selectedCounties).flat().join(', ')}

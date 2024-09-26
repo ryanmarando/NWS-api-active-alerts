@@ -859,11 +859,11 @@ func getState(c *gin.Context) {
 	for _, state := range states {
 		getActiveAlertsFromNWS(state)
 	}
-	if len(alertList) == 0 {
-		emptyHeadline := "All clear! Currently there are no active alerts for " + arrayStates
-		emptyAlerts := Alert{Headline: emptyHeadline}
-		alertList = append(alertList, emptyAlerts)
-	}
+	//if len(alertList) == 0 {
+	//	emptyHeadline := "All clear! Currently there are no active alerts for " + arrayStates
+	//	emptyAlerts := Alert{Headline: emptyHeadline}
+	//	alertList = append(alertList, emptyAlerts)
+	//}
 	c.IndentedJSON(http.StatusOK, alertList)
 }
 
