@@ -95,6 +95,11 @@ const ClickableMap = () => {
     };
 
     const WBGTChart = () => {
+      if (!wbgtForecast || wbgtForecast.length === 0) {
+        // Show alert if wbgtForecast is null or empty
+        alert('Forecast data is not available. Please try again.');
+        return null; // Return nothing to prevent rendering the chart
+      }
         const chartData = {
           labels: wbgtForecast.map(item => formatDateToAMPM(extractDateTime(item.validTime))),
           datasets: [

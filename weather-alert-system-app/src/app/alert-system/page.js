@@ -204,8 +204,15 @@ export default function AlertSystem() {
     "NWS Phoenix AZ",
     "NWS Tucson AZ",
     "NWS Little Rock AR",
+    "NWS Eureka CA",
+    "NWS Hanford CA",
+    "NWS Los Angeles/Oxnard CA",
+    "NWS Sacramento CA",
     "NWS San Diego CA",
     "NWS San Francisco CA",
+    "NWS Denver/Boulder CO",
+    "NWS Grand Junction CO",
+    "NWS Pueblo CO",
     "NWS Key West FL",
     "NWS Jacksonville FL",
     "NWS Melbourne FL",
@@ -213,18 +220,38 @@ export default function AlertSystem() {
     "NWS Tallahassee FL",
     "NWS Tampa Bay Ruskin FL",
     "NWS Peachtree City GA",
+    "NWS Honolulu HI",
+    "NWS Des Moines IA",
+    "NWS Quad Cities IA IL",
+    "NWS Boise ID",
+    "NWS Pocatello ID",
     "NWS Chicago IL",
+    "NWS Lincoln IL",
     "NWS Northern Indiana",
     "NWS Indianapolis IN",
+    "NWS Dodge City KS",
+    "NWS Goodland KS",
+    "NWS Topeka KS",
+    "NWS Wichita KS",
     "NWS Jackson KY",
     "NWS Louisville KY",
     "NWS Paducah KY",
     "NWS Lake Charles LA",
+    "NWS New Orleans LA",
+    "NWS Shreveport LA",
     "NWS Boston/Norton MA",
     "NWS Baltimore MD/Washington DC",
     "NWS Caribou ME",
     "NWS Gray ME",
+    "NWS Detroit/Pontiac MI",
+    "NWS Grand Rapids MI",
+    "NWS Marquette MI",
     "NWS Duluth MN",
+    "NWS Twin Cities/Chanhassen MN",
+    "NWS Kansas City/Pleasant Hill MO",
+    "NWS Springfield MO",
+    "NWS St Louis MO",
+    "NWS Jackson MS",
     "NWS Billings MT",
     "NWS Glasgow MT",
     "NWS Great Falls MT",
@@ -232,41 +259,69 @@ export default function AlertSystem() {
     "NWS Newport/Morehead City NC",
     "NWS Raleigh NC",
     "NWS Wilmington NC",
+    "NWS Bismarck ND", 
+    "NWS Grand Forks ND",
+    "NWS Hastings NE",
+    "NWS North Platte NE",
+    "NWS Omaha/Valley NE",
+    "Albuquerque NM",
     "NWS Mount Holly NJ",
-    "NWS Albany NY",
-    "NWS Upton NY",
+    "NWS Elko NV",
     "NWS Las Vegas NV",
+    "NWS Reno NV",
+    "NWS Albany NY",
+    "NWS Binghamton NY",
+    "NWS Buffalo NY",
+    "NWS New York NY",
+    "NWS Upton NY",
     "NWS Cleveland OH",
     "NWS Wilmington OH",
+    "NWS Norman OK",
+    "NWS Tulsa OK",
     "NWS Medford OR",
     "NWS Pendleton OR",
     "NWS Portland OR",
+    "NWS Pittsburgh PA",
+    "NWS State College PA",
     "NWS Charleston SC",
     "NWS Columbia SC",
     "NWS Greenville-Spartanburg SC",
+    "NWS Aberdeen SD",
     "NWS Rapid City SD",
+    "NWS Sioux Falls SD",
     "NWS Memphis TN",
     "NWS Morristown TN",
     "NWS Nashville TN",
+    "NWS Amarillo TX",
+    "NWS Austin/San Antonio TX",
+    "NWS Brownsville TX",
+    "NWS Corpus Christi TX",
+    "NWS El Paso Tx/Santa Teresa NM",
+    "NWS Houston/Galveston TX",
+    "NWS Lubbock TX",
+    "NWS Midland/Odessa TX",
+    "NWS San Angelo TX",
+    "NWS Salt Lake City UT",
     "NWS Blacksburg VA",
     "NWS Wakefield VA",
     "NWS Burlington VT",
+    "NWS Seattle WA",
     "NWS Spokane WA",
+    "NWS Green Bay WI",
+    "NWS La Crosse WI",
+    "NWS Milwaukee/Sullivan WI",
     "NWS Charleston WV",
     "NWS Cheyenne WY",
+    "NWS Western and Central Wyoming",
   ]
   const [stateOptions, setStateOptions] = useState(options);
   const [selectedOption, setSelectedOption] = useState(null);
   const [stateList, setStateList] = useState([]);
-  const [countyList, setCountyList] = useState("");
   const [alertList, setAlertList] = useState([]);
   const [isRunning, setIsRunning] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [showSettings, setShowSettings] = useState(true);
-  const [countyListSaved, setCountyListSaved] = useState("");
-  const [stateListSaved, setStateListSaved] = useState("");
-  const [inputValue, setInputValue] = useState("");
-  const { isLoaded, isSignedIn, user } = useUser();
+  const { user } = useUser();
   const [showWarningSettings, setShowWarningSettings] = useState(false);
   const [checkedItems, setCheckedItems] = useState([]);
   const [selectAll, setSelectAll] = useState(false);
@@ -277,7 +332,6 @@ export default function AlertSystem() {
   const [selectedCounties, setSelectedCounties] = useState({});
   const [showCountiesForSelectedStates, setShowCountiesForSelectedStates] = useState(false);
   const [hasSearchedForAlerts, setHasSearchedForAlerts] = useState(false);
-  const [siftedAlertList, setSiftedAlertList] = useState([]);
   const URL = "http://localhost:8080" //https://nws-api-active-alerts.onrender.com
 
   function addState() {
