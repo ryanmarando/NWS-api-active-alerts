@@ -96,13 +96,13 @@ export function Hero() {
       <div className="absolute  w-full flex text-center font-semibold text-[32px] lg:text-[64px]  text-[#172026] items-center justify-center mt-14 lg:mt-20 z-10">
         <TypingAnimation></TypingAnimation>
       </div>
-      <div className="absolute flex mt-60 mr-[50%]">
+      <div className="absolute flex mt-40 lg:mt-60 lg:mr-[50%]">
         <YouTubeEmbed url={"https://youtu.be/g8IAGWvhe-s"} autoplay={true}/>
       </div>
-      <div className="absolute flex ml-[43%] mt-48 items-center">
+      <div className="absolute flex mt-[500px] lg:ml-[43%] lg:mt-48 items-center">
         <h2 className="font-semibold text-[20px] text-center">About Ryan Marando</h2>
       </div>
-      <div className="absolute flex ml-[45%] mt-60 w-[50%] text-center">
+      <div className="absolute flex mt-[550px] lg:ml-[45%] lg:mt-60 m-4 lg:m-0 lg:w-[50%] text-center justify-center">
       <p className="border-2 border-gray-800 rounded-md p-2">
   Colleagues call me an engaging and compelling meteorologist who blends storytelling and science with ease. 
   As a Meteorologist for WHIO in Dayton, Ohio, <strong>I shape my forecasts to help the community understand the impacts of everyday to dangerous, severe weather.</strong>
@@ -121,7 +121,7 @@ export function Hero() {
         <Image
           src={Gradient}
           alt="Gradient"
-          className="min-h-[500px] w-full object-cover"
+          className="min-h-[1200px] lg:min-h-[500px] w-full object-cover"
         />
       </div>
       </motion.div>

@@ -151,7 +151,7 @@ const ClickableMap = () => {
       }
   
     return (
-      <div>
+      <div style={{ position: 'relative', zIndex: 0 }}>
         <MapContainer
           center={[37.8, -96]} // Center of the US
           zoom={4}

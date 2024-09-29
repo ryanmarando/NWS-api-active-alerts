@@ -5,7 +5,7 @@ const extractYouTubeID = (url) => {
   };
 
 
-const YouTubeEmbed = ({url, width = '560', height = '315', autoplay = false }) => {
+const YouTubeEmbed = ({url, width = '510', height = '265', autoplay = false }) => {
     const videoID = extractYouTubeID(url);
 
   if (!videoID) {
