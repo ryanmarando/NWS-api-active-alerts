@@ -930,7 +930,7 @@ export default function AlertSystem() {
             >
               {expandedItemIndex === idx && (
                 <pre>
-                  <div className="p-4 text-wrap">{obj.description}</div>
+                  <div className="p-4 sm:items-center text-wrap text-sm lg:text-base">{obj.description}</div>
                 </pre>
               )}
             </div>
