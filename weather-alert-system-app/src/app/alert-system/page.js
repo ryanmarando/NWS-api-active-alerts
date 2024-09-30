@@ -220,7 +220,7 @@ export default function AlertSystem() {
     "NWS Tallahassee FL",
     "NWS Tampa Bay Ruskin FL",
     "NWS Peachtree City GA",
-    "NWS Honolulu HI",
+    "NWS Honolulu HI",  
     "NWS Des Moines IA",
     "NWS Quad Cities IA IL",
     "NWS Boise ID",
@@ -297,6 +297,7 @@ export default function AlertSystem() {
     "NWS Brownsville TX",
     "NWS Corpus Christi TX",
     "NWS El Paso Tx/Santa Teresa NM",
+    "NWS NWS Fort Worth TX",
     "NWS Houston/Galveston TX",
     "NWS Lubbock TX",
     "NWS Midland/Odessa TX",
@@ -332,7 +333,7 @@ export default function AlertSystem() {
   const [selectedCounties, setSelectedCounties] = useState({});
   const [showCountiesForSelectedStates, setShowCountiesForSelectedStates] = useState(false);
   const [hasSearchedForAlerts, setHasSearchedForAlerts] = useState(false);
-  const URL = "http://localhost:8080" //https://nws-api-active-alerts.onrender.com
+  const URL = "https://nws-api-active-alerts.onrender.com" //https://nws-api-active-alerts.onrender.com http://localhost:8080
 
   function addState() {
     if (!selectedOption) return alert("Please enter a state.");
