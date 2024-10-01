@@ -11,7 +11,7 @@ const ClickableMap = () => {
     const [wbgtForecast, setWbgtForecast] = useState([])
     const [wbgtLocation, setWbgtLocation] = useState("")
     const [loading, setLoading] = useState(false)
-    const URL = "https://nws-api-active-alerts.onrender.com" //https://nws-api-active-alerts.onrender.com http://localhost:8080
+    const URL = "http://localhost:8080" //https://nws-api-active-alerts.onrender.com http://localhost:8080
 
     const convertToCSV = (data) => {
         const csvRows = [];
@@ -95,55 +95,61 @@ const ClickableMap = () => {
     };
 
     const WBGTChart = () => {
-        const chartData = {
-          labels: wbgtForecast.map(item => formatDateToAMPM(extractDateTime(item.validTime))),
-          datasets: [
-            {
-              label: 'WBGT Value',
-              data: wbgtForecast.map(item => item.value),
-              borderColor: 'rgba(75, 192, 192, 1)',
-              backgroundColor: 'rgba(75, 192, 192, 0.2)',
-              fill: true,
-            },
-          ],
-        };
-      
-        const options = {
-          responsive: true,
-          scales: {
-            x: {
-              title: {
-                display: true,
-                text: 'Time',
-              },
-            },
-            y: {
-              title: {
-                display: true,
-                text: 'Value (°F)',
-              },
+      const chartData = {
+        labels: wbgtForecast.map((item) => formatDateToAMPM(extractDateTime(item.validTime))),
+        datasets: [
+          {
+            label: 'WBGT Value',
+            data: wbgtForecast.map((item) => item.value),
+            borderColor: 'rgba(75, 192, 192, 1)',
+            backgroundColor: 'rgba(75, 192, 192, 0.2)',
+            fill: true,
+          },
+        ],
+      };
+    
+      const options = {
+        responsive: true,
+        maintainAspectRatio: false, // Allows chart resizing
+        scales: {
+          x: {
+            title: {
+              display: true,
+              text: 'Time',
             },
           },
-        };
-      
-        return (
-          <div className="m-8">
-            <div className="alert-system">
+          y: {
+            title: {
+              display: true,
+              text: 'Value (°F)',
+            },
+          },
+        },
+      };
+    
+      return (
+        <div className="container mx-auto px-4 mt-8">
+          <div className="alert-system">
             {loading ? (
-        <div className="inset-0 bg-white bg-opacity-75 flex items-center justify-center z-10">
-            <LoadingAnimation />
-        </div>
-        ) : (
-        <>
-        <h1 className="w-full items-center justify-center flex">
-        WBGT Forecast Chart for {wbgtLocation.properties.relativeLocation.properties.city}, {wbgtLocation.properties.relativeLocation.properties.state}
-        </h1>
-        </>
-        )} <Line data={chartData} options={options} />
+              <div className="inset-0 bg-white bg-opacity-75 flex items-center justify-center z-10">
+                <LoadingAnimation />
+              </div>
+            ) : (
+              <>
+                <h1 className="w-full items-center justify-center flex">
+                  WBGT Forecast Chart for {wbgtLocation.properties.relativeLocation.properties.city},{' '}
+                  {wbgtLocation.properties.relativeLocation.properties.state}
+                </h1>
+              </>
+            )}
+            <div className="chart-container" style={{ position: 'relative', height: '60vh', width: '100%' }}>
+              <Line data={chartData} options={options} />
             </div>
           </div>
-        );
-      }
+        </div>
+      );
+    };
+    
   
     return (
       <div style={{ position: 'relative', zIndex: 0 }}>

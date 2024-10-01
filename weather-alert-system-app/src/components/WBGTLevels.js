@@ -12,31 +12,36 @@ const WBGTLevels = () => {
 
   return (
     <div className='p-4'>
-    <div className='alert-system'>
-      <h1 className='flex items-center justify-center'>Wet Bulb Globe Temperature (WBGT) Levels</h1>
-      <p>The Wet Bulb Globe Temperature (WBGT), according to the National Weather Service, is a measure of heat stress in direct sunlight, 
-        which takes into account: temperature, humidity, wind speed, sun angle and cloud cover (solar radiation). 
-        This differs from the heat index, which takes into consideration temperature and humidity and is calculated for shady areas</p>
-      <table style={{ width: '100%', borderCollapse: 'collapse', marginTop: '10px', borderRadius: '10px'}}>
+  <div className='alert-system'>
+    <h1 className='flex items-center justify-center text-lg font-bold mb-4'>Wet Bulb Globe Temperature (WBGT) Levels</h1>
+    <p className="mb-4">
+      The Wet Bulb Globe Temperature (WBGT), according to the National Weather Service, is a measure of heat stress in direct sunlight, 
+      which takes into account: temperature, humidity, wind speed, sun angle, and cloud cover (solar radiation). 
+      This differs from the heat index, which takes into consideration temperature and humidity and is calculated for shady areas.
+    </p>
+    <div className="overflow-x-auto w-[80%]">
+      <table className="w-full border-collapse table-auto mt-4">
         <thead>
-          <tr style={{ backgroundColor: '#f2f2f2', textAlign: 'left' }}>
-            <th style={{ padding: '10px', borderBottom: '1px solid #ddd' }}>Level</th>
-            <th style={{ padding: '10px', borderBottom: '1px solid #ddd' }}>Temperature Range</th>
-            <th style={{ padding: '10px', borderBottom: '1px solid #ddd' }}>Description</th>
+          <tr className="bg-gray-200 text-left">
+            <th className="p-3 border-b-2 border-gray-300">Level</th>
+            <th className="p-3 border-b-2 border-gray-300">Temperature Range</th>
+            <th className="p-3 border-b-2 border-gray-300">Description</th>
           </tr>
         </thead>
         <tbody>
           {wbgtLevels.map((level, index) => (
-            <tr key={index} style={{ backgroundColor: level.color }}>
-              <td style={{ padding: '10px', borderBottom: '1px solid #ddd' }}>{level.level}</td>
-              <td style={{ padding: '10px', borderBottom: '1px solid #ddd' }}>{level.range}</td>
-              <td style={{ padding: '10px', borderBottom: '1px solid #ddd' }}>{level.description}</td>
+            <tr key={index} className="text-left" style={{ backgroundColor: level.color }}>
+              <td className="p-3 border-b border-gray-300">{level.level}</td>
+              <td className="p-3 border-b border-gray-300">{level.range}</td>
+              <td className="p-3 border-b border-gray-300">{level.description}</td>
             </tr>
           ))}
         </tbody>
       </table>
     </div>
-    </div>
+  </div>
+</div>
+
   );
 };
 

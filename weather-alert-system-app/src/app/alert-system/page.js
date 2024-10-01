@@ -333,7 +333,7 @@ export default function AlertSystem() {
   const [selectedCounties, setSelectedCounties] = useState({});
   const [showCountiesForSelectedStates, setShowCountiesForSelectedStates] = useState(false);
   const [hasSearchedForAlerts, setHasSearchedForAlerts] = useState(false);
-  const URL = "https://nws-api-active-alerts.onrender.com" //https://nws-api-active-alerts.onrender.com http://localhost:8080
+  const URL = "http://localhost:8080" //https://nws-api-active-alerts.onrender.com http://localhost:8080
 
   function addState() {
     if (!selectedOption) return alert("Please enter a state.");
@@ -399,7 +399,7 @@ export default function AlertSystem() {
         stateList.map((state, index) => (
           <div key={index} className="mb-4">
             <label>Select Counties for {state}:</label>
-            <div className="grid grid-cols-6 md:grid-cols-6 lg:grid-cols-6 gap-1">
+            <div className="grid grid-cols-1 md:grid-cols-6 lg:grid-cols-6 gap-1">
               {countiesByState[state] ? (
                 countiesByState[state].map((county, countyIndex) => (
                   <div key={countyIndex} className="flex items-center">
@@ -796,7 +796,7 @@ export default function AlertSystem() {
         />
       </div>
       <form className="p-2">
-        <div className="grid grid-cols-2 lg:grid-cols-3 gap-2 gap-x-6 -ml-4 lg:ml-2">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-2 gap-x-6 -ml-4 lg:ml-2">
           {filteredOfficeItems.map((item, index) => (
             <div key={item} className="flex items-center pl-4">
               <input
@@ -929,10 +929,10 @@ export default function AlertSystem() {
               }`}
             >
               {expandedItemIndex === idx && (
-                <pre>
-                  <div className="p-4 sm:items-center text-wrap text-sm lg:text-base">{obj.description}</div>
+                <pre className="p-4 sm:items-center break-words whitespace-pre-wrap text-sm lg:text-base">
+                    <div>{obj.description}</div>
                 </pre>
-              )}
+                  )}
             </div>
           </li>
         ))}

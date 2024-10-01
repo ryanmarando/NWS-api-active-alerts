@@ -121,7 +121,7 @@ export function Hero() {
         <Image
           src={Gradient}
           alt="Gradient"
-          className="min-h-[1200px] lg:min-h-[500px] w-full object-cover"
+          className="min-h-[1500px] lg:min-h-[500px] w-full object-cover"
         />
       </div>
       </motion.div>
