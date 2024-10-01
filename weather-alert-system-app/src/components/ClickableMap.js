@@ -11,7 +11,7 @@ const ClickableMap = () => {
     const [wbgtForecast, setWbgtForecast] = useState([])
     const [wbgtLocation, setWbgtLocation] = useState("")
     const [loading, setLoading] = useState(false)
-    const URL = "http://localhost:8080" //https://nws-api-active-alerts.onrender.com http://localhost:8080
+    const URL = "https://nws-api-active-alerts.onrender.com" //https://nws-api-active-alerts.onrender.com http://localhost:8080
 
     const convertToCSV = (data) => {
         const csvRows = [];

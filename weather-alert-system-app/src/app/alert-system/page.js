@@ -333,7 +333,7 @@ export default function AlertSystem() {
   const [selectedCounties, setSelectedCounties] = useState({});
   const [showCountiesForSelectedStates, setShowCountiesForSelectedStates] = useState(false);
   const [hasSearchedForAlerts, setHasSearchedForAlerts] = useState(false);
-  const URL = "http://localhost:8080" //https://nws-api-active-alerts.onrender.com http://localhost:8080
+  const URL = "https://nws-api-active-alerts.onrender.com" //https://nws-api-active-alerts.onrender.com http://localhost:8080
 
   function addState() {
     if (!selectedOption) return alert("Please enter a state.");
