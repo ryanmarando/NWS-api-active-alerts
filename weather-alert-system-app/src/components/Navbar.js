@@ -50,8 +50,24 @@ export function Navbar() {
         <Link className="hidden lg:block py-[16px]" href="/contact">
           Contact
         </Link>
-        <Link className="hidden lg:block py-[16px]" href="/wbgt">
-          Wet Bulb Globe Temperatures
+        <div className="relative group">
+  {/* Main Products Link */}
+  <button className="hidden lg:block py-[16px] px-4 hover:bg-gray-100 rounded-md">
+    Products
+  </button>
+
+  {/* Dropdown Content */}
+  <div className="absolute hidden group-hover:block bg-white shadow-lg rounded-md mt-2 z-20">
+    <Link
+      href="/wbgt"
+      className="block px-4 py-2 text-gray-700 hover:bg-[rgb(221,221,221)] rounded-md"
+    >
+      Wet Bulb Globe Temperatures
+    </Link>
+  </div>
+</div>
+<Link className="hidden lg:block py-[16px]" href="/reel">
+          Demo Reel and Clips
         </Link>
       </div>
       <div className="flex items-center">

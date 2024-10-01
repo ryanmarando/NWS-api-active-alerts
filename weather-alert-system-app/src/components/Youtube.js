@@ -5,7 +5,7 @@ const extractYouTubeID = (url) => {
   };
 
 
-const YouTubeEmbed = ({url, width = '510', height = '265', autoplay = false }) => {
+const YouTubeEmbed = ({url, width = '510', height = '265', autoplay = false, title }) => {
     const videoID = extractYouTubeID(url);
 
   if (!videoID) {
@@ -18,13 +18,16 @@ const YouTubeEmbed = ({url, width = '510', height = '265', autoplay = false }) =
 
   return (
     <div>
+      {title && (
+        <h2 className="text-lg font-semibold mb-2 text-center">{title}</h2>
+      )}
       <iframe
         src={`https://www.youtube.com/embed/${videoID}?autoplay=${autoplayParam}`}
         width={width}
         height={height}
         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
         allowFullScreen
-        title="YouTube Video"
+        title={title || "YouTube Video"}
       ></iframe>
     </div>
   );
