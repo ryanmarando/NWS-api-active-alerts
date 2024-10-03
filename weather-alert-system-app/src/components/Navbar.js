@@ -66,9 +66,6 @@ export function Navbar() {
     </Link>
   </div>
 </div>
-<Link className="hidden lg:block py-[16px]" href="/reel">
-          Demo Reel and Clips
-        </Link>
       </div>
       <div className="flex items-center">
         <a

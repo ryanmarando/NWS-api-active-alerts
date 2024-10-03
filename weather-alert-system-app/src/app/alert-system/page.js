@@ -819,6 +819,9 @@ export default function AlertSystem() {
   const saveDataListInput = async () => {
     if (stateList.length === 0)
       return alert("You must add at least once state to save data.");
+    if (!user) {
+      return alert("Please login to save your data.")
+    }
     try {
       const response = await fetch("/api/updateUserMetadata", {
         method: "POST",
@@ -849,6 +852,9 @@ export default function AlertSystem() {
   };
 
   async function populateDataInput() {
+    if (!user) {
+      return alert("Please login to load your saved data.")
+    }
     const savedStateListArr = user?.publicMetadata.stateList.split(",");
     setStateList(savedStateListArr);
     setSelectedCounties(user?.publicMetadata.selectedCounties);
