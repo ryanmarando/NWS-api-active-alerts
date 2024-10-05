@@ -851,6 +851,10 @@ export default function AlertSystem() {
     if (!user) {
       return alert("Please login to populate saved settings.")
     }
+    console.log(user.publicMetadata)
+    if (!user.publicMetadata || Object.keys(user.publicMetadata).length === 0) {
+      return alert("There's no saved data to populate.");
+    }
     const savedStateListArr = user?.publicMetadata.stateList.split(",");
     setStateList(savedStateListArr);
     setSelectedCounties(user?.publicMetadata.selectedCounties);
