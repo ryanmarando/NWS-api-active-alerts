@@ -47,12 +47,9 @@ export function Navbar() {
         >
           Weather Alert System
         </Link>
-        <Link className="hidden lg:block py-[16px]" href="/contact">
-          Contact
-        </Link>
         <div className="relative group">
   {/* Main Products Link */}
-  <button className="hidden lg:block py-[16px] px-4 hover:bg-gray-100 rounded-md">
+  <button className="hidden lg:block py-[16px] px-2 hover:bg-gray-100 rounded-md">
     Products
   </button>
 
@@ -66,6 +63,12 @@ export function Navbar() {
     </Link>
   </div>
 </div>
+<Link className="hidden lg:block py-[16px]" href="/broadcasting">
+          Broadcasting
+        </Link>
+        <Link className="hidden lg:block py-[16px]" href="/contact">
+          Contact
+        </Link>
       </div>
       <div className="flex items-center">
         <a

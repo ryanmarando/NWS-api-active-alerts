@@ -115,9 +115,7 @@ export default function AlertSystem() {
     "Flash Flood Watch",
     "Gale Warning",
     "Flood Statement",
-    "Wind Chill Warning",
     "Extreme Cold Warning",
-    "Hard Freeze Warning",
     "Freeze Warning",
     "Red Flag Warning",
     "Storm Surge Watch",
@@ -132,7 +130,7 @@ export default function AlertSystem() {
     "Tropical Depression Local Statement",
     "Avalanche Advisory",
     "Winter Weather Advisory",
-    "Wind Chill Advisory",
+    "Cold Weather Advisory",
     "Heat Advisory",
     "Urban and Small Stream Flood Advisory",
     "Small Stream Flood Advisory",
@@ -172,9 +170,7 @@ export default function AlertSystem() {
     "High Wind Watch",
     "Excessive Heat Watch",
     "Extreme Cold Watch",
-    "Wind Chill Watch",
     "Lake Effect Snow Watch",
-    "Hard Freeze Watch",
     "Freeze Watch",
     "Fire Weather Watch",
     "Extreme Fire Danger",
@@ -820,7 +816,7 @@ export default function AlertSystem() {
     if (stateList.length === 0)
       return alert("You must add at least once state to save data.");
     if (!user) {
-      return alert("Please login to save your data.")
+      return alert("Please login to save your settings.")
     }
     try {
       const response = await fetch("/api/updateUserMetadata", {
@@ -853,7 +849,11 @@ export default function AlertSystem() {
 
   async function populateDataInput() {
     if (!user) {
-      return alert("Please login to load your saved data.")
+      return alert("Please login to populate saved settings.")
+    }
+    console.log(user.publicMetadata)
+    if (!user.publicMetadata || Object.keys(user.publicMetadata).length === 0) {
+      return alert("There's no saved data to populate.");
     }
     const savedStateListArr = user?.publicMetadata.stateList.split(",");
     setStateList(savedStateListArr);
