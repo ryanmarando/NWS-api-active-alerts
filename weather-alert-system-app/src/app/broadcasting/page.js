@@ -93,7 +93,7 @@ export default function Broadcasting() {
                 <img
                   src="/assets/temps_coded.png"
                   alt="Graphic 4"
-                  className="w-full h-60 object-cover"
+                  className="w-full lg:h-60 object-cover"
                 />
               </div>
               <div className="text-center">
@@ -101,7 +101,7 @@ export default function Broadcasting() {
                 <img
                   src="/assets/wbgt_coded.png"
                   alt="Graphic 5"
-                  className="w-full h-60 object-cover"
+                  className="w-full lg:h-60 object-cover"
                 />
               </div>
             </div>
