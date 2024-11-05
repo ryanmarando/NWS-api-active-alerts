@@ -97,7 +97,7 @@ export function Hero() {
         <TypingAnimation></TypingAnimation>
       </div>
       <div className="absolute flex mt-40 lg:mt-60 lg:mr-[50%]">
-        <YouTubeEmbed url={"https://youtu.be/g8IAGWvhe-s"} autoplay={true}/>
+        <YouTubeEmbed url={"https://youtu.be/PjuCnojcgHc"} autoplay={true}/>
       </div>
       <div className="absolute flex mt-[500px] lg:ml-[43%] lg:mt-48 items-center">
         <h2 className="font-semibold text-[20px] text-center">About Ryan Marando</h2>
