@@ -986,6 +986,7 @@ type Alert struct {
 	AreaDesc    string `json:"areaDesc"`
 	Event       string `json:"event"`
 	Effective   string `json:"effective"`
+	Ends        string `json:"ends"`
 	Expires     string `json:"expires"`
 	Headline    string `json:"headline"`
 	Description string `json:"description"`
@@ -1128,7 +1129,13 @@ func removeNonASCII(str string) string {
 
 func changeTimeOutputAndHeadline(singleAlert *Alert) {
 	timeStringEffective := singleAlert.Effective
-	timeStringExpires := singleAlert.Expires
+	var timeStringExpires string
+
+	if singleAlert.Ends != "" {
+		timeStringExpires = singleAlert.Ends
+	} else {
+		timeStringExpires = singleAlert.Expires
+	}
 
 	timeEffective, _ := time.Parse(time.RFC3339, timeStringEffective)
 	timeExpires, _ := time.Parse(time.RFC3339, timeStringExpires)
