@@ -4,33 +4,32 @@ const extractYouTubeID = (url) => {
     return matches ? matches[1] : null;  // Returns the video ID if found
   };
 
-
-const YouTubeEmbed = ({url, width = '510', height = '265', autoplay = false, title }) => {
+  const YouTubeEmbed = ({ url, autoplay = false, title, className }) => {
     const videoID = extractYouTubeID(url);
-
-  if (!videoID) {
-    return <p>Invalid YouTube URL</p>; // Handle case where the video ID is invalid
-  }
-
-  // Set autoplay based on the prop (1 for autoplay, 0 for no autoplay)
-  const autoplayParam = autoplay ? '1' : '0';
-
-
-  return (
-    <div>
-      {title && (
-        <h2 className="text-lg font-semibold mb-2 text-center">{title}</h2>
-      )}
-      <iframe
-        src={`https://www.youtube.com/embed/${videoID}?autoplay=${autoplayParam}`}
-        width={width}
-        height={height}
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-        allowFullScreen
-        title={title || "YouTube Video"}
-      ></iframe>
-    </div>
-  );
-};
+  
+    if (!videoID) {
+      return <p>Invalid YouTube URL</p>; // Handle case where the video ID is invalid
+    }
+  
+    const autoplayParam = autoplay ? '1' : '0';
+  
+    return (
+      <div className={className}>
+        {title && (
+          <h2 className="text-lg font-semibold mb-2 text-center">{title}</h2>
+        )}
+        <div className="relative aspect-video">
+          <iframe
+            src={`https://www.youtube.com/embed/${videoID}?autoplay=${autoplayParam}`}
+            className="absolute top-0 left-0 w-full h-full"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowFullScreen
+            title={title || "YouTube Video"}
+          ></iframe>
+        </div>
+      </div>
+    );
+  };
+  
 
 export default YouTubeEmbed;

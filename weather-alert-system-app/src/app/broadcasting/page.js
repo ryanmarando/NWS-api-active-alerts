@@ -9,18 +9,22 @@ export default function Broadcasting() {
         {
           title: 'Every Day',
           url: 'https://www.youtube.com/watch?v=g8IAGWvhe-s',
+          autoplay: true,
         },
         {
           title: 'Helene Tracker',
           url: 'https://youtu.be/o0SnyxxKjB4',
+          autoplay: false,
         },
         {
           title: 'Wet Bulb Globe Temperature Explainer',
           url: 'https://youtu.be/LAhao2jE1qk',
+          autoplay: false,
         },
         {
           title: '3D Set',
           url: 'https://youtu.be/Cq5njUmZkJs',
+          autoplay: false,
         },
         // Add more video objects as needed
       ];
@@ -51,7 +55,7 @@ export default function Broadcasting() {
       const Graphics = () => {
         return (
           <div className="p-4">
-            <div className="flex items-center">
+            <div className="flex items-center sm:max-h-[300px] ">
             <h1 className="sm: text-md ml-2 lg:text-2xl font-bold mb-6 text-center">Graphics Powered With Programming</h1>
             <p className="text-sm text-center w-[70%] mb-8 lg:text-base">
               These graphics use more than the every day graphics system of the Max system or Baron Lynx.
@@ -118,13 +122,19 @@ export default function Broadcasting() {
             <Navbar />
             <Hero />
             <div className="container mx-auto p-4 mb-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {videos.map((video, index) => (
-                  <div key={index} className="flex justify-center">
-                     <YouTubeEmbed key={index} title={video.title} url={video.url} />
-                  </div>
-                ))}
-                </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {videos.map((video, index) => (
+              <div key={index} className="flex justify-center">
+                <YouTubeEmbed 
+                key={index} 
+                title={video.title} 
+                url={video.url} 
+                autoplay={video.autoplay}
+                className="w-full sm:max-w-[300px] md:max-w-[600px] lg:max-w-[500px] aspect-video"
+              />
+              </div>
+              ))}
+            </div>
             </div>
             <Graphics />
             <Footer />
