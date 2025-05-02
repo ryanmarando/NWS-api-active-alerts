@@ -28,7 +28,7 @@ const ClickableMap = () => {
   const [wbgtForecast, setWbgtForecast] = useState([]);
   const [wbgtLocation, setWbgtLocation] = useState("");
   const [loading, setLoading] = useState(false);
-  const URL = "https://nws-api-active-alerts.onrender.com"; //https://nws-api-active-alerts.onrender.com http://localhost:8080
+  const URL = "http://localhost:3001"; //https://nws-api-active-alerts.onrender.com http://localhost:8080
 
   const convertToCSV = (data) => {
     const csvRows = [];
@@ -77,20 +77,23 @@ const ClickableMap = () => {
   }
 
   async function getWBGTForecast(pos) {
-    let results = await fetch(
-      URL + "/getWBGTForecastData/" + pos.lat + "," + pos.lng
-    )
-      .then((data) => data.json())
-      .then((data) => {
-        setWbgtForecast(data);
-      });
+    try {
+      let results = await fetch(
+        URL + "/wbgt?lat=" + pos.lat + "&long=" + pos.lng
+      )
+        .then((data) => data.json())
+        .then((data) => {
+          setWbgtForecast(data["formattedWBGTForecast"]);
+          setWbgtLocation(data["location"]);
+          //console.log(data["formattedWBGTForecast"]);
+          //console.log(data["location"]);
+        });
+    } catch (error) {
+      console.log("Error", error);
+      return;
+    }
 
-    results = await fetch(URL + "/getWBGTForecastCityState")
-      .then((data) => data.json())
-      .then((data) => {
-        setWbgtLocation(data);
-        setLoading(false);
-      });
+    setLoading(false);
   }
 
   // This component listens to click events on the map
@@ -152,9 +155,7 @@ const ClickableMap = () => {
           ) : (
             <>
               <h1 className="w-full items-center justify-center flex">
-                WBGT Forecast Chart for{" "}
-                {wbgtLocation.properties.relativeLocation.properties.city},{" "}
-                {wbgtLocation.properties.relativeLocation.properties.state}
+                WBGT Forecast Chart for {wbgtLocation}
               </h1>
             </>
           )}

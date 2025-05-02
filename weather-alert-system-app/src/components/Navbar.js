@@ -13,28 +13,47 @@ import { MobileNav } from "@/components/MobileNav.js";
 
 <Image alt="Menu" src={Menu} className="lg:hidden" />;
 export function Navbar() {
+  const URL = "http://localhost:3001";
   const { user } = useUser();
-  const [hasSubscription, setHasSubscription] = useState();
+  const [isAdmin, setIsAdmin] = useState();
   useEffect(() => {
-    const fetchPrivateMetadata = async () => {
-      if (!user?.id) return;
+    // const fetchPrivateMetadata = async () => {
+    //   if (!user?.id) return;
 
+    //   try {
+    //     const response = await fetch(
+    //       `/api/updatePrivateMetadata?userId=${user?.id}`
+    //     );
+    //     if (!response.ok) {
+    //       throw new Error("Failed to fetch user data");
+    //     }
+    //     const data = await response.json();
+    //     setHasSubscription(data.privateMetadata.subscription);
+    //   } catch (error) {
+    //     console.error("Error fetching user data:", error);
+    //   }
+
+    const fetchUserData = async () => {
+      const userId = 2;
+      console.log("trying");
+      const call = `${URL}/user/${userId}`;
       try {
-        const response = await fetch(
-          `/api/updatePrivateMetadata?userId=${user?.id}`
-        );
+        const response = await fetch(call);
+
         if (!response.ok) {
           throw new Error("Failed to fetch user data");
         }
-        const data = await response.json();
-        setHasSubscription(data.privateMetadata.subscription);
+
+        const userData = await response.json();
+        setIsAdmin(userData.admin);
+        console.log(userData);
       } catch (error) {
-        console.error("Error fetching user data:", error);
+        console.error("Error fetching", error);
       }
     };
 
-    fetchPrivateMetadata();
-  }, [user?.id]);
+    fetchUserData();
+  }, []);
   return (
     <nav className="flex w-full items-center justify-between px-[20px] py-[16px] lg:container lg:mx-auto lg:px-22">
       <div className="flex gap-x-5">
@@ -69,6 +88,11 @@ export function Navbar() {
         <Link className="hidden lg:block py-[16px]" href="/contact">
           Contact
         </Link>
+        {isAdmin && (
+          <Link className="hidden lg:block py-[16px]" href="/admin">
+            Admin
+          </Link>
+        )}
       </div>
       <div className="flex items-center">
         <a

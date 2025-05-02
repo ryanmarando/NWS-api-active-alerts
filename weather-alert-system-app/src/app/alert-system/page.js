@@ -330,7 +330,7 @@ export default function AlertSystem() {
   const [showCountiesForSelectedStates, setShowCountiesForSelectedStates] =
     useState(false);
   const [hasSearchedForAlerts, setHasSearchedForAlerts] = useState(false);
-  const URL = "https://nws-api-active-alerts.onrender.com"; //https://nws-api-active-alerts.onrender.com http://localhost:8080
+  const URL = "http://localhost:3001"; //https://nws-api-active-alerts.onrender.com http://localhost:8080
 
   function addState() {
     if (!selectedOption) return alert("Please enter a state.");
@@ -347,7 +347,7 @@ export default function AlertSystem() {
   const CountyListLibrary = () => {
     // Fetch counties for a state when it's added
     const getCountiesFromState = async (state) => {
-      const results = await fetch(URL + `/countiesByState/` + state)
+      const results = await fetch(URL + `/alerts?state=` + state)
         .then((data) => data.json())
         .then((data) => {
           setCountiesByState((prevState) => ({
@@ -442,6 +442,40 @@ export default function AlertSystem() {
     setStateList([...stateList]);
     delete updatedCounties[stateToRemove];
     setSelectedCounties(updatedCounties);
+  }
+
+  async function getNewData() {
+    if (stateList.length === 0) return alert("Please choose a state.");
+    setIsLoading(true);
+    const stateListString = stateList.join(",");
+    const data = {
+      states: stateListString,
+      counties: selectedCounties,
+      alertTypes: checkedItems,
+      NWSOffices: checkedNWSOffices,
+    };
+    const response = await fetch(URL + "/alerts", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
+    if (response.ok) {
+      const responseData = await response.json();
+      //console.log("Response data:", responseData.length);
+
+      // Make it sort in the correct order
+      if (responseData.length > 0) {
+        sortAlertListByPriority(responseData);
+      }
+
+      setAlertList(responseData);
+    } else {
+      console.error("Failed to fetch data", response.status);
+    }
+    setHasSearchedForAlerts(true);
+    setIsLoading(false);
   }
 
   function updateAlertAreaDesc(alertList) {
@@ -586,7 +620,8 @@ export default function AlertSystem() {
   const AutomaticOutput = () => {
     const myFunction = () => {
       console.log("Function called!");
-      getDataFromOwnAPI();
+      //getDataFromOwnAPI();
+      getNewData();
     };
 
     const toggleFunction = () => {
@@ -911,8 +946,14 @@ export default function AlertSystem() {
               onClick={() => toggleExpansion(idx)}
             >
               {/* Access object properties and render them */}
-              <span className="effective">{obj.effective}</span>
-              <span className="headline">{obj.headline}</span>
+              <span className="effective">
+                {new Date(obj.effective).toLocaleTimeString([], {
+                  hour: "numeric",
+                  minute: "2-digit",
+                })}
+              </span>
+
+              <span className="headline">{obj.stringOutput}</span>
               <br></br>
               <div className="areaDesc">{obj.areaDesc}</div>
             </button>
@@ -1027,7 +1068,7 @@ export default function AlertSystem() {
           <button
             className="bg-[#4328EB] hover:text-gray-500 w-33 py-1 px-2 rounded-[8px] text-[white] my-[15px]"
             type="alert-button"
-            onClick={getDataFromOwnAPI}
+            onClick={getNewData}
             disabled={isLoading}
           >
             {isLoading ? <LoadingAnimation /> : "Get Alerts"}

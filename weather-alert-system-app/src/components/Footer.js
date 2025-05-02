@@ -11,7 +11,7 @@ export function Footer() {
         <p className="font-bold text-[#36485C] text-[17px]">Ryan Marando</p>
       </div>
       <p className="pt-[20px] pb-[14px] text-center text-[14px] font-medium text-[#5F7896]">
-        © Copyright 2024. All rights reserved.
+        © Copyright {new Date().getFullYear()}. All rights reserved.
       </p>
       <div className="flex items-center justify-center gap-y-[32px] pt-[20px]">
         <a
