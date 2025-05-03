@@ -35,7 +35,6 @@ export function Navbar() {
 
     const fetchUserData = async () => {
       const userId = 2;
-      console.log("trying");
       const call = `${URL}/user/${userId}`;
       try {
         const response = await fetch(call);

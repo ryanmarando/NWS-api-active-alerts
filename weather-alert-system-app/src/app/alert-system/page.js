@@ -330,6 +330,7 @@ export default function AlertSystem() {
   const [showCountiesForSelectedStates, setShowCountiesForSelectedStates] =
     useState(false);
   const [hasSearchedForAlerts, setHasSearchedForAlerts] = useState(false);
+  const [previousAlertIds, setPreviousAlertIds] = useState(new Set());
   const URL = "http://localhost:3001"; //https://nws-api-active-alerts.onrender.com http://localhost:8080
 
   function addState() {
@@ -444,6 +445,11 @@ export default function AlertSystem() {
     setSelectedCounties(updatedCounties);
   }
 
+  const playAlertSound = () => {
+    const audio = new Audio("/ding.mp3"); // Ensure this file is in /public
+    audio.play().catch((err) => console.warn("Audio play failed:", err));
+  };
+
   async function getNewData() {
     if (stateList.length === 0) return alert("Please choose a state.");
     setIsLoading(true);
@@ -454,6 +460,7 @@ export default function AlertSystem() {
       alertTypes: checkedItems,
       NWSOffices: checkedNWSOffices,
     };
+
     const response = await fetch(URL + "/alerts", {
       method: "POST",
       headers: {
@@ -461,19 +468,45 @@ export default function AlertSystem() {
       },
       body: JSON.stringify(data),
     });
+
     if (response.ok) {
       const responseData = await response.json();
-      //console.log("Response data:", responseData.length);
 
-      // Make it sort in the correct order
-      if (responseData.length > 0) {
-        sortAlertListByPriority(responseData);
+      const newIds = new Set(responseData.map((a) => a.id));
+      const prevIds = new Set(alertList.map((a) => a.id));
+
+      const updated = responseData.map((alert) => ({
+        ...alert,
+        isNew: !prevIds.has(alert.id),
+      }));
+
+      sortAlertListByPriority(updated);
+      setAlertList(updated);
+      setPreviousAlertIds(newIds);
+
+      // Only play sound if there are new alerts
+      const newAlerts = updated.filter((alert) => alert.isNew);
+
+      if (newAlerts.length > 0) {
+        // Check if any new alert has "warning" in the headline
+        const newAlertsWithWarning = newAlerts.filter((alert) =>
+          alert.stringOutput.toLowerCase().includes("warning")
+        );
+
+        if (newAlertsWithWarning.length > 0) {
+          // Play warning sound if any new alert contains "warning"
+          const audio = new Audio("/warning.mp3");
+          audio.play();
+        } else {
+          // Play ding sound if no new alert contains "warning"
+          const audio = new Audio("/ding.mp3");
+          audio.play();
+        }
       }
-
-      setAlertList(responseData);
     } else {
       console.error("Failed to fetch data", response.status);
     }
+
     setHasSearchedForAlerts(true);
     setIsLoading(false);
   }
@@ -835,55 +868,113 @@ export default function AlertSystem() {
     );
   };
 
+  const clearInputs = async () => {
+    setStateList([]);
+    setSelectedCounties([]);
+    setCheckedItems([]);
+    setNWSselectedOfficeList([]);
+  };
+
   const saveDataListInput = async () => {
     if (stateList.length === 0)
       return alert("You must add at least once state to save data.");
-    if (!user) {
-      return alert("Please login to save your settings.");
-    }
+    const userId = 2;
+    const stateListString = stateList.join(",");
+    const data = {
+      alertListStates: stateListString,
+      alertListCounties:
+        selectedCounties &&
+        Object.keys(selectedCounties).length > 0 &&
+        Object.values(selectedCounties).some((arr) => arr.length > 0)
+          ? selectedCounties
+          : null,
+      alertListAlertTypes: checkedItems.length > 0 ? checkedItems : [],
+      alertListNWSOffices:
+        checkedNWSOffices.length > 0 ? checkedNWSOffices : [],
+    };
+
     try {
-      const response = await fetch("/api/updateUserMetadata", {
-        method: "POST",
+      const response = await fetch(URL + "/user/" + userId, {
+        method: "PATCH",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          userId: user?.id,
-          metadata: {
-            selectedCounties: selectedCounties,
-            stateList: stateList.join(","),
-            warningTypes: checkedItems,
-            checkedNWSOffices: checkedNWSOffices,
-          },
-        }),
+        body: JSON.stringify(data),
       });
-
       if (response.ok) {
-        alert("Settings updated successfully! Refresh to update");
-      } else {
-        const errorData = await response.json();
-        alert(`Failed to update metadata: ${errorData.error}`);
+        alert("Saved your settings!");
       }
     } catch (error) {
-      console.error("Error updating metadata:", error);
-      alert("Failed to update metadata. Please try again.");
+      console.error("Error:", error);
     }
+
+    // if (!user) {
+    //   return alert("Please login to save your settings.");
+    // }
+    // try {
+    //   const response = await fetch("/api/updateUserMetadata", {
+    //     method: "POST",
+    //     headers: {
+    //       "Content-Type": "application/json",
+    //     },
+    //     body: JSON.stringify({
+    //       userId: user?.id,
+    //       metadata: {
+    //         selectedCounties: selectedCounties,
+    //         stateList: stateList.join(","),
+    //         warningTypes: checkedItems,
+    //         checkedNWSOffices: checkedNWSOffices,
+    //       },
+    //     }),
+    //   });
+
+    //   if (response.ok) {
+    //     alert("Settings updated successfully! Refresh to update");
+    //   } else {
+    //     const errorData = await response.json();
+    //     alert(`Failed to update metadata: ${errorData.error}`);
+    //   }
+    // } catch (error) {
+    //   console.error("Error updating metadata:", error);
+    //   alert("Failed to update metadata. Please try again.");
+    // }
   };
 
   async function populateDataInput() {
-    if (!user) {
-      return alert("Please login to populate saved settings.");
+    const userId = 2;
+
+    try {
+      const response = await fetch(URL + "/user/" + userId, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      if (response.ok) {
+        const userData = await response.json();
+        setStateList(userData.alertListStates.split(","));
+        setSelectedCounties(userData.alertListCounties);
+        setCheckedItems(userData.alertListAlertTypes);
+        setNWSselectedOfficeList(userData.alertListNWSOffices);
+        alert("Populated settings!");
+      }
+    } catch (error) {
+      console.error("Error:", error);
     }
-    console.log(user.publicMetadata);
-    if (!user.publicMetadata || Object.keys(user.publicMetadata).length === 0) {
-      return alert("There's no saved data to populate.");
-    }
-    const savedStateListArr = user?.publicMetadata.stateList.split(",");
-    setStateList(savedStateListArr);
-    setSelectedCounties(user?.publicMetadata.selectedCounties);
-    const savedWarningTypeArr = user?.publicMetadata.warningTypes;
-    setCheckedItems(savedWarningTypeArr);
-    setCheckedNWSOffices(user?.publicMetadata.checkedNWSOffices);
+
+    // if (!user) {
+    //   return alert("Please login to populate saved settings.");
+    // }
+    // console.log(user.publicMetadata);
+    // if (!user.publicMetadata || Object.keys(user.publicMetadata).length === 0) {
+    //   return alert("There's no saved data to populate.");
+    // }
+    // const savedStateListArr = user?.publicMetadata.stateList.split(",");
+    // setStateList(savedStateListArr);
+    // setSelectedCounties(user?.publicMetadata.selectedCounties);
+    // const savedWarningTypeArr = user?.publicMetadata.warningTypes;
+    // setCheckedItems(savedWarningTypeArr);
+    // setCheckedNWSOffices(user?.publicMetadata.checkedNWSOffices);
   }
 
   const handleSelectOfficeChange = (e) => {
@@ -938,7 +1029,9 @@ export default function AlertSystem() {
         {alertList.map((obj, idx) => (
           <li
             key={obj.id}
-            className="alert-list shadow-md border-spacing-1"
+            className={`alert-list shadow-md border-spacing-1 ${
+              obj.isNew ? "animate-flash-highlight" : ""
+            }`}
             style={{ backgroundColor: obj.color }}
           >
             <button
@@ -1066,7 +1159,7 @@ export default function AlertSystem() {
           </div>
           {showNWSOfficeFullList ? <NWSOfficeListForm /> : ""}
           <button
-            className="bg-[#4328EB] hover:text-gray-500 w-33 py-1 px-2 rounded-[8px] text-[white] my-[15px]"
+            className="bg-[#4328EB] hover:text-gray-500 w-33 py-1 px-2 rounded-[8px] text-[white] my-[10px]"
             type="alert-button"
             onClick={getNewData}
             disabled={isLoading}
@@ -1076,9 +1169,17 @@ export default function AlertSystem() {
           <div className="flex relative w-full items-center justify-center">
             <button
               onClick={saveDataListInput}
-              className="bg-[#4328EB] lg:absolute lg:bottom-0 lg:right-0 hover:text-gray-500 py-1 px-2 w-50 lg:mr-0 lg:mt-0 lg:w-50 rounded-[8px] text-white "
+              className="bg-[#4328EB] lg:absolute lg:bottom-0 lg:right-0 hover:text-gray-500 py-1 px-2 w-50 my-[10px] md:my-[0px] lg:my-[0px] lg:mr-0 lg:mt-0 lg:w-50 rounded-[8px] text-white "
             >
               Save Settings
+            </button>
+          </div>
+          <div className="flex relative w-full items-center justify-center">
+            <button
+              onClick={clearInputs}
+              className="bg-[#ff2929] lg:absolute lg:bottom-0 lg:left-0 hover:text-gray-500 py-1 px-2 w-50 my-[10px] md:my-[10px] lg:my-[0px] lg:mr-0 lg:mt-0 lg:w-50 rounded-[8px] text-white "
+            >
+              Clear Inputs
             </button>
           </div>
         </div>
