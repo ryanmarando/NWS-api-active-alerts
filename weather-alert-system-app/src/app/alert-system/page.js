@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import React from "react";
 import Select from "react-select";
 import Image from "next/image";
@@ -12,61 +12,63 @@ import { Footer } from "@/components/Footer";
 import { useUser } from "@clerk/clerk-react";
 import { IoIosArrowBack } from "react-icons/io";
 import { IoIosArrowDown } from "react-icons/io";
+import { API_URL } from "@/lib/constants";
 
 export default function AlertSystem() {
   const options = [
-    { value: "AL", label: "AL" },
-    { value: "AK", label: "AK" },
-    { value: "AZ", label: "AZ" },
-    { value: "AR", label: "AR" },
-    { value: "CA", label: "CA" },
-    { value: "CO", label: "CO" },
-    { value: "CT", label: "CT" },
-    { value: "DE", label: "DE" },
-    { value: "DC", label: "DC" },
-    { value: "FL", label: "FL" },
-    { value: "GA", label: "GA" },
-    { value: "HI", label: "HI" },
-    { value: "ID", label: "ID" },
-    { value: "IL", label: "IL" },
-    { value: "IN", label: "IN" },
-    { value: "IA", label: "IA" },
-    { value: "KS", label: "KS" },
-    { value: "KY", label: "KY" },
-    { value: "LA", label: "LA" },
-    { value: "ME", label: "ME" },
-    { value: "MD", label: "MD" },
-    { value: "MA", label: "MA" },
-    { value: "MI", label: "MI" },
-    { value: "MN", label: "MN" },
-    { value: "MS", label: "MS" },
-    { value: "MO", label: "MO" },
-    { value: "MT", label: "MT" },
-    { value: "NE", label: "NE" },
-    { value: "NV", label: "NV" },
-    { value: "NH", label: "NH" },
-    { value: "NJ", label: "NJ" },
-    { value: "NM", label: "NM" },
-    { value: "NY", label: "NY" },
-    { value: "NC", label: "NC" },
-    { value: "ND", label: "ND" },
-    { value: "OH", label: "OH" },
-    { value: "OK", label: "OK" },
-    { value: "OR", label: "OR" },
-    { value: "PA", label: "PA" },
-    { value: "RI", label: "RI" },
-    { value: "SC", label: "SC" },
-    { value: "SD", label: "SD" },
-    { value: "TN", label: "TN" },
-    { value: "TX", label: "TX" },
-    { value: "UT", label: "UT" },
-    { value: "VT", label: "VT" },
-    { value: "VA", label: "VA" },
-    { value: "WA", label: "WA" },
-    { value: "WV", label: "WV" },
-    { value: "WI", label: "WI" },
-    { value: "WY", label: "WY" },
+    { value: "AL", label: "Alabama" },
+    { value: "AK", label: "Alaska" },
+    { value: "AZ", label: "Arizona" },
+    { value: "AR", label: "Arkansas" },
+    { value: "CA", label: "California" },
+    { value: "CO", label: "Colorado" },
+    { value: "CT", label: "Connecticut" },
+    { value: "DE", label: "Delaware" },
+    { value: "DC", label: "District of Columbia" },
+    { value: "FL", label: "Florida" },
+    { value: "GA", label: "Georgia" },
+    { value: "HI", label: "Hawaii" },
+    { value: "ID", label: "Idaho" },
+    { value: "IL", label: "Illinois" },
+    { value: "IN", label: "Indiana" },
+    { value: "IA", label: "Iowa" },
+    { value: "KS", label: "Kansas" },
+    { value: "KY", label: "Kentucky" },
+    { value: "LA", label: "Louisiana" },
+    { value: "ME", label: "Maine" },
+    { value: "MD", label: "Maryland" },
+    { value: "MA", label: "Massachusetts" },
+    { value: "MI", label: "Michigan" },
+    { value: "MN", label: "Minnesota" },
+    { value: "MS", label: "Mississippi" },
+    { value: "MO", label: "Missouri" },
+    { value: "MT", label: "Montana" },
+    { value: "NE", label: "Nebraska" },
+    { value: "NV", label: "Nevada" },
+    { value: "NH", label: "New Hampshire" },
+    { value: "NJ", label: "New Jersey" },
+    { value: "NM", label: "New Mexico" },
+    { value: "NY", label: "New York" },
+    { value: "NC", label: "North Carolina" },
+    { value: "ND", label: "North Dakota" },
+    { value: "OH", label: "Ohio" },
+    { value: "OK", label: "Oklahoma" },
+    { value: "OR", label: "Oregon" },
+    { value: "PA", label: "Pennsylvania" },
+    { value: "RI", label: "Rhode Island" },
+    { value: "SC", label: "South Carolina" },
+    { value: "SD", label: "South Dakota" },
+    { value: "TN", label: "Tennessee" },
+    { value: "TX", label: "Texas" },
+    { value: "UT", label: "Utah" },
+    { value: "VT", label: "Vermont" },
+    { value: "VA", label: "Virginia" },
+    { value: "WA", label: "Washington" },
+    { value: "WV", label: "West Virginia" },
+    { value: "WI", label: "Wisconsin" },
+    { value: "WY", label: "Wyoming" },
   ];
+
   const items = [
     "Tsunami Warning",
     "Tornado Warning",
@@ -330,8 +332,27 @@ export default function AlertSystem() {
   const [showCountiesForSelectedStates, setShowCountiesForSelectedStates] =
     useState(false);
   const [hasSearchedForAlerts, setHasSearchedForAlerts] = useState(false);
-  const [previousAlertIds, setPreviousAlertIds] = useState(new Set());
-  const URL = "http://localhost:3001"; //https://nws-api-active-alerts.onrender.com http://localhost:8080
+  const previousAlertIdsRef = useRef(new Set());
+  const [temporaryAlertList, setTemporaryAlertList] = useState([]);
+  const expandedItemIndexRef = useRef(null);
+  const [expandedItemIndex, setExpandedItemIndex] = useState(null);
+
+  useEffect(() => {
+    if (temporaryAlertList.length > 0) {
+      // After the new alerts have rendered, remove the isNew flag
+      const timeout = setTimeout(() => {
+        setAlertList(
+          temporaryAlertList.map((a) => ({
+            ...a,
+            isNew: false,
+          }))
+        );
+        setTemporaryAlertList([]); // clear the temp list
+      }, 5000); // allow enough time for animation to trigger
+
+      return () => clearTimeout(timeout); // Cleanup on unmount
+    }
+  }, [temporaryAlertList]);
 
   function addState() {
     if (!selectedOption) return alert("Please enter a state.");
@@ -348,7 +369,7 @@ export default function AlertSystem() {
   const CountyListLibrary = () => {
     // Fetch counties for a state when it's added
     const getCountiesFromState = async (state) => {
-      const results = await fetch(URL + `/alerts?state=` + state)
+      const results = await fetch(API_URL + `/alerts?state=` + state)
         .then((data) => data.json())
         .then((data) => {
           setCountiesByState((prevState) => ({
@@ -432,36 +453,35 @@ export default function AlertSystem() {
 
   function removeState() {
     if (stateList.length === 0)
-      return alert("You must add at least once state to remove.");
+      return alert("You must add at least one state to remove.");
     if (stateList.length <= 1) {
       setStateList([]);
       setSelectedCounties({});
       return;
     }
-    const stateToRemove = stateList.pop();
+
+    const newStateList = stateList.slice(0, -1); // Immutable removal
+    const stateToRemove = stateList[stateList.length - 1]; // Get last state
     const updatedCounties = { ...selectedCounties };
-    setStateList([...stateList]);
     delete updatedCounties[stateToRemove];
+
+    setStateList(newStateList);
     setSelectedCounties(updatedCounties);
   }
-
-  const playAlertSound = () => {
-    const audio = new Audio("/ding.mp3"); // Ensure this file is in /public
-    audio.play().catch((err) => console.warn("Audio play failed:", err));
-  };
 
   async function getNewData() {
     if (stateList.length === 0) return alert("Please choose a state.");
     setIsLoading(true);
+
     const stateListString = stateList.join(",");
     const data = {
       states: stateListString,
       counties: selectedCounties,
       alertTypes: checkedItems,
-      NWSOffices: checkedNWSOffices,
+      NWSoffices: checkedNWSOffices,
     };
 
-    const response = await fetch(URL + "/alerts", {
+    const response = await fetch(API_URL + "/alerts", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -471,9 +491,8 @@ export default function AlertSystem() {
 
     if (response.ok) {
       const responseData = await response.json();
-
       const newIds = new Set(responseData.map((a) => a.id));
-      const prevIds = new Set(alertList.map((a) => a.id));
+      const prevIds = previousAlertIdsRef.current;
 
       const updated = responseData.map((alert) => ({
         ...alert,
@@ -481,27 +500,25 @@ export default function AlertSystem() {
       }));
 
       sortAlertListByPriority(updated);
-      setAlertList(updated);
-      setPreviousAlertIds(newIds);
 
-      // Only play sound if there are new alerts
-      const newAlerts = updated.filter((alert) => alert.isNew);
+      // Preserve expandedItemIndexRef while updating alert list
+      setAlertList((prevAlertList) => {
+        return updated.map((newAlert) => ({
+          ...newAlert,
+          isExpanded: expandedItemIndexRef.current === newAlert.id,
+        }));
+      });
 
+      setTemporaryAlertList(updated); // triggers useEffect to reset isNew
+      previousAlertIdsRef.current = newIds;
+
+      const newAlerts = updated.filter((a) => a.isNew);
       if (newAlerts.length > 0) {
-        // Check if any new alert has "warning" in the headline
-        const newAlertsWithWarning = newAlerts.filter((alert) =>
-          alert.stringOutput.toLowerCase().includes("warning")
+        const hasWarning = newAlerts.some((a) =>
+          a.stringOutput.toLowerCase().includes("warning")
         );
-
-        if (newAlertsWithWarning.length > 0) {
-          // Play warning sound if any new alert contains "warning"
-          const audio = new Audio("/warning.mp3");
-          audio.play();
-        } else {
-          // Play ding sound if no new alert contains "warning"
-          const audio = new Audio("/ding.mp3");
-          audio.play();
-        }
+        const audio = new Audio(hasWarning ? "/warning.mp3" : "/ding.mp3");
+        audio.play();
       }
     } else {
       console.error("Failed to fetch data", response.status);
@@ -511,139 +528,11 @@ export default function AlertSystem() {
     setIsLoading(false);
   }
 
-  function updateAlertAreaDesc(alertList) {
-    const mergedAlerts = [];
-
-    alertList.forEach((alert, index) => {
-      // Check if this alert has already been processed
-      const existingAlertIndex = mergedAlerts.findIndex(
-        (a) => a.id === alert.id
-      );
-
-      if (existingAlertIndex !== -1) {
-        // Merge the AreaDesc of the matching alert with the existing one
-        const existingAlert = mergedAlerts[existingAlertIndex];
-
-        const combinedAreaDesc = [
-          existingAlert.areaDesc ? existingAlert.areaDesc.trim() : "",
-          alert.areaDesc ? alert.areaDesc.trim() : "",
-        ]
-          .filter((desc) => desc !== "")
-          .join("; ")
-          .trim();
-
-        // Update the existing alert with the combined AreaDesc
-        mergedAlerts[existingAlertIndex].areaDesc = combinedAreaDesc;
-      } else {
-        // Add this alert to the merged list if it's not already processed
-        mergedAlerts.push({ ...alert });
-      }
-    });
-
-    return mergedAlerts;
-  }
-
   function sortAlertListByPriority(alertList) {
     return alertList.sort((a, b) => {
       // Assuming priority is a numerical value and lower values have higher priority
       return a.priority - b.priority;
     });
-  }
-
-  async function getDataFromOwnAPIWithCounties() {
-    const tempAlertList = [];
-    const data = { data: checkedItems };
-    const response = await fetch(URL + "/userAlertTypes", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    });
-    if (response.ok) {
-      console.log("Warnings submitted county!");
-    }
-    const NWSOfficeList = { officeList: checkedNWSOffices };
-    const NWSOfficeResponse = await fetch(URL + "/getNWSOffices", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(NWSOfficeList),
-    });
-    if (NWSOfficeResponse.ok) {
-      console.log("Offices submitted county!");
-    }
-    for (let i = 0; i < Object.entries(selectedCounties).length; i++) {
-      if (Object.values(selectedCounties)[i].length > 0) {
-        const results = await fetch(
-          URL +
-            "/alerts/" +
-            Object.keys(selectedCounties)[i] +
-            "/" +
-            Object.values(selectedCounties)[i]
-        )
-          .then((data) => data.json())
-          .then((data) => {
-            tempAlertList.push(...data);
-          });
-      } else {
-        const results = await fetch(
-          URL + "/alerts/" + Object.keys(selectedCounties)[i]
-        )
-          .then((data) => data.json())
-          .then((data) => {
-            tempAlertList.push(...data);
-          });
-      }
-    }
-    let updatedList = updateAlertAreaDesc(tempAlertList);
-    sortAlertListByPriority(updatedList);
-    setAlertList(updatedList);
-    setIsLoading(false);
-    setHasSearchedForAlerts(true);
-    console.log("Successful county export");
-  }
-
-  async function getDataFromOwnAPI() {
-    if (stateList.length === 0) return alert("Please choose a state.");
-    setIsLoading(true);
-    if (Object.entries(selectedCounties).length > 0) {
-      if (Object.values(selectedCounties)[0].length > 0)
-        return getDataFromOwnAPIWithCounties();
-    }
-    const stateListString = stateList.join(",");
-    const data = { data: checkedItems };
-    const response = await fetch(URL + "/userAlertTypes", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    });
-    if (response.ok) {
-      console.log("Warnings submitted!");
-    }
-    const NWSOfficeList = { officeList: checkedNWSOffices };
-    const NWSOfficeResponse = await fetch(URL + "/getNWSOffices", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(NWSOfficeList),
-    });
-    if (NWSOfficeResponse.ok) {
-      console.log("Offices submitted!");
-    }
-    const results = await fetch(URL + "/alerts/" + stateListString)
-      .then((data) => data.json())
-      .then((data) => {
-        setAlertList(updateAlertAreaDesc(data));
-        setIsLoading(false);
-      });
-
-    setHasSearchedForAlerts(true);
-    console.log("Successful state wide export");
   }
 
   function ChangeSettings() {
@@ -872,122 +761,70 @@ export default function AlertSystem() {
     setStateList([]);
     setSelectedCounties([]);
     setCheckedItems([]);
-    setNWSselectedOfficeList([]);
+    setCheckedNWSOffices([]);
   };
 
   const saveDataListInput = async () => {
     if (stateList.length === 0)
       return alert("You must add at least once state to save data.");
-    const userId = 2;
-    const stateListString = stateList.join(",");
-    const data = {
-      alertListStates: stateListString,
-      alertListCounties:
-        selectedCounties &&
-        Object.keys(selectedCounties).length > 0 &&
-        Object.values(selectedCounties).some((arr) => arr.length > 0)
-          ? selectedCounties
-          : null,
-      alertListAlertTypes: checkedItems.length > 0 ? checkedItems : [],
-      alertListNWSOffices:
-        checkedNWSOffices.length > 0 ? checkedNWSOffices : [],
-    };
 
+    if (!user) {
+      return alert("Please login to save your settings.");
+    }
     try {
-      const response = await fetch(URL + "/user/" + userId, {
-        method: "PATCH",
+      const response = await fetch("/api/updateUserMetadata", {
+        method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(data),
+        body: JSON.stringify({
+          userId: user?.id,
+          metadata: {
+            selectedCounties: selectedCounties,
+            stateList: stateList.join(","),
+            warningTypes: checkedItems,
+            checkedNWSOffices: checkedNWSOffices,
+          },
+        }),
       });
+
       if (response.ok) {
-        alert("Saved your settings!");
+        alert("Settings updated successfully! Refresh to update");
+      } else {
+        const errorData = await response.json();
+        alert(`Failed to update metadata: ${errorData.error}`);
       }
     } catch (error) {
-      console.error("Error:", error);
+      console.error("Error updating metadata:", error);
+      alert("Failed to update metadata. Please try again.");
     }
-
-    // if (!user) {
-    //   return alert("Please login to save your settings.");
-    // }
-    // try {
-    //   const response = await fetch("/api/updateUserMetadata", {
-    //     method: "POST",
-    //     headers: {
-    //       "Content-Type": "application/json",
-    //     },
-    //     body: JSON.stringify({
-    //       userId: user?.id,
-    //       metadata: {
-    //         selectedCounties: selectedCounties,
-    //         stateList: stateList.join(","),
-    //         warningTypes: checkedItems,
-    //         checkedNWSOffices: checkedNWSOffices,
-    //       },
-    //     }),
-    //   });
-
-    //   if (response.ok) {
-    //     alert("Settings updated successfully! Refresh to update");
-    //   } else {
-    //     const errorData = await response.json();
-    //     alert(`Failed to update metadata: ${errorData.error}`);
-    //   }
-    // } catch (error) {
-    //   console.error("Error updating metadata:", error);
-    //   alert("Failed to update metadata. Please try again.");
-    // }
   };
 
   async function populateDataInput() {
-    const userId = 2;
-
-    try {
-      const response = await fetch(URL + "/user/" + userId, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-      if (response.ok) {
-        const userData = await response.json();
-        setStateList(userData.alertListStates.split(","));
-        setSelectedCounties(userData.alertListCounties);
-        setCheckedItems(userData.alertListAlertTypes);
-        setNWSselectedOfficeList(userData.alertListNWSOffices);
-        alert("Populated settings!");
-      }
-    } catch (error) {
-      console.error("Error:", error);
+    if (!user) {
+      return alert("Please login to populate saved settings.");
     }
-
-    // if (!user) {
-    //   return alert("Please login to populate saved settings.");
-    // }
-    // console.log(user.publicMetadata);
-    // if (!user.publicMetadata || Object.keys(user.publicMetadata).length === 0) {
-    //   return alert("There's no saved data to populate.");
-    // }
-    // const savedStateListArr = user?.publicMetadata.stateList.split(",");
-    // setStateList(savedStateListArr);
-    // setSelectedCounties(user?.publicMetadata.selectedCounties);
-    // const savedWarningTypeArr = user?.publicMetadata.warningTypes;
-    // setCheckedItems(savedWarningTypeArr);
-    // setCheckedNWSOffices(user?.publicMetadata.checkedNWSOffices);
+    console.log(user.publicMetadata);
+    if (!user.publicMetadata || Object.keys(user.publicMetadata).length === 0) {
+      return alert("There's no saved data to populate.");
+    }
+    const savedStateListArr = user?.publicMetadata.stateList.split(",");
+    setStateList(savedStateListArr);
+    setSelectedCounties(user?.publicMetadata.selectedCounties);
+    const savedWarningTypeArr = user?.publicMetadata.warningTypes;
+    setCheckedItems(savedWarningTypeArr);
+    setCheckedNWSOffices(user?.publicMetadata.checkedNWSOffices);
   }
 
-  const handleSelectOfficeChange = (e) => {
-    setNWSselectedOfficeList(e.target.value);
+  // Toggle function for expansion
+  const toggleExpansion = (id) => {
+    // If the alert is already expanded, collapse it, else expand it
+    setExpandedItemIndex((prevIndex) => (prevIndex === id ? null : id));
+    expandedItemIndexRef.current = (prevIndex) =>
+      prevIndex === id ? null : id;
   };
 
   const AlertList = ({ alertList }) => {
-    const [expandedItemIndex, setExpandedItemIndex] = useState(null);
-
-    const toggleExpansion = (index) => {
-      setExpandedItemIndex((prevIndex) => (prevIndex === index ? null : index));
-    };
-
     if (alertList.length === 0 && hasSearchedForAlerts) {
       return (
         <ul className="p-2">
@@ -1036,9 +873,8 @@ export default function AlertSystem() {
           >
             <button
               className="w-full text-left"
-              onClick={() => toggleExpansion(idx)}
+              onClick={() => toggleExpansion(obj.id)} // Toggle expansion based on unique alert ID
             >
-              {/* Access object properties and render them */}
               <span className="effective">
                 {new Date(obj.effective).toLocaleTimeString([], {
                   hour: "numeric",
@@ -1047,19 +883,19 @@ export default function AlertSystem() {
               </span>
 
               <span className="headline">{obj.stringOutput}</span>
-              <br></br>
+              <br />
               <div className="areaDesc">{obj.areaDesc}</div>
             </button>
             <div
               className={`expanded-content ${
-                expandedItemIndex === idx
+                expandedItemIndex === obj.id
                   ? "expanded"
                   : expandedItemIndex !== null
                   ? "collapsing"
                   : ""
               }`}
             >
-              {expandedItemIndex === idx && (
+              {expandedItemIndex === obj.id && (
                 <pre className="p-4 sm:items-center break-words whitespace-pre-wrap text-sm lg:text-base">
                   <div>{obj.description}</div>
                 </pre>
@@ -1087,11 +923,15 @@ export default function AlertSystem() {
           <label className="label">
             Please select state(s) to receive alerts:
           </label>
-          <Select
-            defaultValue={selectedOption}
-            onChange={setSelectedOption}
-            options={stateOptions}
-          />
+          <div className="w-[75%] md:w-[50%] lg:w-[25%]">
+            {" "}
+            <Select
+              defaultValue={selectedOption}
+              onChange={setSelectedOption}
+              options={stateOptions}
+            />
+          </div>
+
           <div className="flex w-full items-center justify-center">
             <button
               onClick={addState}

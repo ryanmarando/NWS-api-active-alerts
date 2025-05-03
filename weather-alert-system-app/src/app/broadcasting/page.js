@@ -3,31 +3,36 @@ import { Navbar } from "../../components/Navbar";
 import { Footer } from "../../components/Footer";
 import YouTubeEmbed from "@/components/Youtube";
 import Image from "next/image";
+import { useEffect, useState } from "react";
+import { API_URL } from "@/lib/constants";
 
 export default function Broadcasting() {
-  const videos = [
-    {
-      title: "Every Day",
-      url: "https://www.youtube.com/watch?v=g8IAGWvhe-s",
-      autoplay: true,
-    },
-    {
-      title: "Helene Tracker",
-      url: "https://youtu.be/o0SnyxxKjB4",
-      autoplay: false,
-    },
-    {
-      title: "Wet Bulb Globe Temperature Explainer",
-      url: "https://youtu.be/LAhao2jE1qk",
-      autoplay: false,
-    },
-    {
-      title: "3D Set",
-      url: "https://youtu.be/Cq5njUmZkJs",
-      autoplay: false,
-    },
-    // Add more video objects as needed
-  ];
+  const [videos, setVideos] = useState([]);
+  const [loading, setLoading] = useState(true);
+  useEffect(() => {
+    const fetchVideos = async () => {
+      try {
+        const response = await fetch(`${API_URL}/youtubeURLs`);
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        const data = await response.json();
+        const combined = data.titles.map((title, index) => ({
+          title,
+          url: data.urls[index],
+          autoplay: index === 1,
+        }));
+        // Skip the first video
+        setVideos(combined.slice(1));
+      } catch (error) {
+        console.error("Error fetching YouTube data:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchVideos();
+  }, []);
 
   const Hero = () => {
     return (
@@ -132,19 +137,22 @@ export default function Broadcasting() {
       <Navbar />
       <Hero />
       <div className="container mx-auto p-4 mb-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {videos.map((video, index) => (
-            <div key={index} className="flex justify-center">
-              <YouTubeEmbed
-                key={index}
-                title={video.title}
-                url={video.url}
-                autoplay={video.autoplay}
-                className="w-full sm:max-w-[300px] md:max-w-[600px] lg:max-w-[500px] aspect-video"
-              />
-            </div>
-          ))}
-        </div>
+        {loading ? (
+          <p>Loading videos...</p>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {videos.map((video, index) => (
+              <div key={index} className="flex justify-center">
+                <YouTubeEmbed
+                  title={video.title}
+                  url={video.url}
+                  autoplay={video.autoplay}
+                  className="w-full sm:max-w-[300px] md:max-w-[600px] lg:max-w-[500px] aspect-video"
+                />
+              </div>
+            ))}
+          </div>
+        )}
       </div>
       <Graphics />
       <Footer />

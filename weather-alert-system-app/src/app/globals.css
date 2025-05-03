@@ -143,14 +143,20 @@ h1 {
   transition: max-height 0.6s ease;
 }
 
+/* Smooth Expand and Collapse */
+.expanded-content {
+  transition: max-height 1s ease-in-out; /* Smooth transition for max-height */
+  overflow: hidden; /* Hide content overflow */
+  max-height: 0; /* Default to collapsed state */
+}
+
 .expanded-content.expanded {
-  max-height: 1000px; /* Adjust the value based on your content */
+  max-height: 1000px; /* Large enough value to allow full expansion, adjust as needed */
   opacity: 1;
 }
 
 .expanded-content.collapsing {
-  max-height: 0;
-  opacity: 0;
+  max-height: 0; /* Collapse the content */
 }
 
 @keyframes flashHighlight {

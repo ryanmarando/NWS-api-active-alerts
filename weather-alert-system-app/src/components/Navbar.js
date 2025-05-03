@@ -10,49 +10,34 @@ import Twitter from "../../public/assets/X.svg";
 import User from "../../public/assets/User.svg";
 import { SignInButton, SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
 import { MobileNav } from "@/components/MobileNav.js";
+import { API_URL } from "@/lib/constants";
 
 <Image alt="Menu" src={Menu} className="lg:hidden" />;
 export function Navbar() {
-  const URL = "http://localhost:3001";
   const { user } = useUser();
   const [isAdmin, setIsAdmin] = useState();
   useEffect(() => {
-    // const fetchPrivateMetadata = async () => {
-    //   if (!user?.id) return;
+    const fetchPrivateMetadata = async () => {
+      if (!user?.id) return;
 
-    //   try {
-    //     const response = await fetch(
-    //       `/api/updatePrivateMetadata?userId=${user?.id}`
-    //     );
-    //     if (!response.ok) {
-    //       throw new Error("Failed to fetch user data");
-    //     }
-    //     const data = await response.json();
-    //     setHasSubscription(data.privateMetadata.subscription);
-    //   } catch (error) {
-    //     console.error("Error fetching user data:", error);
-    //   }
-
-    const fetchUserData = async () => {
-      const userId = 2;
-      const call = `${URL}/user/${userId}`;
       try {
-        const response = await fetch(call);
-
+        const response = await fetch(
+          `/api/updatePrivateMetadata?userId=${user?.id}`
+        );
         if (!response.ok) {
           throw new Error("Failed to fetch user data");
         }
-
-        const userData = await response.json();
-        setIsAdmin(userData.admin);
-        console.log(userData);
+        const data = await response.json();
+        if (data.privateMetadata.admin) {
+          setIsAdmin(data.privateMetadata.admin);
+        }
       } catch (error) {
-        console.error("Error fetching", error);
+        console.error("Error fetching user data:", error);
       }
     };
 
-    fetchUserData();
-  }, []);
+    fetchPrivateMetadata();
+  }, [user?.id]);
   return (
     <nav className="flex w-full items-center justify-between px-[20px] py-[16px] lg:container lg:mx-auto lg:px-22">
       <div className="flex gap-x-5">

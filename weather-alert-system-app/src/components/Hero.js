@@ -4,6 +4,8 @@ import Gradient from "../../public/assets/Gradient.svg";
 import { motion } from "framer-motion";
 import { TypeAnimation } from "react-type-animation";
 import YouTubeEmbed from "./Youtube";
+import { API_URL } from "@/lib/constants";
+import { useEffect, useState } from "react";
 
 const TypingAnimation = () => {
   return (
@@ -27,6 +29,28 @@ const TypingAnimation = () => {
 };
 
 export function Hero() {
+  const [youtubeData, setYoutubeData] = useState(null);
+  const [firstUrl, setFirstUrl] = useState("");
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch(`${API_URL}/youtubeURLs`);
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        const data = await response.json();
+        setYoutubeData(data);
+        if (data.urls && data.urls.length > 0) {
+          setFirstUrl(data.urls[0]);
+        }
+      } catch (error) {
+        console.error("Error fetching YouTube data:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
   return (
     <div className="pt-4">
       <motion.div
@@ -97,11 +121,15 @@ export function Hero() {
             <TypingAnimation></TypingAnimation>
           </div>
           <div className="absolute flex w-[95%] sm:max-w-[300px] md:max-w-[600px] lg:max-w-[500px] aspect-video mt-40 lg:left-8 lg:mt-64">
-            <YouTubeEmbed
-              url={"https://youtu.be/PjuCnojcgHc"}
-              autoplay={true}
-              className="w-full sm:max-w-[300px] md:max-w-[600px] lg:max-w-[500px] aspect-video z-10"
-            />
+            {firstUrl ? (
+              <YouTubeEmbed
+                url={firstUrl}
+                autoplay={true}
+                className="w-full sm:max-w-[300px] md:max-w-[600px] lg:max-w-[500px] aspect-video z-10"
+              />
+            ) : (
+              <p>Loading video...</p>
+            )}
           </div>
           <div className="absolute flex mt-[400px] md:mt-[550px] lg:ml-[43%] lg:mt-48 items-center z-10">
             <h2 className="font-semibold text-[20px] text-center">
