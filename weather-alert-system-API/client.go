@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"os"
+	"path/filepath"
 	"slices"
 	"sort"
 	"strings"
@@ -13,6 +15,7 @@ import (
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
+	"github.com/u2takey/ffmpeg-go"
 )
 
 var eventTypeLibrary = map[string]int{
@@ -1339,10 +1342,74 @@ func getWBGTForecastCityState(c *gin.Context) {
 	c.IndentedJSON(http.StatusCreated, wbgtDataLocation)
 }
 
+func extractAudioFromVideo(videoPath string) (string, error) {
+	// Generate a temporary audio file path
+	audioPath := filepath.Join("temp", "audio.wav")
+
+	// Extract audio using ffmpeg
+	err := ffmpeg.Input(videoPath).
+		Output(audioPath, ffmpeg.KwArgs{"acodec": "pcm_s16le", "ar": "16000", "ac": "1"}). // Convert to 16kHz mono WAV format
+		Run()
+
+	if err != nil {
+		return "", fmt.Errorf("failed to extract audio: %w", err)
+	}
+
+	return audioPath, nil
+}
+
+func uploadVideoHandler(c *gin.Context) {
+	// Parse the multipart form (the uploaded video file)
+	err := c.Request.ParseMultipartForm(10 << 20) // 10 MB limit
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Error parsing form"})
+		return
+	}
+
+	// Get the video file from the form
+	file, _, err := c.Request.FormFile("video")
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Error getting file"})
+		return
+	}
+	defer file.Close()
+
+	// Save the video to disk temporarily
+	tmpFile, err := os.Create("uploaded_video.mp4")
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Error saving file"})
+		return
+	}
+	defer tmpFile.Close()
+
+	_, err = io.Copy(tmpFile, file)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Error writing file"})
+		return
+	}
+
+	// Now, you would transcribe the video, for example, using Google Cloud or OpenAI's Whisper API
+	transcript, err := transcribeVideo("uploaded_video.mp4")
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Error transcribing video"})
+		return
+	}
+
+	// Send the transcript back to the frontend
+	c.JSON(http.StatusOK, gin.H{"transcript": transcript})
+}
+
+// Placeholder function for transcription (could call Google Cloud API or OpenAI Whisper here)
+func transcribeVideo(filename string) (string, error) {
+	// Replace this with actual video transcription logic using an API like Google Cloud Speech-to-Text or OpenAI Whisper
+	// For demonstration purposes, we return a mock transcript
+	return "This is the transcribed text from the video yuh", nil
+}
+
 func main() {
 	router := gin.Default()
 	router.Use(cors.New(cors.Config{
-		AllowOrigins:     []string{"https://nws-api-active-alerts.vercel.app", "https://www.ryanmarando.com"}, // http://localhost:3000 https://nws-api-active-alerts.vercel.app", "https://www.ryanmarando.com
+		AllowOrigins:     []string{"https://nws-api-active-alerts.vercel.app", "https://www.ryanmarando.com", "http://localhost:3000"}, // http://localhost:3000 https://nws-api-active-alerts.vercel.app", "https://www.ryanmarando.com
 		AllowMethods:     []string{"PUT", "PATCH", "POST", "DELETE", "GET"},
 		AllowHeaders:     []string{"Content-Type"},
 		AllowCredentials: true,
@@ -1356,6 +1423,7 @@ func main() {
 	router.GET("/countiesByState/:state", getCountiesByState)
 	router.GET("/getWBGTForecastCityState", getWBGTForecastCityState)
 	router.GET("/getWBGTForecastData/:loc", getWBGTForecastData)
-	router.Run(":10000") //localhost:8080 :10000
+	router.POST("/uploadVideo", uploadVideoHandler)
+	router.Run("localhost:8080") //localhost:8080 :10000
 
 }
