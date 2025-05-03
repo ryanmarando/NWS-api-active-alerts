@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import React from "react";
 import Select from "react-select";
 import Image from "next/image";
@@ -12,61 +12,63 @@ import { Footer } from "@/components/Footer";
 import { useUser } from "@clerk/clerk-react";
 import { IoIosArrowBack } from "react-icons/io";
 import { IoIosArrowDown } from "react-icons/io";
+import { API_URL } from "@/lib/constants";
 
 export default function AlertSystem() {
   const options = [
-    { value: "AL", label: "AL" },
-    { value: "AK", label: "AK" },
-    { value: "AZ", label: "AZ" },
-    { value: "AR", label: "AR" },
-    { value: "CA", label: "CA" },
-    { value: "CO", label: "CO" },
-    { value: "CT", label: "CT" },
-    { value: "DE", label: "DE" },
-    { value: "DC", label: "DC" },
-    { value: "FL", label: "FL" },
-    { value: "GA", label: "GA" },
-    { value: "HI", label: "HI" },
-    { value: "ID", label: "ID" },
-    { value: "IL", label: "IL" },
-    { value: "IN", label: "IN" },
-    { value: "IA", label: "IA" },
-    { value: "KS", label: "KS" },
-    { value: "KY", label: "KY" },
-    { value: "LA", label: "LA" },
-    { value: "ME", label: "ME" },
-    { value: "MD", label: "MD" },
-    { value: "MA", label: "MA" },
-    { value: "MI", label: "MI" },
-    { value: "MN", label: "MN" },
-    { value: "MS", label: "MS" },
-    { value: "MO", label: "MO" },
-    { value: "MT", label: "MT" },
-    { value: "NE", label: "NE" },
-    { value: "NV", label: "NV" },
-    { value: "NH", label: "NH" },
-    { value: "NJ", label: "NJ" },
-    { value: "NM", label: "NM" },
-    { value: "NY", label: "NY" },
-    { value: "NC", label: "NC" },
-    { value: "ND", label: "ND" },
-    { value: "OH", label: "OH" },
-    { value: "OK", label: "OK" },
-    { value: "OR", label: "OR" },
-    { value: "PA", label: "PA" },
-    { value: "RI", label: "RI" },
-    { value: "SC", label: "SC" },
-    { value: "SD", label: "SD" },
-    { value: "TN", label: "TN" },
-    { value: "TX", label: "TX" },
-    { value: "UT", label: "UT" },
-    { value: "VT", label: "VT" },
-    { value: "VA", label: "VA" },
-    { value: "WA", label: "WA" },
-    { value: "WV", label: "WV" },
-    { value: "WI", label: "WI" },
-    { value: "WY", label: "WY" },
+    { value: "AL", label: "Alabama" },
+    { value: "AK", label: "Alaska" },
+    { value: "AZ", label: "Arizona" },
+    { value: "AR", label: "Arkansas" },
+    { value: "CA", label: "California" },
+    { value: "CO", label: "Colorado" },
+    { value: "CT", label: "Connecticut" },
+    { value: "DE", label: "Delaware" },
+    { value: "DC", label: "District of Columbia" },
+    { value: "FL", label: "Florida" },
+    { value: "GA", label: "Georgia" },
+    { value: "HI", label: "Hawaii" },
+    { value: "ID", label: "Idaho" },
+    { value: "IL", label: "Illinois" },
+    { value: "IN", label: "Indiana" },
+    { value: "IA", label: "Iowa" },
+    { value: "KS", label: "Kansas" },
+    { value: "KY", label: "Kentucky" },
+    { value: "LA", label: "Louisiana" },
+    { value: "ME", label: "Maine" },
+    { value: "MD", label: "Maryland" },
+    { value: "MA", label: "Massachusetts" },
+    { value: "MI", label: "Michigan" },
+    { value: "MN", label: "Minnesota" },
+    { value: "MS", label: "Mississippi" },
+    { value: "MO", label: "Missouri" },
+    { value: "MT", label: "Montana" },
+    { value: "NE", label: "Nebraska" },
+    { value: "NV", label: "Nevada" },
+    { value: "NH", label: "New Hampshire" },
+    { value: "NJ", label: "New Jersey" },
+    { value: "NM", label: "New Mexico" },
+    { value: "NY", label: "New York" },
+    { value: "NC", label: "North Carolina" },
+    { value: "ND", label: "North Dakota" },
+    { value: "OH", label: "Ohio" },
+    { value: "OK", label: "Oklahoma" },
+    { value: "OR", label: "Oregon" },
+    { value: "PA", label: "Pennsylvania" },
+    { value: "RI", label: "Rhode Island" },
+    { value: "SC", label: "South Carolina" },
+    { value: "SD", label: "South Dakota" },
+    { value: "TN", label: "Tennessee" },
+    { value: "TX", label: "Texas" },
+    { value: "UT", label: "Utah" },
+    { value: "VT", label: "Vermont" },
+    { value: "VA", label: "Virginia" },
+    { value: "WA", label: "Washington" },
+    { value: "WV", label: "West Virginia" },
+    { value: "WI", label: "Wisconsin" },
+    { value: "WY", label: "Wyoming" },
   ];
+
   const items = [
     "Tsunami Warning",
     "Tornado Warning",
@@ -216,7 +218,7 @@ export default function AlertSystem() {
     "NWS Tallahassee FL",
     "NWS Tampa Bay Ruskin FL",
     "NWS Peachtree City GA",
-    "NWS Honolulu HI",  
+    "NWS Honolulu HI",
     "NWS Des Moines IA",
     "NWS Quad Cities IA IL",
     "NWS Boise ID",
@@ -255,7 +257,7 @@ export default function AlertSystem() {
     "NWS Newport/Morehead City NC",
     "NWS Raleigh NC",
     "NWS Wilmington NC",
-    "NWS Bismarck ND", 
+    "NWS Bismarck ND",
     "NWS Grand Forks ND",
     "NWS Hastings NE",
     "NWS North Platte NE",
@@ -310,7 +312,7 @@ export default function AlertSystem() {
     "NWS Charleston WV",
     "NWS Cheyenne WY",
     "NWS Western and Central Wyoming",
-  ]
+  ];
   const [stateOptions, setStateOptions] = useState(options);
   const [selectedOption, setSelectedOption] = useState(null);
   const [stateList, setStateList] = useState([]);
@@ -322,14 +324,35 @@ export default function AlertSystem() {
   const [showWarningSettings, setShowWarningSettings] = useState(false);
   const [checkedItems, setCheckedItems] = useState([]);
   const [selectAll, setSelectAll] = useState(false);
-  const [NWSselectedOfficeList, setNWSselectedOfficeList] = useState([])
+  const [NWSselectedOfficeList, setNWSselectedOfficeList] = useState([]);
   const [showNWSOfficeFullList, setShowNWSOfficeFullList] = useState(false);
   const [checkedNWSOffices, setCheckedNWSOffices] = useState([]);
   const [countiesByState, setCountiesByState] = useState({});
   const [selectedCounties, setSelectedCounties] = useState({});
-  const [showCountiesForSelectedStates, setShowCountiesForSelectedStates] = useState(false);
+  const [showCountiesForSelectedStates, setShowCountiesForSelectedStates] =
+    useState(false);
   const [hasSearchedForAlerts, setHasSearchedForAlerts] = useState(false);
-  const URL = "https://nws-api-active-alerts.onrender.com" //https://nws-api-active-alerts.onrender.com http://localhost:8080
+  const previousAlertIdsRef = useRef(new Set());
+  const [temporaryAlertList, setTemporaryAlertList] = useState([]);
+  const expandedItemIndexRef = useRef(null);
+  const [expandedItemIndex, setExpandedItemIndex] = useState(null);
+
+  useEffect(() => {
+    if (temporaryAlertList.length > 0) {
+      // After the new alerts have rendered, remove the isNew flag
+      const timeout = setTimeout(() => {
+        setAlertList(
+          temporaryAlertList.map((a) => ({
+            ...a,
+            isNew: false,
+          }))
+        );
+        setTemporaryAlertList([]); // clear the temp list
+      }, 5000); // allow enough time for animation to trigger
+
+      return () => clearTimeout(timeout); // Cleanup on unmount
+    }
+  }, [temporaryAlertList]);
 
   function addState() {
     if (!selectedOption) return alert("Please enter a state.");
@@ -344,249 +367,172 @@ export default function AlertSystem() {
   }
 
   const CountyListLibrary = () => {
-
-  // Fetch counties for a state when it's added
-  const getCountiesFromState = async (state) => {
-    const results = await fetch(URL + `/countiesByState/` + state)
-      .then((data) => data.json())
-      .then((data) => {
-        setCountiesByState((prevState) => ({
-          ...prevState,
-          [state]: data, // Store counties for the selected state
-        }));
-      });
-  };
-
- // Handle county checkbox change
- const handleCheckboxChange = (event, state, county) => {
-  const isChecked = event.target.checked;
-
-  setSelectedCounties((prevState) => {
-    const updatedCounties = isChecked
-      ? [...(prevState[state] || []), county]
-      : prevState[state].filter((item) => item !== county);
-
-    return {
-      ...prevState,
-      [state]: updatedCounties,
+    // Fetch counties for a state when it's added
+    const getCountiesFromState = async (state) => {
+      const results = await fetch(API_URL + `/alerts?state=` + state)
+        .then((data) => data.json())
+        .then((data) => {
+          setCountiesByState((prevState) => ({
+            ...prevState,
+            [state]: data, // Store counties for the selected state
+          }));
+        });
     };
-  });
-};
 
-  // Fetch counties when a new state is added to the list
-  useEffect(() => {
-    stateList.forEach((state) => {
-      if (!countiesByState[state]) {
-        getCountiesFromState(state); // Fetch counties only if not already fetched
-      }
-    });
-  }, [stateList]);
+    // Handle county checkbox change
+    const handleCheckboxChange = (event, state, county) => {
+      const isChecked = event.target.checked;
 
-  return (
-    <div className="p-4">
-      <p className="w-full flex items-center justify-center">
+      setSelectedCounties((prevState) => {
+        const updatedCounties = isChecked
+          ? [...(prevState[state] || []), county]
+          : prevState[state].filter((item) => item !== county);
+
+        return {
+          ...prevState,
+          [state]: updatedCounties,
+        };
+      });
+    };
+
+    // Fetch counties when a new state is added to the list
+    useEffect(() => {
+      stateList.forEach((state) => {
+        if (!countiesByState[state]) {
+          getCountiesFromState(state); // Fetch counties only if not already fetched
+        }
+      });
+    }, [stateList]);
+
+    return (
+      <div className="p-4">
+        <p className="w-full flex items-center justify-center">
           Optional: skip for all statewide alerts
         </p>
-      {/* Display selected states and allow selecting counties for each */}
-      {/* Conditional rendering based on stateList */}
-      {stateList.length === 0 ? (
-        <p>Please enter a state.</p>
-      ) : (
-        stateList.map((state, index) => (
-          <div key={index} className="mb-4">
-            <label>Select Counties for {state}:</label>
-            <div className="grid grid-cols-1 md:grid-cols-6 lg:grid-cols-6 gap-1">
-              {countiesByState[state] ? (
-                countiesByState[state].map((county, countyIndex) => (
-                  <div key={countyIndex} className="flex items-center">
-                    <input
-                      type="checkbox"
-                      id={`checkbox-${state}-${countyIndex}`}
-                      value={county}
-                      checked={
-                        selectedCounties[state]?.includes(county) || false
-                      }
-                      onChange={(event) =>
-                        handleCheckboxChange(event, state, county)
-                      }
-                    />
-                    <label
-                      htmlFor={`checkbox-${state}-${countyIndex}`}
-                      className="ml-2"
-                    >
-                      {county}
-                    </label>
-                  </div>
-                ))
-              ) : (
-                <p>Loading counties...</p>
-              )}
+        {/* Display selected states and allow selecting counties for each */}
+        {/* Conditional rendering based on stateList */}
+        {stateList.length === 0 ? (
+          <p>Please enter a state.</p>
+        ) : (
+          stateList.map((state, index) => (
+            <div key={index} className="mb-4">
+              <label>Select Counties for {state}:</label>
+              <div className="grid grid-cols-1 md:grid-cols-6 lg:grid-cols-6 gap-1">
+                {countiesByState[state] ? (
+                  countiesByState[state].map((county, countyIndex) => (
+                    <div key={countyIndex} className="flex items-center">
+                      <input
+                        type="checkbox"
+                        id={`checkbox-${state}-${countyIndex}`}
+                        value={county}
+                        checked={
+                          selectedCounties[state]?.includes(county) || false
+                        }
+                        onChange={(event) =>
+                          handleCheckboxChange(event, state, county)
+                        }
+                      />
+                      <label
+                        htmlFor={`checkbox-${state}-${countyIndex}`}
+                        className="ml-2"
+                      >
+                        {county}
+                      </label>
+                    </div>
+                  ))
+                ) : (
+                  <p>Loading counties...</p>
+                )}
+              </div>
             </div>
-          </div>
-        ))
-      )}
-    </div>
-  );
+          ))
+        )}
+      </div>
+    );
   };
 
   function removeState() {
     if (stateList.length === 0)
-      return alert("You must add at least once state to remove.");
+      return alert("You must add at least one state to remove.");
     if (stateList.length <= 1) {
       setStateList([]);
-      setSelectedCounties({})
+      setSelectedCounties({});
       return;
     }
-    const stateToRemove = stateList.pop();
-    const updatedCounties = {...selectedCounties}
-    setStateList([...stateList]);
+
+    const newStateList = stateList.slice(0, -1); // Immutable removal
+    const stateToRemove = stateList[stateList.length - 1]; // Get last state
+    const updatedCounties = { ...selectedCounties };
     delete updatedCounties[stateToRemove];
-    setSelectedCounties(updatedCounties)
 
+    setStateList(newStateList);
+    setSelectedCounties(updatedCounties);
   }
 
-  function updateAlertAreaDesc(alertList) {
-    const mergedAlerts = [];
-  
-    alertList.forEach((alert, index) => {
-      // Check if this alert has already been processed
-      const existingAlertIndex = mergedAlerts.findIndex(a => a.id === alert.id);
-  
-      if (existingAlertIndex !== -1) {
-        // Merge the AreaDesc of the matching alert with the existing one
-        const existingAlert = mergedAlerts[existingAlertIndex];
-        
-        const combinedAreaDesc = [
-          existingAlert.areaDesc ? existingAlert.areaDesc.trim() : '',
-          alert.areaDesc ? alert.areaDesc.trim() : ''
-        ].filter(desc => desc !== '').join("; ").trim();
-  
-        // Update the existing alert with the combined AreaDesc
-        mergedAlerts[existingAlertIndex].areaDesc = combinedAreaDesc;
-  
-      } else {
-        // Add this alert to the merged list if it's not already processed
-        mergedAlerts.push({ ...alert });
-      }
+  async function getNewData() {
+    if (stateList.length === 0) return alert("Please choose a state.");
+    setIsLoading(true);
+
+    const stateListString = stateList.join(",");
+    const data = {
+      states: stateListString,
+      counties: selectedCounties,
+      alertTypes: checkedItems,
+      NWSoffices: checkedNWSOffices,
+    };
+
+    const response = await fetch(API_URL + "/alerts", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
     });
-  
-    return mergedAlerts;
+
+    if (response.ok) {
+      const responseData = await response.json();
+      const newIds = new Set(responseData.map((a) => a.id));
+      const prevIds = previousAlertIdsRef.current;
+
+      const updated = responseData.map((alert) => ({
+        ...alert,
+        isNew: !prevIds.has(alert.id),
+      }));
+
+      sortAlertListByPriority(updated);
+
+      // Preserve expandedItemIndexRef while updating alert list
+      setAlertList((prevAlertList) => {
+        return updated.map((newAlert) => ({
+          ...newAlert,
+          isExpanded: expandedItemIndexRef.current === newAlert.id,
+        }));
+      });
+
+      setTemporaryAlertList(updated); // triggers useEffect to reset isNew
+      previousAlertIdsRef.current = newIds;
+
+      const newAlerts = updated.filter((a) => a.isNew);
+      if (newAlerts.length > 0) {
+        const hasWarning = newAlerts.some((a) =>
+          a.stringOutput.toLowerCase().includes("warning")
+        );
+        const audio = new Audio(hasWarning ? "/warning.mp3" : "/ding.mp3");
+        audio.play();
+      }
+    } else {
+      console.error("Failed to fetch data", response.status);
+    }
+
+    setHasSearchedForAlerts(true);
+    setIsLoading(false);
   }
-  
+
   function sortAlertListByPriority(alertList) {
     return alertList.sort((a, b) => {
       // Assuming priority is a numerical value and lower values have higher priority
       return a.priority - b.priority;
     });
-  }
-
-  async function getDataFromOwnAPIWithCounties() {
-    const tempAlertList = [];
-    const data = { data: checkedItems };
-    const response = await fetch(
-      URL + "/userAlertTypes",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      }
-    );
-    if (response.ok) {
-      console.log("Warnings submitted county!");
-    }
-    const NWSOfficeList = { officeList: checkedNWSOffices}
-    const NWSOfficeResponse = await fetch(
-      URL + "/getNWSOffices",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(NWSOfficeList),
-      }
-    );
-    if (NWSOfficeResponse.ok) {
-      console.log("Offices submitted county!");
-    }
-    for (let i = 0; i < Object.entries(selectedCounties).length; i++) {
-      if (Object.values(selectedCounties)[i].length > 0) {
-      const results = await fetch(
-        URL + "/alerts/" +
-         Object.keys(selectedCounties)[i] +
-          "/" +
-          Object.values(selectedCounties)[i]
-      )
-        .then((data) => data.json())
-        .then((data) => {
-          tempAlertList.push(...data)
-        });
-    } else {
-      const results = await fetch(
-        URL + "/alerts/" +
-         Object.keys(selectedCounties)[i]
-      )
-        .then((data) => data.json())
-        .then((data) => {
-          tempAlertList.push(...data)
-        });
-  }
-  }
-    let updatedList = updateAlertAreaDesc(tempAlertList);
-    sortAlertListByPriority(updatedList)
-    setAlertList(updatedList);
-    setIsLoading(false);
-    setHasSearchedForAlerts(true)
-    console.log("Successful county export");
-  }
-
-  async function getDataFromOwnAPI() {
-    if (stateList.length === 0) return alert("Please choose a state.");
-    setIsLoading(true);
-    if (Object.entries(selectedCounties).length > 0) {
-      if (Object.values(selectedCounties)[0].length > 0) return getDataFromOwnAPIWithCounties();}
-    const stateListString = stateList.join(",");
-    const data = { data: checkedItems };
-    const response = await fetch(
-      URL + "/userAlertTypes",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      }
-    );
-    if (response.ok) {
-      console.log("Warnings submitted!");
-    }
-    const NWSOfficeList = { officeList: checkedNWSOffices}
-    const NWSOfficeResponse = await fetch(
-      URL + "/getNWSOffices",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(NWSOfficeList),
-      }
-    );
-    if (NWSOfficeResponse.ok) {
-      console.log("Offices submitted!");
-    }
-    const results = await fetch(
-      URL + "/alerts/" +
-        stateListString
-    )
-      .then((data) => data.json())
-      .then((data) => {
-        setAlertList(updateAlertAreaDesc(data));
-        setIsLoading(false);
-      });
- 
-    setHasSearchedForAlerts(true)
-    console.log("Successful state wide export");
   }
 
   function ChangeSettings() {
@@ -596,7 +542,8 @@ export default function AlertSystem() {
   const AutomaticOutput = () => {
     const myFunction = () => {
       console.log("Function called!");
-      getDataFromOwnAPI();
+      //getDataFromOwnAPI();
+      getNewData();
     };
 
     const toggleFunction = () => {
@@ -680,16 +627,13 @@ export default function AlertSystem() {
       const data = { data: checkedItems };
       console.log(data);
 
-      const response = await fetch(
-        URL + "/userAlertTypes",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(data),
-        }
-      );
+      const response = await fetch(URL + "/userAlertTypes", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
 
       if (response.ok) {
         console.log("Warnings submitted!");
@@ -756,67 +700,76 @@ export default function AlertSystem() {
   const NWSOfficeListForm = () => {
     const [searchOfficeTerm, setSearchOfficeTerm] = useState("");
 
-  // Handle checkbox change
-  const handleCheckboxChange = (event) => {
-    const { value, checked } = event.target;
+    // Handle checkbox change
+    const handleCheckboxChange = (event) => {
+      const { value, checked } = event.target;
 
-    setCheckedNWSOffices((prevCheckedItems) =>
-      checked
-        ? [...prevCheckedItems, value] // Add to checked list
-        : prevCheckedItems.filter((item) => item !== value) // Remove from checked list
+      setCheckedNWSOffices(
+        (prevCheckedItems) =>
+          checked
+            ? [...prevCheckedItems, value] // Add to checked list
+            : prevCheckedItems.filter((item) => item !== value) // Remove from checked list
+      );
+    };
+
+    // Handle search term change
+    const handleSearchChange = (event) => {
+      setSearchOfficeTerm(event.target.value);
+    };
+
+    // Filter the office list based on search term
+    const filteredOfficeItems = NWSofficeFullList.filter((item) =>
+      item.toLowerCase().includes(searchOfficeTerm.toLowerCase())
+    );
+
+    return (
+      <div className="p-4 w-full">
+        <p className="w-full flex items-center justify-center">
+          Optional: skip for any office that applies
+        </p>
+        <div className="w-full">
+          <input
+            type="text"
+            placeholder="Search..."
+            value={searchOfficeTerm}
+            onChange={handleSearchChange}
+            className="path-bar mb-6 p-1 w-full"
+          />
+        </div>
+        <form className="p-2">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-2 gap-x-6 -ml-4 lg:ml-2">
+            {filteredOfficeItems.map((item, index) => (
+              <div key={item} className="flex items-center pl-4">
+                <input
+                  type="checkbox"
+                  id={`checkbox-${index}`}
+                  value={item}
+                  checked={checkedNWSOffices.includes(item)} // Check if it's selected
+                  onChange={handleCheckboxChange}
+                  className="p-2 mr-2 text-center"
+                />
+                <label htmlFor={`checkbox-${index}`}>{item}</label>
+              </div>
+            ))}
+          </div>
+        </form>
+      </div>
     );
   };
 
-  // Handle search term change
-  const handleSearchChange = (event) => {
-    setSearchOfficeTerm(event.target.value);
-  };
-
-  // Filter the office list based on search term
-  const filteredOfficeItems = NWSofficeFullList.filter((item) =>
-    item.toLowerCase().includes(searchOfficeTerm.toLowerCase())
-  );
-
-  return (
-    <div className="p-4 w-full">
-      <p className="w-full flex items-center justify-center">
-        Optional: skip for any office that applies
-      </p>
-      <div className="w-full">
-        <input
-          type="text"
-          placeholder="Search..."
-          value={searchOfficeTerm}
-          onChange={handleSearchChange}
-          className="path-bar mb-6 p-1 w-full"
-        />
-      </div>
-      <form className="p-2">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-2 gap-x-6 -ml-4 lg:ml-2">
-          {filteredOfficeItems.map((item, index) => (
-            <div key={item} className="flex items-center pl-4">
-              <input
-                type="checkbox"
-                id={`checkbox-${index}`}
-                value={item}
-                checked={checkedNWSOffices.includes(item)} // Check if it's selected
-                onChange={handleCheckboxChange}
-                className="p-2 mr-2 text-center"
-              />
-              <label htmlFor={`checkbox-${index}`}>{item}</label>
-            </div>
-          ))}
-        </div>
-      </form>
-    </div>
-  );
+  const clearInputs = async () => {
+    setStateList([]);
+    setSelectedCounties([]);
+    setCheckedItems([]);
+    setCheckedNWSOffices([]);
   };
 
   const saveDataListInput = async () => {
     if (stateList.length === 0)
       return alert("You must add at least once state to save data.");
+
     if (!user) {
-      return alert("Please login to save your settings.")
+      return alert("Please login to save your settings.");
     }
     try {
       const response = await fetch("/api/updateUserMetadata", {
@@ -830,7 +783,7 @@ export default function AlertSystem() {
             selectedCounties: selectedCounties,
             stateList: stateList.join(","),
             warningTypes: checkedItems,
-            checkedNWSOffices: checkedNWSOffices
+            checkedNWSOffices: checkedNWSOffices,
           },
         }),
       });
@@ -849,9 +802,9 @@ export default function AlertSystem() {
 
   async function populateDataInput() {
     if (!user) {
-      return alert("Please login to populate saved settings.")
+      return alert("Please login to populate saved settings.");
     }
-    console.log(user.publicMetadata)
+    console.log(user.publicMetadata);
     if (!user.publicMetadata || Object.keys(user.publicMetadata).length === 0) {
       return alert("There's no saved data to populate.");
     }
@@ -860,51 +813,52 @@ export default function AlertSystem() {
     setSelectedCounties(user?.publicMetadata.selectedCounties);
     const savedWarningTypeArr = user?.publicMetadata.warningTypes;
     setCheckedItems(savedWarningTypeArr);
-    setCheckedNWSOffices(user?.publicMetadata.checkedNWSOffices)
+    setCheckedNWSOffices(user?.publicMetadata.checkedNWSOffices);
   }
 
-  const handleSelectOfficeChange = (e) => {
-    setNWSselectedOfficeList(e.target.value);
+  // Toggle function for expansion
+  const toggleExpansion = (id) => {
+    // If the alert is already expanded, collapse it, else expand it
+    setExpandedItemIndex((prevIndex) => (prevIndex === id ? null : id));
+    expandedItemIndexRef.current = (prevIndex) =>
+      prevIndex === id ? null : id;
   };
 
-
-
   const AlertList = ({ alertList }) => {
-    const [expandedItemIndex, setExpandedItemIndex] = useState(null);
-
-    const toggleExpansion = (index) => {
-      setExpandedItemIndex((prevIndex) => (prevIndex === index ? null : index));
-    };
-
     if (alertList.length === 0 && hasSearchedForAlerts) {
       return (
         <ul className="p-2">
           <li
             className="alert-list shadow-md border-spacing-1"
-            style={{ backgroundColor: "white" }}>
-                <p className="w-full items-center justify-center">
-                  All clear for {stateList.join(', ')} 
-                </p>
-                <p className="w-full items-center justify-center">
-                  {Object.values(selectedCounties).flat().join(', ')}
-                </p>
-                {
-                checkedNWSOffices.length === 0 ? (
-                  <p className="w-full items-center justify-center">For All Offices</p>
-                 ) : (
-                   <p className="w-full items-center justify-center">For {checkedNWSOffices.join(', ')}</p>
-                 )
-              }
-                {
-                checkedItems.length === 0 ? (
-                  <p className="w-full items-center justify-center">For All Warnings</p>
-                 ) : (
-                   <p className="w-full items-center justify-center">For {checkedItems.join(', ')}</p>
-                 )
-              }
-            </li>
+            style={{ backgroundColor: "white" }}
+          >
+            <p className="w-full items-center justify-center">
+              All clear for {stateList.join(", ")}
+            </p>
+            <p className="w-full items-center justify-center">
+              {Object.values(selectedCounties).flat().join(", ")}
+            </p>
+            {checkedNWSOffices.length === 0 ? (
+              <p className="w-full items-center justify-center">
+                For All Offices
+              </p>
+            ) : (
+              <p className="w-full items-center justify-center">
+                For {checkedNWSOffices.join(", ")}
+              </p>
+            )}
+            {checkedItems.length === 0 ? (
+              <p className="w-full items-center justify-center">
+                For All Warnings
+              </p>
+            ) : (
+              <p className="w-full items-center justify-center">
+                For {checkedItems.join(", ")}
+              </p>
+            )}
+          </li>
         </ul>
-      )
+      );
     }
 
     return (
@@ -912,33 +866,40 @@ export default function AlertSystem() {
         {alertList.map((obj, idx) => (
           <li
             key={obj.id}
-            className="alert-list shadow-md border-spacing-1"
+            className={`alert-list shadow-md border-spacing-1 ${
+              obj.isNew ? "animate-flash-highlight" : ""
+            }`}
             style={{ backgroundColor: obj.color }}
           >
             <button
               className="w-full text-left"
-              onClick={() => toggleExpansion(idx)}
+              onClick={() => toggleExpansion(obj.id)} // Toggle expansion based on unique alert ID
             >
-              {/* Access object properties and render them */}
-              <span className="effective">{obj.effective}</span>
-              <span className="headline">{obj.headline}</span>
-              <br></br>
+              <span className="effective">
+                {new Date(obj.effective).toLocaleTimeString([], {
+                  hour: "numeric",
+                  minute: "2-digit",
+                })}
+              </span>
+
+              <span className="headline">{obj.stringOutput}</span>
+              <br />
               <div className="areaDesc">{obj.areaDesc}</div>
             </button>
             <div
               className={`expanded-content ${
-                expandedItemIndex === idx
+                expandedItemIndex === obj.id
                   ? "expanded"
                   : expandedItemIndex !== null
                   ? "collapsing"
                   : ""
               }`}
             >
-              {expandedItemIndex === idx && (
+              {expandedItemIndex === obj.id && (
                 <pre className="p-4 sm:items-center break-words whitespace-pre-wrap text-sm lg:text-base">
-                    <div>{obj.description}</div>
+                  <div>{obj.description}</div>
                 </pre>
-                  )}
+              )}
             </div>
           </li>
         ))}
@@ -962,11 +923,15 @@ export default function AlertSystem() {
           <label className="label">
             Please select state(s) to receive alerts:
           </label>
-          <Select
-            defaultValue={selectedOption}
-            onChange={setSelectedOption}
-            options={stateOptions}
-          />
+          <div className="w-[75%] md:w-[50%] lg:w-[25%]">
+            {" "}
+            <Select
+              defaultValue={selectedOption}
+              onChange={setSelectedOption}
+              options={stateOptions}
+            />
+          </div>
+
           <div className="flex w-full items-center justify-center">
             <button
               onClick={addState}
@@ -986,7 +951,9 @@ export default function AlertSystem() {
             <label className="label">Choose your specific counties:</label>
             <button
               onClick={() => {
-                setShowCountiesForSelectedStates(!showCountiesForSelectedStates);
+                setShowCountiesForSelectedStates(
+                  !showCountiesForSelectedStates
+                );
               }}
             >
               {showCountiesForSelectedStates ? (
@@ -996,7 +963,11 @@ export default function AlertSystem() {
               )}
             </button>
           </div>
-          {showCountiesForSelectedStates ? <CountyListLibrary statesList={stateList}/> : ""}
+          {showCountiesForSelectedStates ? (
+            <CountyListLibrary statesList={stateList} />
+          ) : (
+            ""
+          )}
           <div className="flex gap-1">
             <label className="label">Choose your specific warnings:</label>
             <button
@@ -1028,9 +999,9 @@ export default function AlertSystem() {
           </div>
           {showNWSOfficeFullList ? <NWSOfficeListForm /> : ""}
           <button
-            className="bg-[#4328EB] hover:text-gray-500 w-33 py-1 px-2 rounded-[8px] text-[white] my-[15px]"
+            className="bg-[#4328EB] hover:text-gray-500 w-33 py-1 px-2 rounded-[8px] text-[white] my-[10px]"
             type="alert-button"
-            onClick={getDataFromOwnAPI}
+            onClick={getNewData}
             disabled={isLoading}
           >
             {isLoading ? <LoadingAnimation /> : "Get Alerts"}
@@ -1038,9 +1009,17 @@ export default function AlertSystem() {
           <div className="flex relative w-full items-center justify-center">
             <button
               onClick={saveDataListInput}
-              className="bg-[#4328EB] lg:absolute lg:bottom-0 lg:right-0 hover:text-gray-500 py-1 px-2 w-50 lg:mr-0 lg:mt-0 lg:w-50 rounded-[8px] text-white "
+              className="bg-[#4328EB] lg:absolute lg:bottom-0 lg:right-0 hover:text-gray-500 py-1 px-2 w-50 my-[10px] md:my-[0px] lg:my-[0px] lg:mr-0 lg:mt-0 lg:w-50 rounded-[8px] text-white "
             >
               Save Settings
+            </button>
+          </div>
+          <div className="flex relative w-full items-center justify-center">
+            <button
+              onClick={clearInputs}
+              className="bg-[#ff2929] lg:absolute lg:bottom-0 lg:left-0 hover:text-gray-500 py-1 px-2 w-50 my-[10px] md:my-[10px] lg:my-[0px] lg:mr-0 lg:mt-0 lg:w-50 rounded-[8px] text-white "
+            >
+              Clear Inputs
             </button>
           </div>
         </div>

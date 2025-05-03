@@ -1,0 +1,154 @@
+[33m6a3e683[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mdeploy_test[m[33m)[m pushing test
+[33mc4e72d2[m trying deploy testt
+[33m9c2e2c2[m trying deploy test
+[33m1f5a75f[m committing old changes
+[33mc622c35[m working new backend
+[33m9990f5d[m added sounds and alerts for new warnigns
+[33maf142ff[m starting to connect to new backend
+[33m6a361d8[m[33m ([m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;32mmain[m[33m)[m Create README.md
+[33mddef4b2[m[33m ([m[1;31morigin/deploy_test[m[33m)[m fixed formatting
+[33mca32ddf[m Merge branch 'deploy_test'
+[33m8b12815[m added better mobile looks
+[33m64651fd[m Merge branch 'deploy_test'
+[33mb90e34b[m fixed ends and expires on warnings
+[33m1b42a47[m Merge branch 'deploy_test'
+[33m702f03f[m added new weather in hero
+[33maf18785[m fixed height on 2nd reow pics
+[33m41f9419[m fixed pics
+[33m78c5a49[m Merge branch 'deploy_test'
+[33m7421823[m full broadcasting and update winter alerts
+[33m2ecf9d2[m fixed populate data if nothing there
+[33m3347470[m working version of brodcasting tab
+[33m91fce30[m fixed populate data crashing
+[33md6a00e4[m first working reel page
+[33m1cc63d6[m fixed mobile and localhost
+[33mfb10977[m fixed mobile bugs
+[33m87db1c6[m made mobile expnaded smaller
+[33m127c6a9[m first rehaul and wbgt
+[33m131fbf0[m working version with all states and wbgt
+[33me9664e0[m added phone view and through tennessee
+[33m9a99e54[m fixed bug with apostrophe
+[33m1bfea79[m added all offices and added nebraska counties
+[33m886ebf7[m fixed duplicating ids of alerts and sort order county list
+[33m718bc0a[m fixed bug with remove states and counties
+[33m91a1a75[m fixed statelist for no alerts
+[33ma3b4b14[m fixed clickable map not loading
+[33mf87eb94[m added fully working wbgt and fixed county list
+[33mf8c560e[m added working first draft of wbgt
+[33m66adba6[m added to kansas
+[33mb743964[m fixed a bug with counties changing on each run
+[33m6fd5f33[m more offices and up to idaho
+[33m9628020[m added through ga
+[33m1cdee43[m added up to arkansas
+[33m64573e1[m added prototype of county with analytics
+[33m6605243[m analytics and county starts
+[33mf291fa8[m starting working version of counties
+[33m153ddbf[m working protoype of county choosing
+[33mbb0d55f[m added sendername office choice
+[33m0994e2c[m fixed localhost
+[33m18099e7[m Merge branch 'deploy_test'
+[33mc965dda[m Merge branch 'main' of https://github.com/ryanmarando/NWS-api-active-alerts
+[33m1be9091[m took away phone number
+[33meb50913[m took out stipe
+[33m7e892e8[m base for changing
+[33m6397c8b[m deploy_test init
+[33mfe1f2c7[m took out / in ryanmarando.com
+[33m449517f[m adding ryanmarando.com to cors
+[33m112019d[m committing
+[33m3edd545[m flop
+[33m5beacc6[m committing
+[33m5de74a3[m failure of pop out
+[33m0126598[m changed localhost
+[33m6017ee2[m adding expandable alerts with backend
+[33m8a537d4[m adding expanable alerts
+[33m8524048[m Merge branch 'main' of https://github.com/ryanmarando/NWS-api-active-alerts
+[33m49af9b7[m added KY
+[33mc645d86[m trying to cancel sub
+[33m199abb4[m[33m ([m[1;31morigin/test_payment[m[33m)[m working cancel subscription
+[33m5ca7bbc[m fixed useeffect
+[33m8b8cd51[m fixed a useuser
+[33m70a3277[m test working version of payment
+[33mcbe8ff3[m very basic barely working authentication for subscription
+[33m82c6a44[m added sign in and pricing page next is to make sure you are signed in for it
+[33mc1f8a69[m pre monthly subscription
+[33m9eee465[m adding autentication
+[33m849ebe3[m trying popup
+[33m0d45f6c[m trying to fix alert type mobile
+[33m0a57536[m now fixed mobile warnings choose
+[33m9b92d6e[m removed print backend
+[33mca4e0fa[m fixed mobile checkboxes
+[33m8c69a60[m main working version of choose warnings
+[33m1e7980d[m added working version of warning type with all urls
+[33mbc0c37d[m completed choose warning
+[33md347799[m first iteration of choosing what warnings
+[33m5555282[m trying choose alerts
+[33mfea279b[m v1 of website working
+[33m7a0fcd0[m v1 of website
+[33m809f88d[m fixed border on alerts and api read
+[33m624a389[m fixed border on alerts
+[33m23f2cdf[m put on contact page first test
+[33m973a779[m fixed no alerts for counties look
+[33m86d50c6[m fixed error message on save data
+[33ma888b91[m added save county and state data from front end
+[33mc3afe74[m fixed populate mobile button
+[33m6b00d93[m added better mobile nav bar and area add button
+[33m424b241[m populate countylist only
+[33me7e85b4[m trying countylist populate 1
+[33mc32667f[m fixed mobile navbar button
+[33m793125b[m added mobile nav bar
+[33mb77084b[m committing
+[33me376a80[m comit
+[33m5904d8d[m comitting
+[33meceb462[m commiting so I can pull
+[33me1a77f6[m merged sign in feature
+[33mdfb3911[m repushing
+[33me59634d[m clerk sign in
+[33ma6396fe[m refresh of old version
+[33m09e1e68[m removed clerk login
+[33m8c7ec1e[m change middlware to js
+[33md079f8b[m made local sign in
+[33m6f3d7c3[m added login and logout
+[33mad02cbc[m fixed navbar view
+[33md73c798[m made small things invisible
+[33m8c09b51[m added a home page
+[33mf235c17[m cnetered text for labels
+[33mf9fdc25[m added frontend revamp with hiding settings and modernish look
+[33m640a183[m committing
+[33md4f536f[m committing
+[33m442422f[m added automatic timer countdown
+[33m07ad208[m added no alerts looks plus a loading animation
+[33m2fcd9f8[m changed icon
+[33mf7a380e[m added all alerts with colors
+[33ma81e4b5[m added all warnings with colors and priority
+[33ma8a16ec[m changed alert output to frontend only
+[33mc1b2c9f[m Merge branch 'main' of https://github.com/ryanmarando/NWS-api-active-alerts
+[33m66cf2ff[m changed localhost
+[33md5fb5b6[m flipping path slash
+[33ma652a4e[m added path for county request
+[33me5fb558[m added render api calls in page.js
+[33m4873ceb[m trying to deploy api v1
+[33me82d171[m addded vercel api read and made front end box not go off screen
+[33m17511fb[m updating pc stuff
+[33mcb387a6[m changed csv name to currentwarnings.csv
+[33m9be3ab5[m added a half decent looking front end
+[33m2c74f20[m first complete working alert system
+[33mb1d58a9[m starting to get a path get request for users
+[33m54cd559[m fully functioning alpha version of alert system with automatic exports
+[33m7bd20ae[m communicating frontend to backend hardcoded
+[33m306d033[m added exporting to csv functionality
+[33m1d91ab7[m added county functionality into api
+[33m943635c[m added functionality to the api and updated flox.txt
+[33md6c27ab[m pushing app
+[33m11fbcb9[m added backend api in go
+[33m30163a7[m added state selection and warning output by state
+[33med49010[m adding the first save of the full website
+[33m356a2f6[m added comment in changeTimeOutput for until further notice
+[33m31bf5d8[m updating flow.txt
+[33m2716c09[m fixed a bug with time not showing correctly
+[33mff75174[m added shortend headline and local time
+[33m55fb8ed[m with counties and states
+[33m8c1ce83[m add county adder and print all when no counties added
+[33m31b43a6[m added back the convertArrayToCSV
+[33m0a0b455[m add check if in county and county list
+[33m986c44a[m added another CSV attempt
+[33m7c47ada[m state data to csv

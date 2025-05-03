@@ -10,11 +10,12 @@ import Twitter from "../../public/assets/X.svg";
 import User from "../../public/assets/User.svg";
 import { SignInButton, SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
 import { MobileNav } from "@/components/MobileNav.js";
+import { API_URL } from "@/lib/constants";
 
 <Image alt="Menu" src={Menu} className="lg:hidden" />;
 export function Navbar() {
     const { user } = useUser();
-    const [hasSubscription, setHasSubscription] = useState();
+    const [isAdmin, setIsAdmin] = useState();
     useEffect(() => {
         const fetchPrivateMetadata = async () => {
             if (!user?.id) return;
@@ -27,7 +28,9 @@ export function Navbar() {
                     throw new Error("Failed to fetch user data");
                 }
                 const data = await response.json();
-                setHasSubscription(data.privateMetadata.subscription);
+                if (data.privateMetadata.admin) {
+                    setIsAdmin(data.privateMetadata.admin);
+                }
             } catch (error) {
                 console.error("Error fetching user data:", error);
             }
@@ -53,29 +56,16 @@ export function Navbar() {
                         Products
                     </button>
 
-                    {/* Dropdown Wrapper */}
-                    <div className="absolute hidden group-hover:flex flex-col bg-white shadow-lg rounded-md mt-2 z-20">
-                        {/* Dropdown Item 1 */}
+                    {/* Dropdown Content */}
+                    <div className="absolute hidden group-hover:block bg-white shadow-lg rounded-md mt-2 z-20">
                         <Link
                             href="/wbgt"
                             className="block px-4 py-2 text-gray-700 hover:bg-[rgb(221,221,221)] rounded-md"
                         >
                             Wet Bulb Globe Temperatures
                         </Link>
-
-                        {/* Separator */}
-                        <div className="border-t border-gray-200 my-2"></div>
-
-                        {/* Dropdown Item 2 */}
-                        <Link
-                            href="/ai_analyzer"
-                            className="block px-4 py-2 text-gray-700 hover:bg-[rgb(221,221,221)] rounded-md"
-                        >
-                            AI Weathercast Analyzer
-                        </Link>
                     </div>
                 </div>
-
                 <Link
                     className="hidden lg:block py-[16px]"
                     href="/broadcasting"
@@ -85,6 +75,11 @@ export function Navbar() {
                 <Link className="hidden lg:block py-[16px]" href="/contact">
                     Contact
                 </Link>
+                {isAdmin && (
+                    <Link className="hidden lg:block py-[16px]" href="/admin">
+                        Admin
+                    </Link>
+                )}
             </div>
             <div className="flex items-center">
                 <a
