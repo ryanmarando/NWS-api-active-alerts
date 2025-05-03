@@ -4,171 +4,172 @@
 @import url("https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap");
 
 body {
-  background-color: lightblue;
+    background-color: lightblue;
 }
 
 .alert-system {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  flex: 1;
-  justify-content: center;
-  padding: 5px;
-  background-color: rgb(221, 221, 221);
-  font-family: "DM Sans", sans-serif;
-  margin: 14px;
-  margin-top: 2px;
-  border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1;
+    justify-content: center;
+    padding: 5px;
+    background-color: rgb(221, 221, 221);
+    font-family: "DM Sans", sans-serif;
+    margin: 14px;
+    margin-top: 2px;
+    border-radius: 12px;
 }
 
 :root {
-  --component-background-color: white; /* Default background color */
+    --component-background-color: white; /* Default background color */
 }
 
 .alert-output {
-  margin: 10px;
-  padding: 5px;
-  padding-top: 1px;
+    margin: 10px;
+    padding: 5px;
+    padding-top: 1px;
 }
 
 .alert-list {
-  background-color: var(--component-background-color);
-  height: 15%;
-  padding: 7px;
-  margin-top: 9px;
-  margin-left: 9px;
-  margin-right: 9px;
-  border: solid black;
-  border-width: 2px;
-  border-color: black;
-  border-radius: 12px;
+    background-color: var(--component-background-color);
+    height: 15%;
+    padding: 7px;
+    margin-top: 9px;
+    margin-left: 9px;
+    margin-right: 9px;
+    border: solid black;
+    border-width: 2px;
+    border-color: black;
+    border-radius: 12px;
+    cursor: context-menu;
 }
 
 .label {
-  display: flex;
-  margin-top: 10px;
-  font-size: 20px;
-  font-family: "DM Sans", sans-serif;
-  text-align: center;
+    display: flex;
+    margin-top: 10px;
+    font-size: 20px;
+    font-family: "DM Sans", sans-serif;
+    text-align: center;
 }
 
 .button {
-  padding: 5px;
-  margin: 5px;
-  border-width: 2px;
-  border-color: black;
-  border-radius: 20px;
-  border-style: double;
-  font-family: "DM Sans", sans-serif;
+    padding: 5px;
+    margin: 5px;
+    border-width: 2px;
+    border-color: black;
+    border-radius: 20px;
+    border-style: double;
+    font-family: "DM Sans", sans-serif;
 }
 
 .button:hover {
-  background-color: rgb(174, 175, 174);
+    background-color: rgb(174, 175, 174);
 }
 
 .path-bar {
-  width: 98%;
-  margin-bottom: 5px;
-  height: 35px;
-  font-size: 20px;
-  font-family: "DM Sans", sans-serif;
+    width: 98%;
+    margin-bottom: 5px;
+    height: 35px;
+    font-size: 20px;
+    font-family: "DM Sans", sans-serif;
 }
 
 .headline {
-  font-size: 38px;
-  font-weight: 500;
-  display: inline-block;
-  margin-left: 2px;
-  padding-right: 25px;
+    font-size: 38px;
+    font-weight: 500;
+    display: inline-block;
+    margin-left: 2px;
+    padding-right: 25px;
 }
 
 .areaDesc {
-  padding-left: 44px;
-  font-size: 20px;
-  width: 100%;
-  word-wrap: break-word;
+    padding-left: 44px;
+    font-size: 20px;
+    width: 100%;
+    word-wrap: break-word;
 }
 
 .effective {
-  width: 125px;
-  max-width: 150px;
-  font-size: 25px;
-  margin-top: 10px;
-  display: inline-block;
+    width: 125px;
+    max-width: 150px;
+    font-size: 25px;
+    margin-top: 10px;
+    display: inline-block;
 }
 
 .clock {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  font-size: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    font-size: 40px;
 }
 
 h1 {
-  color: black;
-  font-size: 24px;
-  font-family: "DM Sans", sans-serif;
+    color: black;
+    font-size: 24px;
+    font-family: "DM Sans", sans-serif;
 }
 
 .loading-animation {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 50px;
 }
 
 .spinner {
-  border: 6px solid #f3f3f3;
-  border-top: 6px solid #3498db;
-  border-radius: 50%;
-  width: 40px;
-  height: 40px;
-  animation: spin 1s linear infinite;
+    border: 6px solid #f3f3f3;
+    border-top: 6px solid #3498db;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: spin 1s linear infinite;
 }
 
 @keyframes spin {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
 }
 
 .expanded-content {
-  max-height: 0;
-  opacity: 0;
-  overflow: hidden;
-  transition: max-height 0.6s ease;
+    max-height: 0;
+    opacity: 0;
+    overflow: hidden;
+    transition: max-height 0.6s ease;
 }
 
 /* Smooth Expand and Collapse */
 .expanded-content {
-  transition: max-height 1s ease-in-out; /* Smooth transition for max-height */
-  overflow: hidden; /* Hide content overflow */
-  max-height: 0; /* Default to collapsed state */
+    transition: max-height 1s ease-in-out; /* Smooth transition for max-height */
+    overflow: hidden; /* Hide content overflow */
+    max-height: 0; /* Default to collapsed state */
 }
 
 .expanded-content.expanded {
-  max-height: 1000px; /* Large enough value to allow full expansion, adjust as needed */
-  opacity: 1;
+    max-height: 1000px; /* Large enough value to allow full expansion, adjust as needed */
+    opacity: 1;
 }
 
 .expanded-content.collapsing {
-  max-height: 0; /* Collapse the content */
+    max-height: 0; /* Collapse the content */
 }
 
 @keyframes flashHighlight {
-  0%,
-  100% {
-    box-shadow: 0 0 0px 0px rgba(180, 30, 0, 0.9);
-  }
-  50% {
-    box-shadow: 0 0 18px 8px rgba(180, 30, 0, 1);
-  }
+    0%,
+    100% {
+        box-shadow: 0 0 0px 0px rgba(180, 30, 0, 0.9);
+    }
+    50% {
+        box-shadow: 0 0 18px 8px rgba(180, 30, 0, 1);
+    }
 }
 
 .animate-flash-highlight {
-  animation: flashHighlight 0.6s ease-in-out 7;
+    animation: flashHighlight 0.6s ease-in-out 7;
 }
