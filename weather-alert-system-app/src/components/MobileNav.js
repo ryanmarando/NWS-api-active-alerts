@@ -68,6 +68,12 @@ export function MobileNav() {
           </Link>
           <Link
             className="block px-3 py-2 rounded-md text-base font-medium text-white hover:text-white hover:bg-gray-700"
+            href="/model-comparer"
+          >
+            NBM Model Comparer
+          </Link>
+          <Link
+            className="block px-3 py-2 rounded-md text-base font-medium text-white hover:text-white hover:bg-gray-700"
             href="/broadcasting"
           >
             Broadcasting

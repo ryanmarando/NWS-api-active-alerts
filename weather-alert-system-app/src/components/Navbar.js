@@ -14,112 +14,105 @@ import { API_URL } from "@/lib/constants";
 
 <Image alt="Menu" src={Menu} className="lg:hidden" />;
 export function Navbar() {
-    const { user } = useUser();
-    const [isAdmin, setIsAdmin] = useState();
-    useEffect(() => {
-        const fetchPrivateMetadata = async () => {
-            if (!user?.id) return;
+  const { user } = useUser();
+  const [isAdmin, setIsAdmin] = useState();
+  useEffect(() => {
+    const fetchPrivateMetadata = async () => {
+      if (!user?.id) return;
 
-            try {
-                const response = await fetch(
-                    `/api/updatePrivateMetadata?userId=${user?.id}`
-                );
-                if (!response.ok) {
-                    throw new Error("Failed to fetch user data");
-                }
-                const data = await response.json();
-                if (data.privateMetadata.admin) {
-                    setIsAdmin(data.privateMetadata.admin);
-                }
-            } catch (error) {
-                console.error("Error fetching user data:", error);
-            }
-        };
+      try {
+        const response = await fetch(
+          `/api/updatePrivateMetadata?userId=${user?.id}`
+        );
+        if (!response.ok) {
+          throw new Error("Failed to fetch user data");
+        }
+        const data = await response.json();
+        if (data.privateMetadata.admin) {
+          setIsAdmin(data.privateMetadata.admin);
+        }
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      }
+    };
 
-        fetchPrivateMetadata();
-    }, [user?.id]);
-    return (
-        <nav className="flex w-full items-center justify-between px-[20px] py-[16px] lg:container lg:mx-auto lg:px-22">
-            <div className="flex gap-x-5">
-                <Link href="/">
-                    <Image alt="Logo" src={Logo} className="object-cover" />
-                </Link>
-                <Link
-                    className="hidden lg:block py-[16px] text-center"
-                    href="/alert-system"
-                >
-                    Weather Alert System
-                </Link>
-                <div className="relative group">
-                    {/* Main Products Link */}
-                    <button className="hidden lg:block py-[16px] px-2 hover:bg-gray-100 rounded-md">
-                        Products
-                    </button>
+    fetchPrivateMetadata();
+  }, [user?.id]);
+  return (
+    <nav className="flex w-full items-center justify-between px-[20px] py-[16px] lg:container lg:mx-auto lg:px-22">
+      <div className="flex gap-x-5">
+        <Link href="/">
+          <Image alt="Logo" src={Logo} className="object-cover" />
+        </Link>
+        <Link
+          className="hidden lg:block py-[16px] text-center"
+          href="/alert-system"
+        >
+          Weather Alert System
+        </Link>
+        <div className="relative group">
+          {/* Main Products Link */}
+          <button className="hidden lg:block py-[16px] px-2 hover:bg-gray-100 rounded-md">
+            Products
+          </button>
 
-                    {/* Dropdown Content */}
-                    <div className="absolute hidden group-hover:block bg-white shadow-lg rounded-md mt-2 z-20">
-                        <Link
-                            href="/wbgt"
-                            className="block px-4 py-2 text-gray-700 hover:bg-[rgb(221,221,221)] rounded-md"
-                        >
-                            Wet Bulb Globe Temperatures
-                        </Link>
-                    </div>
-                </div>
-                <Link
-                    className="hidden lg:block py-[16px]"
-                    href="/broadcasting"
-                >
-                    Broadcasting
-                </Link>
-                <Link className="hidden lg:block py-[16px]" href="/contact">
-                    Contact
-                </Link>
-                {isAdmin && (
-                    <Link className="hidden lg:block py-[16px]" href="/admin">
-                        Admin
-                    </Link>
-                )}
-            </div>
-            <div className="flex items-center">
-                <a
-                    href="https://www.facebook.com/ryanmarandowx"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                >
-                    <Image
-                        className="mr-[15px] w-8 h-8"
-                        alt="Facebook"
-                        src={Facebook}
-                    />
-                </a>
-                <a
-                    href="https://twitter.com/ryanmarando"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                >
-                    <Image
-                        className="mr-[15px] w-8 h-8"
-                        alt="Twitter"
-                        src={Twitter}
-                    />
-                </a>
-                <div className="flex items-center mr-[15px]">
-                    <SignedOut>
-                        <Link href="/sign-in">
-                            <p className="font-medium text-[#36485C]">
-                                Sign in
-                            </p>
-                        </Link>
-                    </SignedOut>
-                    <SignedIn>
-                        <UserButton />
-                    </SignedIn>
-                </div>
-                <div>
-                    <MobileNav />
-                </div>
-            </div>
-        </nav>
-    );
+          {/* Dropdown Content */}
+          <div className="absolute hidden group-hover:block bg-white shadow-lg rounded-md mt-2 z-20">
+            <Link
+              href="/wbgt"
+              className="block px-4 py-2 text-gray-700 hover:bg-[rgb(221,221,221)] rounded-md"
+            >
+              Wet Bulb Globe Temperatures
+            </Link>
+            <Link
+              href="/model-comparer"
+              className="block px-4 py-2 text-gray-700 hover:bg-[rgb(221,221,221)] rounded-md"
+            >
+              NBM Model Comparer
+            </Link>
+          </div>
+        </div>
+        <Link className="hidden lg:block py-[16px]" href="/broadcasting">
+          Broadcasting
+        </Link>
+        <Link className="hidden lg:block py-[16px]" href="/contact">
+          Contact
+        </Link>
+        {isAdmin && (
+          <Link className="hidden lg:block py-[16px]" href="/admin">
+            Admin
+          </Link>
+        )}
+      </div>
+      <div className="flex items-center">
+        <a
+          href="https://www.facebook.com/ryanmarandowx"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <Image className="mr-[15px] w-8 h-8" alt="Facebook" src={Facebook} />
+        </a>
+        <a
+          href="https://twitter.com/ryanmarando"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <Image className="mr-[15px] w-8 h-8" alt="Twitter" src={Twitter} />
+        </a>
+        <div className="flex items-center mr-[15px]">
+          <SignedOut>
+            <Link href="/sign-in">
+              <p className="font-medium text-[#36485C]">Sign in</p>
+            </Link>
+          </SignedOut>
+          <SignedIn>
+            <UserButton />
+          </SignedIn>
+        </div>
+        <div>
+          <MobileNav />
+        </div>
+      </div>
+    </nav>
+  );
 }
