@@ -24,14 +24,50 @@ export default function ModelTrendVisualizer() {
   const [runTime, setRunTime] = useState(null);
   const [location, setLocation] = useState("KDAY");
   const [selectedRunHour, setSelectedRunHour] = useState(null); // selected UTC hour
-  const [selectedParameters, setSelectedParameters] = useState({
-    TMP: true,
-    DPT: true,
-    WSP: true,
-    WDR: true,
-    SKY: true,
-  });
   const [fetching, setFetching] = useState(false);
+  const parameterTypes = [
+    "TMP",
+    "DPT",
+    "SKY",
+    "WDR",
+    "WSP",
+    "P06",
+    "P12",
+    "Q06",
+    "Q12",
+    "T03",
+    "T06",
+    "T12",
+  ];
+  const [selectedParameters, setSelectedParameters] = useState(
+    parameterTypes.reduce((acc, param) => {
+      acc[param] = true;
+      return acc;
+    }, {})
+  );
+  const colors = [
+    "#e6194b",
+    "#3cb44b",
+    "#ffe119",
+    "#4363d8",
+    "#f58231",
+    "#911eb4",
+    "#46f0f0",
+    "#f032e6",
+    "#bcf60c",
+    "#fabebe",
+    "#008080",
+    "#e6beff",
+    "#9a6324",
+    "#fffac8",
+    "#800000",
+    "#aaffc3",
+    "#808000",
+    "#ffd8b1",
+    "#000075",
+    "#808080",
+    "#ffffff",
+  ];
 
   const fetchModelData = async () => {
     if (!location) return;
@@ -82,7 +118,7 @@ export default function ModelTrendVisualizer() {
 
   const processAndSetData = (raw, filterHour) => {
     const filtered = raw.filter(
-      (item) => dayjs(item.runTime).hour() === filterHour
+      (item) => dayjs.utc(item.runTime).hour() === filterHour
     );
 
     if (filtered.length === 0) {
@@ -113,7 +149,8 @@ export default function ModelTrendVisualizer() {
     });
 
     const final = Object.values(byValidTime).sort(
-      (a, b) => new Date(a.validTime) - new Date(b.validTime)
+      (a, b) =>
+        dayjs.utc(a.validTime).valueOf() - dayjs.utc(b.validTime).valueOf()
     );
 
     setData(final);
@@ -124,7 +161,7 @@ export default function ModelTrendVisualizer() {
     processAndSetData(allData, hour);
   };
 
-  const formatTime = (iso) => dayjs(iso).format("dd ha");
+  const formatTime = (iso) => dayjs.utc(iso).format("dd HH[Z]");
 
   const renderCustomTooltip = ({ active, payload, label }) => {
     if (active && payload?.length) {
@@ -145,7 +182,15 @@ export default function ModelTrendVisualizer() {
             .map((key) => {
               let unit = "°F";
               if (key === "WSP") unit = "mph";
-              if (key === "SKY") unit = "%";
+              if (key === "WDR") unit = "°";
+              if (
+                key === "SKY" ||
+                key[0] === "P" ||
+                key === "T06" ||
+                key === "T12"
+              )
+                unit = "%";
+              if (key[0] === "Q") unit = "";
               return (
                 <div key={key}>
                   {key}: {pt[key]}
@@ -177,7 +222,7 @@ export default function ModelTrendVisualizer() {
         <div className="max-w-md mx-auto mb-4">
           <label
             htmlFor="stationCode"
-            className="block text-sm font-medium text-gray-700 mb-1"
+            className="flex flex-wrap justify-center text-sm font-medium text-gray-700 mb-1"
           >
             Enter Station Code:
           </label>
@@ -192,23 +237,42 @@ export default function ModelTrendVisualizer() {
         </div>
 
         <div className="mb-4">
-          <label className="block text-sm font-medium text-gray-700 mb-2">
+          <label className="flex flex-wrap justify-center text-sm font-medium text-gray-700 mb-2">
             Select Parameters to Display:
           </label>
-          <div className="space-y-2">
-            {["TMP", "DPT", "WSP", "WDR", "SKY"].map((param) => (
-              <div key={param} className="flex items-center">
+
+          {/* Select All Checkbox */}
+          <div className="flex justify-center mb-2">
+            <label className="flex items-center space-x-2">
+              <input
+                type="checkbox"
+                checked={parameterTypes.every(
+                  (param) => selectedParameters[param]
+                )}
+                onChange={(e) => {
+                  const checked = e.target.checked;
+                  const newSelections = {};
+                  parameterTypes.forEach((param) => {
+                    newSelections[param] = checked;
+                  });
+                  setSelectedParameters(newSelections);
+                }}
+              />
+              <span className="text-sm font-semibold">Select All</span>
+            </label>
+          </div>
+
+          {/* Individual Checkboxes */}
+          <div className="flex flex-wrap justify-center gap-4 my-4">
+            {parameterTypes.map((param) => (
+              <label key={param} className="flex items-center space-x-2">
                 <input
                   type="checkbox"
                   checked={selectedParameters[param]}
                   onChange={() => handleToggleChange(param)}
-                  id={param}
-                  className="mr-2"
                 />
-                <label htmlFor={param} className="text-sm">
-                  {param}
-                </label>
-              </div>
+                <span className="text-sm">{param}</span>
+              </label>
             ))}
           </div>
         </div>
@@ -225,18 +289,18 @@ export default function ModelTrendVisualizer() {
 
         {runTime && (
           <div className="text-center text-gray-500 text-sm mb-4">
-            Latest Model Run Time: {dayjs(runTime).format("YYYY-MM-DD HH:mm")}{" "}
-            UTC
+            Latest Model Run Time:{" "}
+            {dayjs.utc(runTime).format("YYYY-MM-DD HH:mm")} UTC
           </div>
         )}
 
         {/* UTC Run Hour Selector */}
-        <div className="flex flex-wrap justify-center gap-2 mb-6">
+        <div className="grid grid-cols-4 gap-3 justify-center mb-6 max-w-md mx-auto">
           {[...Array(24)].map((_, i) => (
             <button
               key={i}
               onClick={() => handleRunHourClick(i)}
-              className={`px-3 py-1 rounded border ${
+              className={`px-3 py-1 rounded border text-sm ${
                 selectedRunHour === i
                   ? "bg-blue-600 text-white"
                   : "bg-white text-gray-700 hover:bg-gray-100"
@@ -289,7 +353,7 @@ export default function ModelTrendVisualizer() {
                   )}
                 />
 
-                {["TMP", "DPT", "WSP", "WDR", "SKY"].map((param, idx) => {
+                {parameterTypes.map((param, idx) => {
                   if (!selectedParameters[param]) return null;
                   return (
                     <React.Fragment key={param}>
@@ -297,17 +361,7 @@ export default function ModelTrendVisualizer() {
                         type="monotone"
                         dataKey={param}
                         name={`${param} (latest)`}
-                        stroke={
-                          [
-                            "#ef4444",
-                            "#3b82f6",
-                            "#10b981",
-                            "#6366f1",
-                            "#f59e0b",
-                            "#8b5cf6",
-                            "#34d399",
-                          ][idx]
-                        }
+                        stroke={colors[idx % colors.length]}
                         strokeWidth={2}
                         dot={false}
                         isAnimationActive={false}
@@ -316,17 +370,7 @@ export default function ModelTrendVisualizer() {
                         type="monotone"
                         dataKey={`${param}_Original`}
                         name={`${param} (original)`}
-                        stroke={
-                          [
-                            "#ef4444",
-                            "#3b82f6",
-                            "#10b981",
-                            "#6366f1",
-                            "#f59e0b",
-                            "#8b5cf6",
-                            "#34d399",
-                          ][idx]
-                        }
+                        stroke={colors[idx % colors.length]}
                         strokeDasharray="4 2"
                         strokeWidth={1.5}
                         dot={false}
