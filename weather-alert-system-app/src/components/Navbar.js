@@ -68,7 +68,7 @@ export function Navbar() {
               href="/model-comparer"
               className="block px-4 py-2 text-gray-700 hover:bg-[rgb(221,221,221)] rounded-md"
             >
-              NBM Model Comparer
+              NBM Model Run Comparer
             </Link>
           </div>
         </div>

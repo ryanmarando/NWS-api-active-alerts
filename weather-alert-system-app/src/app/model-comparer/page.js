@@ -70,7 +70,8 @@ export default function ModelTrendVisualizer() {
   ];
 
   const fetchModelData = async () => {
-    if (!location) return;
+    if (!location || location.length !== 4)
+      alert("Please enter a valid 4 digit station code.");
 
     setFetching(true);
 
@@ -215,7 +216,7 @@ export default function ModelTrendVisualizer() {
     <div className="min-h-screen flex flex-col">
       <Navbar />
       <header className="bg-blue-600 text-white text-xl font-semibold py-4 px-6">
-        NBM Model Trend Visualizer
+        NBM Model Run Comparer
       </header>
 
       <main className="flex-1 p-4">
