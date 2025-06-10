@@ -47,10 +47,20 @@ export default function Broadcasting() {
               of everyday to dangerous, severe weather.
             </strong>
           </p>
-          <span className="p-2 border-2 rounded-md border-white text-2xl md:text-4xl font-bold text-white">
-            Ryan Marando
-          </span>
+
+          {/* Centered name and icon */}
+          <div className="flex items-center gap-2 p-2 border-2 rounded-md border-white text-white w-fit">
+            <span className="text-2xl md:text-4xl font-bold leading-none">
+              Ryan Marando
+            </span>
+            <img
+              src="/assets/amsSealIcon.png"
+              alt="AMS Seal"
+              className="h-6 md:h-8 w-auto"
+            />
+          </div>
         </div>
+
         <Image
           src="/assets/demo_page_heropic.png"
           alt="Ryan Marando"
