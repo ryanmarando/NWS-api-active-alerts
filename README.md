@@ -31,11 +31,11 @@ npm install
 ```
 ## Configuration
 ### API Configuration:
-1. Rename the `.env.example` file in the `weather-alert-system-API` directory to `.env`.
+1. Create a  `.env` file in the `weather-alert-system-API` directory.
 2. Update the environment variables as needed, such as setting the port number or API keys.
 
 ### Application Configuration:
-1. Rename the `.env.example` file in the `weather-alert-system-app` directory to `.env`.
+1. Create a  `.env` file in the `weather-alert-system-app` directory.
 2. Configure the environment variables, including the API endpoint and any other necessary settings.
 
 ## Usage
